@@ -1,381 +1,268 @@
-/* Paleta de colores personalizada */
 :root {
-  --header-bg: #58111A;        /* Rojo vino / Burdeos elegante */
-  --header-gold: #D4AF37;      /* Dorado para letras y detalles */
-  --bg-dark: #0a1128;          /* Azul marino oscuro para el fondo */
-  --card-bg: #1c2541;          /* Azul marino ligeramente más claro para tarjetas */
-  --card-border: #3a506b;      /* Borde de las tarjetas */
-  --text-white: #ffffff;       /* Texto principal blanco */
-  --text-muted: #a0aec0;       /* Texto secundario */
-  --danger-red: #ef4444;       /* Rojo para botón eliminar */
+    --color-primario: #58181F; /* Burdeos cofrade */
+    --color-secundario: #D4AF37; /* Dorado */
+    --color-fondo: #f8f9fa;
+    --color-texto: #333333;
+    --color-blanco: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  background-color: var(--bg-dark);
-  color: var(--text-white);
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  margin: 0;
-  padding: 0;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-/* Cabecera - Rojo Vino con Letras Doradas */
+/* Cabecera */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  background-color: var(--header-bg);
-  border-bottom: 3px solid var(--header-gold);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-bottom: 3px solid var(--color-secundario);
 }
 
 .header-brand {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .escudo-img {
-  width: 48px;
-  height: auto;
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
 }
 
 .header-titles h1 {
-  margin: 0;
-  font-size: 1.3rem;
-  color: var(--header-gold);
-  font-weight: bold;
-  letter-spacing: 0.5px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    color: var(--color-blanco);
 }
 
 .header-titles p {
-  margin: 2px 0 0 0;
-  color: #f1e6b8;
-  font-size: 0.85rem;
+    font-size: 0.85rem;
+    color: #e0d0d0;
 }
 
-#btnAdmin {
-  background: var(--header-gold);
-  color: var(--header-bg);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: transform 0.2s, background-color 0.2s;
-}
-
-#btnAdmin:hover {
-  background: #f3cf55;
-  transform: translateY(-1px);
-}
-
-/* Contenedor Principal */
+/* Contenido Principal */
 .contenedor {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 30px 15px;
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 0 15px;
+    flex: 1;
 }
 
 .seccion-titulo {
-  text-align: center;
-  margin-bottom: 30px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
 }
 
 .seccion-titulo h2 {
-  font-size: 1.8rem;
-  margin-bottom: 5px;
-  color: var(--header-gold);
+    color: var(--color-primario);
+    font-size: 1.4rem;
 }
 
 .seccion-titulo p {
-  color: var(--text-muted);
-  margin: 0;
+    color: #666;
+    font-size: 0.9rem;
 }
 
-/* Lista y Tarjetas de Eventos */
-#listaEventos {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
+/* Tarjetas de Eventos */
+.evento-card {
+    background: var(--color-blanco);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-left: 5px solid var(--color-secundario);
+    transition: transform 0.2s ease;
 }
 
-.tarjeta-evento {
-  position: relative;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-left: 5px solid var(--header-gold);
-  border-radius: 12px;
-  padding: 20px;
-  width: 100%;
-  max-width: 550px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  box-sizing: border-box;
+.evento-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.evento-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  padding-right: 50px;
+/* Botones Generales y Modales (Forzados sin estilo nativo de OS) */
+button, .btn-principal, .btn-secundario, .btn-admin {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    border: none !important;
+    outline: none !important;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+    transition: background-color 0.2s, opacity 0.2s;
 }
 
-.badge {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: white;
-  background-color: var(--header-bg);
-  border: 1px solid var(--header-gold);
+.btn-principal, button[type="submit"] {
+    background-color: var(--color-primario) !important;
+    color: var(--color-blanco) !important;
 }
 
-.badge.ensayo { background-color: #1e40af; }
-.badge.concierto { background-color: #6b21a8; }
-.badge.procesión, .badge.procesion { background-color: var(--header-bg); }
-.badge.reunión, .badge.reunion { background-color: #065f46; }
-
-.evento-hora {
-  font-weight: bold;
-  color: var(--header-gold);
-  font-size: 0.95rem;
+.btn-principal:hover, button[type="submit"]:hover {
+    background-color: #401116 !important;
 }
 
-.tarjeta-evento h3 {
-  margin: 0 0 10px 0;
-  font-size: 1.3rem;
-  color: #ffffff;
+.btn-secundario {
+    background-color: #e2e8f0 !important;
+    color: #4a5568 !important;
 }
 
-.tarjeta-evento p {
-  margin: 6px 0;
-  color: var(--text-muted);
-  font-size: 0.95rem;
+.btn-secundario:hover {
+    background-color: #cbd5e1 !important;
 }
 
-.tarjeta-evento p strong {
-  color: var(--header-gold);
+.btn-admin {
+    background-color: var(--color-secundario) !important;
+    color: #000 !important;
+    padding: 8px 14px;
+    font-size: 0.85rem;
 }
 
-/* Botón X pequeña de borrado */
-.btn-borrar-x {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: #ef4444;
-  color: #ffffff;
-  border: none;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 26px;
-  text-align: center;
-  padding: 0;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-  transition: transform 0.2s, background-color 0.2s;
+.btn-admin:hover {
+    opacity: 0.9;
 }
 
-.btn-borrar-x:hover {
-  background: #dc2626;
-  transform: scale(1.15);
+/* Botón YouTube */
+.btn-youtube {
+    background-color: #FF0000;
+    color: #ffffff;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-block;
 }
 
-/* Botón de editar (lápiz) en las tarjetas */
-.btn-editar {
-  position: absolute;
-  top: 12px;
-  right: 46px;
-  background: var(--header-gold);
-  color: var(--header-bg);
-  border: none;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  font-size: 13px;
-  font-weight: bold;
-  line-height: 26px;
-  text-align: center;
-  padding: 0;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-  transition: transform 0.2s, background-color 0.2s;
-}
-
-.btn-editar:hover {
-  background: #f3cf55;
-  transform: scale(1.15);
-}
-
-/* BOTÓN FLOTANTE (+) SOLO PARA ADMIN */
-#btnFlotanteAgregar {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  width: 60px;
-  height: 60px;
-  background-color: var(--header-gold);
-  color: var(--header-bg);
-  border: 2px solid #ffffff;
-  border-radius: 50%;
-  font-size: 34px;
-  font-weight: bold;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-  cursor: pointer;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  transition: transform 0.2s, background-color 0.2s;
-}
-
-#btnFlotanteAgregar:hover {
-  transform: scale(1.1);
-  background-color: #f3cf55;
-}
-
-/* Pie de página */
-.footer {
-  text-align: center;
-  padding: 30px 15px;
-  background: #070d1e;
-  margin-top: 40px;
-  border-top: 2px solid var(--header-gold);
-  color: var(--text-white);
-}
-
-.subfooter {
-  color: var(--text-muted);
-  font-size: 0.85rem;
+.btn-youtube:hover {
+    opacity: 0.9;
 }
 
 /* Modales */
 .modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
-  align-items: center;
-  justify-content: center;
-  padding: 15px;
-  z-index: 10000;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
 }
 
 .modal-contenido {
-  background: var(--card-bg);
-  padding: 20px;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 480px;
-  border: 1px solid var(--header-gold);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-  box-sizing: border-box;
-  max-height: 90vh;
-  overflow-y: auto;
+    background-color: var(--color-blanco);
+    padding: 25px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-top: 4px solid var(--color-primario);
 }
 
-.modal-sm { max-width: 350px; }
+.modal-sm {
+    max-width: 350px;
+}
 
 .modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
 }
-
-.modal-header h3 { margin: 0; color: var(--header-gold); }
 
 .btn-cerrar {
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--text-muted);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
 }
 
+.btn-cerrar:hover {
+    color: #000;
+}
+
+/* Formularios */
 .form-group {
-  margin-bottom: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  width: 100%;
-  box-sizing: border-box;
+    margin-bottom: 15px;
 }
 
 .form-group label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #444;
 }
 
-.form-group input, .form-group select, .form-group textarea {
-  padding: 10px;
-  background: var(--bg-dark);
-  border: 1px solid var(--card-border);
-  border-radius: 6px;
-  color: var(--text-white);
-  font-size: 0.95rem;
-  width: 100%;
-  box-sizing: border-box;
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    outline: none;
+    background-color: #fff;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 2px rgba(88, 24, 31, 0.1);
 }
 
 .form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-@media (max-width: 480px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 }
 
 .modal-botones {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
 }
 
-/* Botones personalizados y forzados para que no usen el estilo feo del móvil */
-.btn-principal {
-  background: var(--header-gold) !important;
-  color: var(--header-bg) !important;
-  border: none !important;
-  padding: 8px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+/* Footer */
+.footer {
+    background-color: #222;
+    color: #bbb;
+    text-align: center;
+    padding: 20px;
+    font-size: 0.85rem;
+    margin-top: auto;
+    border-top: 3px solid var(--color-secundario);
 }
 
-.btn-principal:hover {
-  background: #f3cf55 !important;
-}
-
-.btn-secundario {
-  background: transparent !important;
-  color: var(--text-muted) !important;
-  border: 1px solid var(--card-border) !important;
-  padding: 8px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-secundario:hover {
-  color: var(--text-white) !important;
-  border-color: var(--header-gold) !important;
-}
-
-/* Eliminar bordes blancos molestos al enfocar inputs o modales */
-input:focus, select:focus, textarea:focus, button:focus {
-  outline: none !important;
-  border-color: var(--header-gold) !important;
-  box-shadow: 0 0 5px rgba(212, 175, 55, 0.4);
+.footer .subfooter {
+    font-size: 0.75rem;
+    color: #777;
+    margin-top: 5px;
 }
