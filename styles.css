@@ -119,7 +119,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
-  padding-right: 25px;
+  padding-right: 50px; /* Espacio para que los botones flotantes no tapen el texto */
 }
 
 .badge {
@@ -183,6 +183,32 @@ body {
 
 .btn-borrar-x:hover {
   background: #dc2626;
+  transform: scale(1.15);
+}
+
+/* Botón de editar (lápiz) en las tarjetas */
+.btn-editar {
+  position: absolute;
+  top: 12px;
+  right: 46px;
+  background: var(--header-gold);
+  color: var(--header-bg);
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 26px;
+  text-align: center;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-editar:hover {
+  background: #f3cf55;
   transform: scale(1.15);
 }
 
@@ -281,57 +307,4 @@ body {
 }
 
 .form-group label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.form-group input, .form-group select, .form-group textarea {
-  padding: 10px;
-  background: var(--bg-dark);
-  border: 1px solid var(--card-border);
-  border-radius: 6px;
-  color: var(--text-white);
-  font-size: 0.95rem;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-@media (max-width: 480px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.modal-botones {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.btn-principal {
-  background: var(--header-gold);
-  color: var(--header-bg);
-  border: none;
-  padding: 8px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.btn-secundario {
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--card-border);
-  padding: 8px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-}
+  font-size: 0.85
