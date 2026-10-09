@@ -16,7 +16,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const eventosRef = collection(db, "eventos");
 
-// Por defecto, nadie es Administrador
+// Estado Administrador
 let esAdmin = false;
 
 // 2. Control de Modales y Clave Admin
@@ -35,14 +35,14 @@ window.cerrarModal = function(idModal) {
 window.validarClave = function() {
   const claveIngresada = document.getElementById("inputClave").value;
   if (claveIngresada === "nazareno2012") { 
-    esAdmin = true; // Se activa el modo administrador
+    esAdmin = true;
     document.getElementById("inputClave").value = "";
     cerrarModal("modalClave");
     
-    // Muestra el botón flotante (+) ÚNICAMENTE AL VALIDAR LA CLAVE
-    document.getElementById("btnFlotanteAgregar").style.display = "flex";
+    // CREAR EL BOTÓN FLOTANTE (+) SOLO CUANDO SE INGRESA LA CLAVE CORRECTA
+    crearBotonFlotante();
     
-    // Vuelve a pintar las tarjetas activando la X chica roja sólo para ti
+    // Recargar eventos para mostrar las X chicas rojas
     escucharEventos();
     
     window.abrirFormularioDirecto();
@@ -51,7 +51,19 @@ window.validarClave = function() {
   }
 };
 
-// Se asegura de pedir la clave si alguien hace clic en el (+) sin ser admin
+function crearBotonFlotante() {
+  if (document.getElementById("btnFlotanteAgregar")) return;
+
+  const btn = document.createElement("button");
+  btn.id = "btnFlotanteAgregar";
+  btn.innerHTML = "+";
+  btn.title = "Añadir acto";
+  btn.onclick = function() {
+    window.abrirFormularioDirecto();
+  };
+  document.body.appendChild(btn);
+}
+
 window.abrirFormularioDirecto = function() {
   if (esAdmin) {
     document.getElementById("panelAdmin").style.display = "flex";
@@ -79,9 +91,8 @@ function escucharEventos() {
 
       const tarjeta = document.createElement("div");
       tarjeta.className = "tarjeta-evento";
-      tarjeta.style.position = "relative";
 
-      // La X chica roja SOLO se incluye si esAdmin es true
+      // La X roja pequeña SOLO se genera si eres Admin
       tarjeta.innerHTML = `
         ${esAdmin ? `<button class="btn-borrar-x" onclick="borrarEvento('${id}')" title="Eliminar acto">✕</button>` : ''}
         <div class="evento-header">
@@ -98,14 +109,14 @@ function escucharEventos() {
   });
 }
 
-// Iniciar la escucha en tiempo real
+// Iniciar escucha
 escucharEventos();
 
-// 4. Guardar evento en la nube
+// 4. Guardar evento
 window.guardarEvento = async function(e) {
   if (e) e.preventDefault();
   if (!esAdmin) {
-    alert("Acceso denegado: solo el administrador puede añadir eventos.");
+    alert("Acceso denegado");
     return;
   }
   
@@ -127,7 +138,7 @@ window.guardarEvento = async function(e) {
   }
 };
 
-// 5. Borrar evento de la nube
+// 5. Borrar evento
 window.borrarEvento = async function(id) {
   if (!esAdmin) return;
   
