@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banda Jesús Nazareno - Agenda Oficial</title>
-    <link rel="stylesheet" href="styles.css">
+    <!-- Enlace a la hoja de estilos -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -17,7 +18,7 @@
                 <p>Sevilla • Agenda Oficial</p>
             </div>
         </div>
-        <button id="btnAdmin" onclick="pedirClave()">Admin</button>
+        <button id="btnAdmin" class="btn-admin" onclick="pedirClave()">Admin</button>
     </header>
 
     <!-- Contenido Principal -->
@@ -29,7 +30,7 @@
 
         <!-- Lista de tarjetas de eventos -->
         <div id="listaEventos">
-            <!-- Los eventos se cargarán dinámicamente aquí -->
+            <!-- Los eventos se cargarán dinámicamente desde Firebase -->
         </div>
     </main>
 
@@ -37,10 +38,10 @@
     <footer class="footer">
         <p>Banda de Cornetas y Tambores Jesús Nazareno</p>
         <p class="subfooter">Sevilla • Todos los derechos reservados</p>
-
+        
         <!-- Botón de YouTube -->
         <div style="margin-top: 15px;">
-            <a href="https://www.youtube.com/@bandanazarenosevilla" target="_blank" style="background-color: #FF0000; color: #ffffff; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-weight: bold; font-family: Arial, sans-serif; font-size: 14px; display: inline-block;">
+            <a href="https://www.youtube.com/@bandanazarenosevilla" target="_blank" class="btn-youtube">
                 ▶ Ver Canal de YouTube
             </a>
         </div>
@@ -116,7 +117,6 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
     <!-- Cargar script como módulo ES6 para Firebase -->
     <script type="module" src="app.js"></script>
 </body>
