@@ -113,6 +113,21 @@ function escucharEventos() {
 
     // Generar la tarjeta de cada acto
     eventosArr.forEach((evento) => {
+      // COMPROBACIÓN: Ocultar ensayos 1 hora y media después de su inicio
+      if (evento.tipo && evento.tipo.toLowerCase() === "ensayo" && evento.fecha && evento.hora) {
+        const fechaHoraEventoStr = `${evento.fecha}T${evento.hora}:00`;
+        const fechaHoraEvento = new Date(fechaHoraEventoStr);
+        
+        // 1 hora y media en milisegundos (1.5h * 60m * 60s * 1000ms = 5400000ms)
+        const tiempoLimite = new Date(fechaHoraEvento.getTime() + 5400000);
+        const ahora = new Date();
+
+        // Si ya ha pasado 1 hora y media, se omite y no se dibuja
+        if (ahora > tiempoLimite) {
+          return;
+        }
+      }
+
       const tarjeta = document.createElement("div");
       tarjeta.className = "tarjeta-evento";
 
