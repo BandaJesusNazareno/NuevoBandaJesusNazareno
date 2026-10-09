@@ -1,7 +1,7 @@
 :root {
     --color-fondo: #0a0f1d;
     --color-tarjeta: #131c31;
-    --color-primario: #5b0f1e; /* Burdeos cofrade exacto */
+    --color-primario: #5b0f1e; /* Burdeos cofrade */
     --color-secundario: #D4AF37; /* Dorado clásico */
     --color-texto: #ffffff;
     --color-texto-secundario: #cbd5e1;
@@ -84,41 +84,46 @@ body {
     font-size: 0.85rem;
 }
 
-/* TARJETAS DE ENSAYOS / ACTOS (Separadas y bien definidas como en la foto) */
-.evento-card {
+/* 
+  SOLUCIÓN UNIVERSAL DE TARJETAS: 
+  Fuerza a cualquier contenedor de ensayos (sea cual sea la clase que use el JS) 
+  a convertirse en un recuadro oscuro con borde izquierdo dorado y separación de 22px.
+*/
+.evento-card, 
+#lista-eventos > div, 
+#eventos-container > div, 
+.card, 
+.tarjeta, 
+.item-evento {
     background-color: var(--color-tarjeta) !important;
     border-radius: 14px !important;
     padding: 20px !important;
-    margin-bottom: 22px !important; /* Separación clara y limpia entre tarjeta y tarjeta */
+    margin-bottom: 22px !important;
     box-shadow: 0 6px 16px rgba(0,0,0,0.45) !important;
     border-left: 6px solid var(--color-secundario) !important;
     border-top: 1px solid #22304d !important;
     border-right: 1px solid #22304d !important;
     border-bottom: 1px solid #22304d !important;
-    position: relative;
-    transition: transform 0.2s ease;
-}
-
-.evento-card:hover {
-    transform: translateY(-2px);
+    position: relative !important;
+    display: block !important;
 }
 
 /* Textos e internos de la tarjeta */
-.evento-card h3 {
+.evento-card h3, div h3 {
     color: #ffffff;
     font-size: 1.2rem;
     margin: 12px 0 14px 0;
     font-weight: 600;
 }
 
-.evento-card span, .evento-card p {
+.evento-card span, .evento-card p, div span, div p {
     color: var(--color-texto-secundario);
     font-size: 0.9rem;
     margin: 6px 0;
 }
 
-.evento-card strong {
-    color: var(--color-secundario); /* Fecha y Lugar en dorado */
+.evento-card strong, div strong {
+    color: var(--color-secundario);
 }
 
 /* Etiqueta tipo "ENSAYO" */
@@ -134,38 +139,6 @@ body {
     display: inline-block;
 }
 
-/* Cabecera de la tarjeta: Hora a la izquierda de la X roja */
-.evento-header, .evento-acciones, .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-}
-
-/* Hora en color dorado */
-.evento-header span:first-child, .hora-evento {
-    color: var(--color-secundario) !important;
-    font-weight: 700;
-    font-size: 1.05rem;
-}
-
-/* Botón de la X roja redondo */
-.btn-eliminar, .btn-borrar, .eliminar-evento, .fa-times, .fa-trash {
-    background-color: #ef4444 !important;
-    color: #ffffff !important;
-    border: none;
-    border-radius: 50% !important;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: bold;
-    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
-}
-
 /* Botón Admin */
 .btn-admin {
     background-color: var(--color-secundario) !important;
@@ -179,7 +152,7 @@ body {
 }
 
 /* BOTÓN FLOTANTE CON EL "+" (FAB) ABAJO A LA DERECHA */
-.btn-flotante, #btnAñadir, .fab, .btn-agregar {
+.btn-flotante, #btnAñadir, .fab, .btn-agregar, button.flotante {
     position: fixed !important;
     bottom: 25px !important;
     right: 25px !important;
@@ -249,19 +222,6 @@ body {
     padding: 10px;
     background-color: #0a0f1d;
     border: 1px solid #334155;
-    color: #ffffff;
-    border-radius: 6px;
-    font-size: 0.95rem;
-}
-
-.btn-principal {
-    background-color: var(--color-primario) !important;
-    color: #ffffff !important;
-    padding: 10px 18px;
-    border-radius: 6px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
 }
 
 /* Footer */
