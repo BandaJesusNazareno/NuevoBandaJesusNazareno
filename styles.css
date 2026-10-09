@@ -50,7 +50,7 @@ body {
 
 .header-titles p {
   margin: 2px 0 0 0;
-  color: #f1e6b8; /* Dorado suave para el subtítulo */
+  color: #f1e6b8;
   font-size: 0.85rem;
 }
 
@@ -102,7 +102,7 @@ body {
 }
 
 .tarjeta-evento {
-  position: relative; /* Para ubicar la X en la esquina */
+  position: relative;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-left: 5px solid var(--header-gold);
@@ -119,7 +119,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
-  padding-right: 25px; /* Espacio para no chocar con la X */
+  padding-right: 25px;
 }
 
 .badge {
@@ -133,7 +133,6 @@ body {
   border: 1px solid var(--header-gold);
 }
 
-/* Colores de etiquetas según el tipo */
 .badge.ensayo { background-color: #1e40af; }
 .badge.concierto { background-color: #6b21a8; }
 .badge.procesión, .badge.procesion { background-color: var(--header-bg); }
@@ -187,33 +186,32 @@ body {
   transform: scale(1.15);
 }
 
-/* BOTÓN FLOTANTE (+) REDONDO Y DORADO EN LA ESQUINA INFERIOR DERECHA */
+/* BOTÓN FLOTANTE (+) SOLO PARA ADMIN */
 #btnFlotanteAgregar {
-  position: fixed !important;
-  bottom: 30px !important;
-  right: 25px !important;
-  left: auto !important;
-  width: 60px !important;
-  height: 60px !important;
-  background-color: var(--header-gold) !important;
-  color: var(--header-bg) !important;
-  border: 2px solid #ffffff !important;
-  border-radius: 50% !important;
-  font-size: 36px !important;
-  font-weight: bold !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
-  cursor: pointer !important;
-  z-index: 9999 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  line-height: 1 !important;
-  transition: transform 0.2s, background-color 0.2s !important;
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
+  background-color: var(--header-gold);
+  color: var(--header-bg);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  font-size: 34px;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: transform 0.2s, background-color 0.2s;
 }
 
 #btnFlotanteAgregar:hover {
-  transform: scale(1.1) !important;
-  background-color: #f3cf55 !important;
+  transform: scale(1.1);
+  background-color: #f3cf55;
 }
 
 /* Pie de página */
