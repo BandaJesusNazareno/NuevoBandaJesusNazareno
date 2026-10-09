@@ -135,51 +135,72 @@ body {
     display: inline-block !important;
 }
 
-/* CONTENEDOR DE ACCIONES (Lápiz y X juntos arriba) */
-.evento-actions, .acciones-evento, .card-actions, .acciones {
+/* CONTENEDOR DE ACCIONES */
+.evento-actions, .acciones-evento, .card-actions, .acciones, div[style*="flex"] {
     display: flex !important;
     gap: 8px !important;
     align-items: center !important;
     margin-bottom: 8px !important;
 }
 
-/* BOTÓN DE BORRAR (La X en rojo que has marcado) */
-.btn-eliminar, .btn-borrar, .eliminar-evento, .fa-times, .fa-trash, button[onclick*="eliminar"], button[class*="delete"], button[class*="borrar"] {
+/* 
+  FORZADO ABSOLUTO PARA EL BOTÓN DE BORRAR (LA X) 
+  Captura cualquier botón de borrado, clases con delete/borrar/eliminar o iconos de cierre 
+*/
+.btn-eliminar, 
+.btn-borrar, 
+.eliminar-evento, 
+.fa-times, 
+.fa-trash, 
+button[onclick*="eliminar"], 
+button[onclick*="borrar"], 
+button[onclick*="delete"], 
+button[class*="delete"], 
+button[class*="borrar"], 
+button[class*="eliminar"],
+.evento-card button:last-child,
+div > button:nth-child(2) {
     background-color: #dc2626 !important;
     color: #ffffff !important;
-    border: none !important;
+    border: 2px solid #ef4444 !important;
     border-radius: 50% !important;
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
-    min-height: 34px !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     cursor: pointer !important;
-    font-size: 0.95rem !important;
+    font-size: 1rem !important;
     font-weight: 900 !important;
-    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.5) !important;
+    box-shadow: 0 3px 8px rgba(220, 38, 38, 0.6) !important;
     text-align: center !important;
     line-height: 1 !important;
 }
 
 /* BOTÓN DE EDITAR (El lápiz) */
-.btn-editar, .editar-evento, button[onclick*="editar"], button[class*="edit"] {
+.btn-editar, 
+.editar-evento, 
+button[onclick*="editar"], 
+button[onclick*="edit"], 
+button[class*="edit"],
+.evento-card button:first-child,
+div > button:nth-child(1) {
     background-color: #f59e0b !important;
     color: #ffffff !important;
-    border: none !important;
+    border: 2px solid #fbbf24 !important;
     border-radius: 50% !important;
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
-    min-height: 34px !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     cursor: pointer !important;
-    font-size: 0.9rem !important;
-    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4) !important;
+    font-size: 0.95rem !important;
+    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.5) !important;
 }
 
 /* Botón Admin */
