@@ -102,7 +102,7 @@ body {
 }
 
 .tarjeta-evento {
-  position: relative; /* Necesario para ubicar la X chica en la esquina */
+  position: relative; /* Para ubicar la X en la esquina */
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-left: 5px solid var(--header-gold);
@@ -119,7 +119,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
-  padding-right: 25px; /* Espacio extra para que no pise la X */
+  padding-right: 25px; /* Espacio para no chocar con la X */
 }
 
 .badge {
@@ -161,20 +161,20 @@ body {
   color: var(--header-gold);
 }
 
-/* Botón X pequeña de borrado en la esquina (Solo visile para Administrador) */
+/* Botón X pequeña de borrado */
 .btn-borrar-x {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   background: #ef4444;
   color: #ffffff;
   border: none;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
-  line-height: 24px;
+  line-height: 26px;
   text-align: center;
   padding: 0;
   cursor: pointer;
@@ -185,6 +185,35 @@ body {
 .btn-borrar-x:hover {
   background: #dc2626;
   transform: scale(1.15);
+}
+
+/* BOTÓN FLOTANTE (+) REDONDO Y DORADO EN LA ESQUINA INFERIOR DERECHA */
+#btnFlotanteAgregar {
+  position: fixed !important;
+  bottom: 30px !important;
+  right: 25px !important;
+  left: auto !important;
+  width: 60px !important;
+  height: 60px !important;
+  background-color: var(--header-gold) !important;
+  color: var(--header-bg) !important;
+  border: 2px solid #ffffff !important;
+  border-radius: 50% !important;
+  font-size: 36px !important;
+  font-weight: bold !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+  cursor: pointer !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  transition: transform 0.2s, background-color 0.2s !important;
+}
+
+#btnFlotanteAgregar:hover {
+  transform: scale(1.1) !important;
+  background-color: #f3cf55 !important;
 }
 
 /* Pie de página */
@@ -211,7 +240,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 15px;
-  z-index: 1000;
+  z-index: 10000;
 }
 
 .modal-contenido {
@@ -290,3 +319,7 @@ body {
   background: transparent;
   color: var(--text-muted);
   border: 1px solid var(--card-border);
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
