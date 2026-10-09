@@ -84,13 +84,8 @@ body {
     font-size: 0.85rem;
 }
 
-/* Tarjetas de ensayos */
-.evento-card, 
-#lista-eventos > div, 
-#eventos-container > div, 
-.card, 
-.tarjeta, 
-.item-evento {
+/* DISEÑO LIMPIO DE LAS TARJETAS (ESTILO REFERENCIA) */
+.tarjeta-evento {
     background-color: var(--color-tarjeta) !important;
     border-radius: 12px !important;
     padding: 18px !important;
@@ -104,26 +99,26 @@ body {
     display: block !important;
 }
 
-/* Textos dentro de los recuadros */
-.evento-card h3, div h3 {
+/* Textos dentro de la tarjeta */
+.tarjeta-evento h3 {
     color: #ffffff !important;
     font-size: 1.25rem !important;
-    margin: 10px 0 12px 0 !important;
+    margin: 10px 0 10px 0 !important;
     font-weight: 600 !important;
 }
 
-.evento-card p, div p, .evento-card span, div span {
+.tarjeta-evento p {
     color: var(--color-texto-secundario) !important;
     font-size: 0.9rem !important;
-    margin: 4px 0 !important;
+    margin: 5px 0 !important;
 }
 
-.evento-card strong, div strong {
+.tarjeta-evento strong {
     color: var(--color-secundario) !important;
 }
 
-/* Etiqueta tipo "ENSAYO" azul */
-.badge, .tipo-badge, .etiqueta-tipo, .badge-tipo {
+/* Insignia de tipo (ENSAYO, CONCIERTO, ETC.) */
+.badge {
     background-color: #1d4ed8 !important;
     color: #ffffff !important;
     padding: 4px 12px !important;
@@ -135,31 +130,45 @@ body {
     display: inline-block !important;
 }
 
-/* CONTENEDOR DE ACCIONES */
-.evento-actions, .acciones-evento, .card-actions, .acciones, div[style*="flex"] {
-    display: flex !important;
-    gap: 8px !important;
-    align-items: center !important;
-    margin-bottom: 8px !important;
+.badge.concierto {
+    background-color: #7c2d12 !important;
 }
 
-/* 
-  FORZADO ABSOLUTO PARA EL BOTÓN DE BORRAR (LA X) 
-  Captura cualquier botón de borrado, clases con delete/borrar/eliminar o iconos de cierre 
-*/
-.btn-eliminar, 
-.btn-borrar, 
-.eliminar-evento, 
-.fa-times, 
-.fa-trash, 
-button[onclick*="eliminar"], 
-button[onclick*="borrar"], 
-button[onclick*="delete"], 
-button[class*="delete"], 
-button[class*="borrar"], 
-button[class*="eliminar"],
-.evento-card button:last-child,
-div > button:nth-child(2) {
+.badge.procesión {
+    background-color: #14532d !important;
+}
+
+.badge.reunión {
+    background-color: #581c87 !important;
+}
+
+/* HORA A LA DERECHA */
+.evento-hora {
+    color: var(--color-secundario) !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+}
+
+/* BOTÓN DE EDITAR (Lápiz) */
+.btn-editar {
+    background-color: #f59e0b !important;
+    color: #ffffff !important;
+    border: 2px solid #fbbf24 !important;
+    border-radius: 50% !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    font-size: 0.95rem !important;
+    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.5) !important;
+}
+
+/* BOTÓN DE ELIMINAR (X Roja) */
+.btn-eliminar {
     background-color: #dc2626 !important;
     color: #ffffff !important;
     border: 2px solid #ef4444 !important;
@@ -179,30 +188,6 @@ div > button:nth-child(2) {
     line-height: 1 !important;
 }
 
-/* BOTÓN DE EDITAR (El lápiz) */
-.btn-editar, 
-.editar-evento, 
-button[onclick*="editar"], 
-button[onclick*="edit"], 
-button[class*="edit"],
-.evento-card button:first-child,
-div > button:nth-child(1) {
-    background-color: #f59e0b !important;
-    color: #ffffff !important;
-    border: 2px solid #fbbf24 !important;
-    border-radius: 50% !important;
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-    font-size: 0.95rem !important;
-    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.5) !important;
-}
-
 /* Botón Admin */
 .btn-admin {
     background-color: var(--color-secundario) !important;
@@ -216,7 +201,7 @@ div > button:nth-child(1) {
 }
 
 /* BOTÓN FLOTANTE CON EL "+" (FAB) ABAJO A LA DERECHA */
-.btn-flotante, #btnAñadir, .fab, .btn-agregar, button.flotante {
+#btnFlotanteAgregar {
     position: fixed !important;
     bottom: 25px !important;
     right: 25px !important;
@@ -237,7 +222,7 @@ div > button:nth-child(1) {
     text-decoration: none !important;
 }
 
-.btn-flotante:hover, #btnAñadir:hover {
+#btnFlotanteAgregar:hover {
     transform: scale(1.08);
 }
 
@@ -290,6 +275,51 @@ div > button:nth-child(1) {
     border-radius: 6px;
 }
 
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.modal-botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-principal {
+    background-color: var(--color-secundario);
+    color: #0f172a;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-secundario {
+    background-color: #334155;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.btn-cerrar {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-secundario);
+}
+
 /* Footer */
 .footer {
     background-color: #060913;
@@ -299,4 +329,10 @@ div > button:nth-child(1) {
     font-size: 0.85rem;
     margin-top: auto;
     border-top: 2px solid var(--color-secundario);
+}
+
+.btn-youtube {
+    color: var(--color-secundario);
+    text-decoration: none;
+    font-weight: 600;
 }
