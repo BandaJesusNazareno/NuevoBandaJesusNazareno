@@ -283,3 +283,30 @@ body {
   border-radius: 6px;
   cursor: pointer;
 }
+
+/* Botón flotante (+) para Administrador */
+#btnFlotanteAgregar {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
+  background-color: var(--header-gold);
+  color: var(--header-bg);
+  border: none;
+  border-radius: 50%;
+  font-size: 32px;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+#btnFlotanteAgregar:hover {
+  transform: scale(1.1);
+  background-color: #f3cf55;
+}
