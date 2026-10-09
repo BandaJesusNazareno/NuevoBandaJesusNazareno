@@ -16,9 +16,16 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const eventosRef = collection(db, "eventos");
 
+// Variable para recordar si estás dentro como Admin
+let esAdmin = false;
+
 // 2. Control de Modales y Clave Admin
 window.pedirClave = function() {
-  document.getElementById("modalClave").style.display = "flex";
+  if (esAdmin) {
+    window.abrirFormularioDirecto();
+  } else {
+    document.getElementById("modalClave").style.display = "flex";
+  }
 };
 
 window.cerrarModal = function(idModal) {
@@ -27,14 +34,19 @@ window.cerrarModal = function(idModal) {
 
 window.validarClave = function() {
   const claveIngresada = document.getElementById("inputClave").value;
-  // Puedes cambiar "nazareno2012" por la clave que prefieras
   if (claveIngresada === "nazareno2012") { 
+    esAdmin = true;
     document.getElementById("inputClave").value = "";
     cerrarModal("modalClave");
-    document.getElementById("panelAdmin").style.display = "flex";
+    document.getElementById("btnFlotanteAgregar").style.display = "flex";
+    window.abrirFormularioDirecto();
   } else {
     alert("Contraseña incorrecta");
   }
+};
+
+window.abrirFormularioDirecto = function() {
+  document.getElementById("panelAdmin").style.display = "flex";
 };
 
 // 3. Cargar y escuchar eventos en tiempo real desde Firebase
@@ -64,7 +76,7 @@ onSnapshot(eventosRef, (snapshot) => {
       <p>📅 <strong>Fecha:</strong> ${evento.fecha || ''}</p>
       <p>📍 <strong>Lugar:</strong> ${evento.lugar || ''}</p>
       ${evento.detalles ? `<p>📝 ${evento.detalles}</p>` : ''}
-      <button class="btn-borrar" onclick="borrarEvento('${id}')">Eliminar</button>
+      ${esAdmin ? `<button class="btn-borrar" onclick="borrarEvento('${id}')">Eliminar</button>` : ''}
     `;
     lista.appendChild(tarjeta);
   });
