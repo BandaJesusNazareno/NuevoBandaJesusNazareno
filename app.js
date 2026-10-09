@@ -44,7 +44,7 @@ window.cerrarModal = function(idModal) {
 
 window.validarClave = function() {
   const claveIngresada = document.getElementById("inputClave").value;
-  if (claveIngresada === "nazareno2012") { 
+  if (claveIngresada === "nazareno2012") {  
     esAdmin = true;
     document.getElementById("inputClave").value = "";
     cerrarModal("modalClave");
@@ -55,7 +55,7 @@ window.validarClave = function() {
     // Recargar eventos para mostrar las X chicas rojas
     escucharEventos();
     
-    window.abrirFormularioDirecto();
+    // (Se ha eliminado la línea que abría el formulario automáticamente aquí)
   } else {
     alert("Contraseña incorrecta");
   }
