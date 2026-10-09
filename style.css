@@ -69,13 +69,14 @@ body {
 }
 
 .seccion-titulo {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .seccion-titulo h2 {
-    color: var(--color-secundario); /* Título en oro como en la foto */
+    color: var(--color-secundario);
     font-size: 1.4rem;
     font-weight: 700;
+    margin-bottom: 4px;
 }
 
 .seccion-titulo p {
@@ -83,32 +84,37 @@ body {
     font-size: 0.85rem;
 }
 
-/* Tarjetas de Eventos (Idénticas a la captura) */
+/* TARJETAS DE ENSAYOS / ACTOS (Separadas y bien definidas como en la foto) */
 .evento-card {
-    background-color: var(--color-tarjeta);
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    border-left: 6px solid var(--color-secundario);
-    border-top: 1px solid #1e293b;
-    border-right: 1px solid #1e293b;
-    border-bottom: 1px solid #1e293b;
+    background-color: var(--color-tarjeta) !important;
+    border-radius: 14px !important;
+    padding: 20px !important;
+    margin-bottom: 22px !important; /* Separación clara y limpia entre tarjeta y tarjeta */
+    box-shadow: 0 6px 16px rgba(0,0,0,0.45) !important;
+    border-left: 6px solid var(--color-secundario) !important;
+    border-top: 1px solid #22304d !important;
+    border-right: 1px solid #22304d !important;
+    border-bottom: 1px solid #22304d !important;
     position: relative;
+    transition: transform 0.2s ease;
+}
+
+.evento-card:hover {
+    transform: translateY(-2px);
 }
 
 /* Textos e internos de la tarjeta */
 .evento-card h3 {
     color: #ffffff;
-    font-size: 1.25rem;
-    margin: 10px 0 12px 0;
+    font-size: 1.2rem;
+    margin: 12px 0 14px 0;
     font-weight: 600;
 }
 
 .evento-card span, .evento-card p {
     color: var(--color-texto-secundario);
     font-size: 0.9rem;
-    margin: 4px 0;
+    margin: 6px 0;
 }
 
 .evento-card strong {
@@ -119,7 +125,7 @@ body {
 .badge, .tipo-badge, .etiqueta-tipo, .badge-tipo {
     background-color: #1d4ed8 !important;
     color: #ffffff !important;
-    padding: 4px 12px;
+    padding: 5px 14px;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 700;
@@ -133,7 +139,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 /* Hora en color dorado */
@@ -149,15 +155,15 @@ body {
     color: #ffffff !important;
     border: none;
     border-radius: 50% !important;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: bold;
-    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
 }
 
 /* Botón Admin */
@@ -172,7 +178,7 @@ body {
     cursor: pointer;
 }
 
-/* BOTÓN FLOTANTE CON EL "+" (FAB) ABAJO A LA DERECHA - EXACTO A LA FOTO */
+/* BOTÓN FLOTANTE CON EL "+" (FAB) ABAJO A LA DERECHA */
 .btn-flotante, #btnAñadir, .fab, .btn-agregar {
     position: fixed !important;
     bottom: 25px !important;
@@ -180,7 +186,7 @@ body {
     width: 60px !important;
     height: 60px !important;
     background-color: var(--color-secundario) !important;
-    color: #5b0f1e !important; /* Color del signo + idéntico a la foto */
+    color: #5b0f1e !important;
     border-radius: 50% !important;
     display: flex !important;
     align-items: center !important;
