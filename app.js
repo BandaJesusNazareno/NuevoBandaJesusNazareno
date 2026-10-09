@@ -118,7 +118,7 @@ function escucharEventos() {
       return a.fecha.localeCompare(b.fecha);
     });
 
-    // Generar la tarjeta de cada acto
+    // Generar la tarjeta de cada acto con diseño estructurado
     eventosArr.forEach((evento) => {
       // COMPROBACIÓN: Ocultar ensayos 1 hora y media después de su inicio
       if (evento.tipo && evento.tipo.toLowerCase() === "ensayo" && evento.fecha && evento.hora) {
@@ -142,18 +142,20 @@ function escucharEventos() {
       const fechaFormateada = formatearFecha(evento.fecha);
 
       tarjeta.innerHTML = `
-        ${esAdmin ? `
-          <button class="btn-editar" onclick="cargarEdicionEvento('${evento.id}')" title="Editar acto">✏️</button>
-          <button class="btn-borrar-x" onclick="borrarEvento('${evento.id}')" title="Eliminar acto">✕</button>
-        ` : ''}
-        <div class="evento-header">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
           <span class="badge ${evento.tipo ? evento.tipo.toLowerCase() : ''}">${evento.tipo || 'Evento'}</span>
-          <span class="evento-hora">${evento.hora || ''}</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="color: #D4AF37; font-weight: 700; font-size: 0.95rem;">${evento.hora || ''}</span>
+            ${esAdmin ? `
+              <button class="btn-editar" onclick="cargarEdicionEvento('${evento.id}')" title="Editar acto">✏️</button>
+              <button class="btn-eliminar" onclick="borrarEvento('${evento.id}')" title="Eliminar acto">✕</button>
+            ` : ''}
+          </div>
         </div>
-        <h3>${evento.titulo || ''}</h3>
-        <p>📅 <strong>Fecha:</strong> ${fechaFormateada}</p>
-        <p>📍 <strong>Lugar:</strong> ${evento.lugar || ''}</p>
-        ${evento.detalles ? `<p>📝 ${evento.detalles}</p>` : ''}
+        <h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 10px; font-weight: 600;">${evento.titulo || ''}</h3>
+        <p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📅 <strong>Fecha:</strong> ${fechaFormateada}</p>
+        <p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📍 <strong>Lugar:</strong> ${evento.lugar || ''}</p>
+        ${evento.detalles ? `<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📝 ${evento.detalles}</p>` : ''}
       `;
       lista.appendChild(tarjeta);
     });
