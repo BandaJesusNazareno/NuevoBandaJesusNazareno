@@ -50,7 +50,7 @@ body {
     font-size: 1.15rem;
     font-weight: 700;
     letter-spacing: 0.5px;
-    color: var(--color-secundario); /* Títulos en oro como en tu captura */
+    color: var(--color-secundario);
 }
 
 .header-titles p {
@@ -65,7 +65,7 @@ body {
     margin: 20px auto;
     padding: 0 15px;
     flex: 1;
-    padding-bottom: 80px; /* Espacio para el botón flotante */
+    padding-bottom: 80px;
 }
 
 .seccion-titulo {
@@ -75,7 +75,7 @@ body {
 }
 
 .seccion-titulo h2 {
-    color: var(--color-secundario); /* Título de sección en oro */
+    color: var(--color-secundario);
     font-size: 1.35rem;
     font-weight: 700;
 }
@@ -85,7 +85,7 @@ body {
     font-size: 0.85rem;
 }
 
-/* Tarjetas de Eventos (Diseño oscuro con borde izquierdo dorado) */
+/* Tarjetas de Eventos */
 .evento-card {
     background: var(--color-tarjeta);
     border-radius: 12px;
@@ -104,17 +104,62 @@ body {
     transform: translateY(-2px);
 }
 
-/* Estilos internos de las tarjetas (Etiquetas, fechas y horas en oro) */
+/* Estilos internos de las tarjetas */
 .evento-card h3, .evento-card strong, .badge-tipo, .evento-card span {
     color: var(--color-texto);
 }
 
-/* Si tu app usa clases específicas para fechas/horas, las forzamos a oro */
 .evento-card .fecha, .evento-card .lugar, .evento-card label {
     color: var(--color-texto-secundario);
 }
 
-/* Botones de Admin y Acciones */
+/* Botones de acción dentro de las tarjetas (X de borrar y Lápiz) */
+.evento-header, .evento-acciones, .card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.btn-eliminar, .btn-borrar, .eliminar-evento, .fa-trash, .fa-times {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 50% !important;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
+}
+
+.btn-editar, .editar-evento {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 6px !important;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+/* Etiquetas corporativas / Badge */
+.badge, .tipo-badge, .etiqueta-tipo {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+/* Botones generales y de Admin */
 button, .btn-principal, .btn-secundario, .btn-admin {
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
@@ -148,7 +193,7 @@ button, .btn-principal, .btn-secundario, .btn-admin {
     border-radius: 6px;
 }
 
-/* Botón Flotante Redondo con el "+" dorado (abajo a la derecha) */
+/* Botón Flotante Redondo con el "+" dorado */
 .btn-flotante, #btnAñadir, .fab, .btn-agregar {
     position: fixed;
     bottom: 25px;
@@ -230,7 +275,7 @@ button, .btn-principal, .btn-secundario, .btn-admin {
     cursor: pointer;
 }
 
-/* Formularios dentro de modales oscuros */
+/* Formularios */
 .form-group {
     margin-bottom: 14px;
 }
