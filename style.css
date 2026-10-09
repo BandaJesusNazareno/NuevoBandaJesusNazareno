@@ -1,10 +1,10 @@
 :root {
-    --color-fondo-oscuro: #0f172a; /* Fondo oscuro principal */
-    --color-tarjeta: #1e293b;     /* Fondo de las tarjetas */
-    --color-primario: #6B1226;    /* Burdeos corporativo */
-    --color-secundario: #D4AF37;  /* Dorado clásico */
-    --color-texto: #f8fafc;       /* Texto blanco/claro */
-    --color-texto-secundario: #cbd5e1; /* Texto secundario gris claro */
+    --color-fondo: #0a0f1d;
+    --color-tarjeta: #131c31;
+    --color-primario: #5b0f1e; /* Burdeos cofrade exacto */
+    --color-secundario: #D4AF37; /* Dorado clásico */
+    --color-texto: #ffffff;
+    --color-texto-secundario: #cbd5e1;
 }
 
 * {
@@ -15,47 +15,47 @@
 }
 
 body {
-    background-color: var(--color-fondo-oscuro);
+    background-color: var(--color-fondo);
     color: var(--color-texto);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-/* Cabecera */
+/* Cabecera corporativa */
 .header {
     background-color: var(--color-primario);
     color: #ffffff;
-    padding: 12px 20px;
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    border-bottom: 3px solid var(--color-secundario);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    border-bottom: 2px solid var(--color-secundario);
 }
 
 .header-brand {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
 }
 
 .escudo-img {
-    width: 48px;
-    height: 48px;
+    width: 50px;
+    height: 50px;
     object-fit: contain;
 }
 
 .header-titles h1 {
     font-size: 1.15rem;
     font-weight: 700;
+    color: #ffffff;
     letter-spacing: 0.5px;
-    color: var(--color-secundario);
 }
 
 .header-titles p {
     font-size: 0.8rem;
-    color: #f1d3d7;
+    color: #e2e8f0;
 }
 
 /* Contenido Principal */
@@ -65,18 +65,16 @@ body {
     margin: 20px auto;
     padding: 0 15px;
     flex: 1;
-    padding-bottom: 80px;
+    padding-bottom: 90px;
 }
 
 .seccion-titulo {
     margin-bottom: 20px;
-    border-bottom: 2px solid #334155;
-    padding-bottom: 10px;
 }
 
 .seccion-titulo h2 {
-    color: var(--color-secundario);
-    font-size: 1.35rem;
+    color: var(--color-secundario); /* Título en oro como en la foto */
+    font-size: 1.4rem;
     font-weight: 700;
 }
 
@@ -85,70 +83,41 @@ body {
     font-size: 0.85rem;
 }
 
-/* Tarjetas de Eventos */
+/* Tarjetas de Eventos (Idénticas a la captura) */
 .evento-card {
-    background: var(--color-tarjeta);
+    background-color: var(--color-tarjeta);
     border-radius: 12px;
     padding: 18px;
     margin-bottom: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    border-left: 5px solid var(--color-secundario);
-    border-top: 1px solid #334155;
-    border-right: 1px solid #334155;
-    border-bottom: 1px solid #334155;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    border-left: 6px solid var(--color-secundario);
+    border-top: 1px solid #1e293b;
+    border-right: 1px solid #1e293b;
+    border-bottom: 1px solid #1e293b;
     position: relative;
-    transition: transform 0.2s ease;
 }
 
-.evento-card:hover {
-    transform: translateY(-2px);
+/* Textos e internos de la tarjeta */
+.evento-card h3 {
+    color: #ffffff;
+    font-size: 1.25rem;
+    margin: 10px 0 12px 0;
+    font-weight: 600;
 }
 
-/* Estilos internos de las tarjetas */
-.evento-card h3, .evento-card strong, .badge-tipo, .evento-card span {
-    color: var(--color-texto);
-}
-
-.evento-card .fecha, .evento-card .lugar, .evento-card label {
+.evento-card span, .evento-card p {
     color: var(--color-texto-secundario);
+    font-size: 0.9rem;
+    margin: 4px 0;
 }
 
-/* Botones de acción dentro de las tarjetas (X de borrar y Lápiz) */
-.evento-header, .evento-acciones, .card-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+.evento-card strong {
+    color: var(--color-secundario); /* Fecha y Lugar en dorado */
 }
 
-.btn-eliminar, .btn-borrar, .eliminar-evento, .fa-trash, .fa-times {
-    background-color: #ef4444 !important;
-    color: #ffffff !important;
-    border: none;
-    border-radius: 50% !important;
-    width: 28px;
-    height: 28px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 0.85rem;
-    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
-}
-
-.btn-editar, .editar-evento {
-    background-color: #3b82f6 !important;
-    color: #ffffff !important;
-    border: none;
-    border-radius: 6px !important;
-    padding: 4px 10px;
-    cursor: pointer;
-    font-size: 0.85rem;
-}
-
-/* Etiquetas corporativas / Badge */
-.badge, .tipo-badge, .etiqueta-tipo {
-    background-color: #2563eb !important;
+/* Etiqueta tipo "ENSAYO" */
+.badge, .tipo-badge, .etiqueta-tipo, .badge-tipo {
+    background-color: #1d4ed8 !important;
     color: #ffffff !important;
     padding: 4px 12px;
     border-radius: 20px;
@@ -159,76 +128,74 @@ body {
     display: inline-block;
 }
 
-/* Botones generales y de Admin */
-button, .btn-principal, .btn-secundario, .btn-admin {
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-    border: none !important;
-    outline: none !important;
-    cursor: pointer;
-    font-weight: 600;
-    border-radius: 6px;
-    padding: 8px 16px;
-    font-size: 0.9rem;
-    transition: opacity 0.2s;
+/* Cabecera de la tarjeta: Hora a la izquierda de la X roja */
+.evento-header, .evento-acciones, .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
 }
 
-.btn-principal, button[type="submit"] {
-    background-color: var(--color-primario) !important;
-    color: #ffffff !important;
-}
-
-.btn-secundario {
-    background-color: #334155 !important;
-    color: #f8fafc !important;
-}
-
-.btn-admin {
-    background-color: var(--color-secundario) !important;
-    color: #0f172a !important;
-    padding: 7px 14px;
-    font-size: 0.8rem;
+/* Hora en color dorado */
+.evento-header span:first-child, .hora-evento {
+    color: var(--color-secundario) !important;
     font-weight: 700;
-    border-radius: 6px;
+    font-size: 1.05rem;
 }
 
-/* Botón Flotante Redondo con el "+" dorado */
-.btn-flotante, #btnAñadir, .fab, .btn-agregar {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 60px;
-    height: 60px;
-    background-color: var(--color-secundario) !important;
-    color: #0f172a !important;
-    border-radius: 50%;
+/* Botón de la X roja redondo */
+.btn-eliminar, .btn-borrar, .eliminar-evento, .fa-times, .fa-trash {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 50% !important;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    font-weight: bold;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-    z-index: 99;
     cursor: pointer;
-    border: 2px solid #ffffff;
-    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
+}
+
+/* Botón Admin */
+.btn-admin {
+    background-color: var(--color-secundario) !important;
+    color: #0f172a !important;
+    padding: 7px 15px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+/* BOTÓN FLOTANTE CON EL "+" (FAB) ABAJO A LA DERECHA - EXACTO A LA FOTO */
+.btn-flotante, #btnAñadir, .fab, .btn-agregar {
+    position: fixed !important;
+    bottom: 25px !important;
+    right: 25px !important;
+    width: 60px !important;
+    height: 60px !important;
+    background-color: var(--color-secundario) !important;
+    color: #5b0f1e !important; /* Color del signo + idéntico a la foto */
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 2.2rem !important;
+    font-weight: bold !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
+    z-index: 9999 !important;
+    cursor: pointer;
+    border: 2px solid #ffffff !important;
+    text-decoration: none !important;
 }
 
 .btn-flotante:hover, #btnAñadir:hover {
-    transform: scale(1.05);
-}
-
-/* Botón de YouTube */
-.btn-youtube {
-    background-color: #FF0000;
-    color: #ffffff;
-    padding: 8px 16px;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: bold;
-    font-size: 0.85rem;
-    display: inline-block;
+    transform: scale(1.08);
 }
 
 /* Modales */
@@ -240,7 +207,7 @@ button, .btn-principal, .btn-secundario, .btn-admin {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.75);
     justify-content: center;
     align-items: center;
     padding: 15px;
@@ -253,29 +220,10 @@ button, .btn-principal, .btn-secundario, .btn-admin {
     border-radius: 12px;
     width: 100%;
     max-width: 500px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
     border-top: 4px solid var(--color-secundario);
 }
 
-.modal-sm {
-    max-width: 350px;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.btn-cerrar {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--color-texto-secundario);
-    cursor: pointer;
-}
-
-/* Formularios */
 .form-group {
     margin-bottom: 14px;
 }
@@ -293,46 +241,30 @@ button, .btn-principal, .btn-secundario, .btn-admin {
 .form-group textarea {
     width: 100%;
     padding: 10px;
-    background-color: #0f172a;
-    border: 1px solid #475569;
+    background-color: #0a0f1d;
+    border: 1px solid #334155;
     color: #ffffff;
     border-radius: 6px;
     font-size: 0.95rem;
-    outline: none;
 }
 
-.form-group input:focus, 
-.form-group select:focus, 
-.form-group textarea:focus {
-    border-color: var(--color-secundario);
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.modal-botones {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
+.btn-principal {
+    background-color: var(--color-primario) !important;
+    color: #ffffff !important;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
 }
 
 /* Footer */
 .footer {
-    background-color: #0b1120;
+    background-color: #060913;
     color: var(--color-texto-secundario);
     text-align: center;
     padding: 20px;
     font-size: 0.85rem;
     margin-top: auto;
-    border-top: 3px solid var(--color-secundario);
-}
-
-.footer .subfooter {
-    font-size: 0.75rem;
-    color: #64748b;
-    margin-top: 5px;
+    border-top: 2px solid var(--color-secundario);
 }
