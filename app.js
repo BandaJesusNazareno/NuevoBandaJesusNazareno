@@ -1,4 +1,4 @@
-// 1. Configuración de Firebase con tus claves
+// 1. Configuración de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -12,12 +12,32 @@ const firebaseConfig = {
   measurementId: "G-RZSLXYPJ2B"
 };
 
-// Inicializar Firebase y Firestore
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const eventosRef = collection(db, "eventos");
 
-// 2. Escuchar cambios en tiempo real (se actualiza solo en todos los móviles)
+// 2. Control de Modales y Clave Admin
+window.pedirClave = function() {
+  document.getElementById("modalClave").style.display = "flex";
+};
+
+window.cerrarModal = function(idModal) {
+  document.getElementById(idModal).style.display = "none";
+};
+
+window.validarClave = function() {
+  const claveIngresada = document.getElementById("inputClave").value;
+  // Puedes cambiar "nazareno2012" por la clave que prefieras
+  if (claveIngresada === "nazareno2012") { 
+    document.getElementById("inputClave").value = "";
+    cerrarModal("modalClave");
+    document.getElementById("panelAdmin").style.display = "flex";
+  } else {
+    alert("Contraseña incorrecta");
+  }
+};
+
+// 3. Cargar y escuchar eventos en tiempo real desde Firebase
 onSnapshot(eventosRef, (snapshot) => {
   const lista = document.getElementById("listaEventos");
   if (!lista) return;
@@ -50,30 +70,29 @@ onSnapshot(eventosRef, (snapshot) => {
   });
 });
 
-// 3. Guardar nuevo evento en la nube
+// 4. Guardar evento en la nube
 window.guardarEvento = async function(e) {
   if (e) e.preventDefault();
   
   const nuevoEvento = {
-    titulo: document.getElementById("tituloEvento")?.value || "",
-    tipo: document.getElementById("tipoEvento")?.value || "",
-    hora: document.getElementById("horaEvento")?.value || "",
-    fecha: document.getElementById("fechaEvento")?.value || "",
-    lugar: document.getElementById("lugarEvento")?.value || "",
-    detalles: document.getElementById("detallesEvento")?.value || ""
+    titulo: document.getElementById("tituloEvento").value,
+    tipo: document.getElementById("tipoEvento").value,
+    hora: document.getElementById("horaEvento").value,
+    fecha: document.getElementById("fechaEvento").value,
+    lugar: document.getElementById("lugarEvento").value,
+    detalles: document.getElementById("detallesEvento").value
   };
 
   try {
     await addDoc(eventosRef, nuevoEvento);
-    const form = document.getElementById("formEvento");
-    if (form) form.reset();
-    if (typeof cerrarModal === 'function') cerrarModal('panelAdmin');
+    document.getElementById("formEvento").reset();
+    cerrarModal('panelAdmin');
   } catch (error) {
     alert("Error al guardar en la nube: " + error.message);
   }
 };
 
-// 4. Borrar evento de la nube
+// 5. Borrar evento de la nube
 window.borrarEvento = async function(id) {
   if (confirm("¿Seguro que quieres eliminar este acto?")) {
     try {
