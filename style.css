@@ -85,9 +85,8 @@ body {
 }
 
 /* 
-  SOLUCIÓN UNIVERSAL DE TARJETAS: 
-  Fuerza a cualquier contenedor de ensayos (sea cual sea la clase que use el JS) 
-  a convertirse en un recuadro oscuro con borde izquierdo dorado y separación de 22px.
+  DISEÑO LIMPIO DE LAS TARJETAS DE ENSAYO
+  Cualquier tarjeta generada por el JS cogerá este aspecto de recuadro perfecto.
 */
 .evento-card, 
 #lista-eventos > div, 
@@ -96,47 +95,74 @@ body {
 .tarjeta, 
 .item-evento {
     background-color: var(--color-tarjeta) !important;
-    border-radius: 14px !important;
-    padding: 20px !important;
+    border-radius: 12px !important;
+    padding: 18px !important;
     margin-bottom: 22px !important;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.45) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
     border-left: 6px solid var(--color-secundario) !important;
-    border-top: 1px solid #22304d !important;
-    border-right: 1px solid #22304d !important;
-    border-bottom: 1px solid #22304d !important;
+    border-top: 1px solid #1e293b !important;
+    border-right: 1px solid #1e293b !important;
+    border-bottom: 1px solid #1e293b !important;
     position: relative !important;
     display: block !important;
 }
 
-/* Textos e internos de la tarjeta */
+/* Textos dentro de los recuadros */
 .evento-card h3, div h3 {
-    color: #ffffff;
-    font-size: 1.2rem;
-    margin: 12px 0 14px 0;
-    font-weight: 600;
+    color: #ffffff !important;
+    font-size: 1.25rem !important;
+    margin: 10px 0 12px 0 !important;
+    font-weight: 600 !important;
 }
 
-.evento-card span, .evento-card p, div span, div p {
-    color: var(--color-texto-secundario);
-    font-size: 0.9rem;
-    margin: 6px 0;
+.evento-card p, div p, .evento-card span, div span {
+    color: var(--color-texto-secundario) !important;
+    font-size: 0.9rem !important;
+    margin: 4px 0 !important;
 }
 
 .evento-card strong, div strong {
-    color: var(--color-secundario);
+    color: var(--color-secundario) !important;
 }
 
-/* Etiqueta tipo "ENSAYO" */
+/* Etiqueta tipo "ENSAYO" azul */
 .badge, .tipo-badge, .etiqueta-tipo, .badge-tipo {
     background-color: #1d4ed8 !important;
     color: #ffffff !important;
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    display: inline-block;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    display: inline-block !important;
+}
+
+/* Botones de Borrar (X roja redonda) y Editar */
+.btn-eliminar, .btn-borrar, .eliminar-evento, .fa-times, .fa-trash {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 30px !important;
+    height: 30px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    font-size: 0.9rem !important;
+    font-weight: bold !important;
+    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4) !important;
+}
+
+.btn-editar, .editar-evento {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 5px 10px !important;
+    cursor: pointer !important;
+    font-size: 0.85rem !important;
 }
 
 /* Botón Admin */
@@ -222,6 +248,8 @@ body {
     padding: 10px;
     background-color: #0a0f1d;
     border: 1px solid #334155;
+    color: #ffffff;
+    border-radius: 6px;
 }
 
 /* Footer */
