@@ -84,10 +84,7 @@ body {
     font-size: 0.85rem;
 }
 
-/* 
-  DISEÑO LIMPIO DE LAS TARJETAS DE ENSAYO
-  Cualquier tarjeta generada por el JS cogerá este aspecto de recuadro perfecto.
-*/
+/* Tarjetas de ensayos */
 .evento-card, 
 #lista-eventos > div, 
 #eventos-container > div, 
@@ -138,31 +135,51 @@ body {
     display: inline-block !important;
 }
 
-/* Botones de Borrar (X roja redonda) y Editar */
-.btn-eliminar, .btn-borrar, .eliminar-evento, .fa-times, .fa-trash {
-    background-color: #ef4444 !important;
+/* CONTENEDOR DE ACCIONES (Lápiz y X juntos arriba) */
+.evento-actions, .acciones-evento, .card-actions, .acciones {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+    margin-bottom: 8px !important;
+}
+
+/* BOTÓN DE BORRAR (La X en rojo que has marcado) */
+.btn-eliminar, .btn-borrar, .eliminar-evento, .fa-times, .fa-trash, button[onclick*="eliminar"], button[class*="delete"], button[class*="borrar"] {
+    background-color: #dc2626 !important;
     color: #ffffff !important;
     border: none !important;
     border-radius: 50% !important;
-    width: 30px !important;
-    height: 30px !important;
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    font-size: 0.95rem !important;
+    font-weight: 900 !important;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.5) !important;
+    text-align: center !important;
+    line-height: 1 !important;
+}
+
+/* BOTÓN DE EDITAR (El lápiz) */
+.btn-editar, .editar-evento, button[onclick*="editar"], button[class*="edit"] {
+    background-color: #f59e0b !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     cursor: pointer !important;
     font-size: 0.9rem !important;
-    font-weight: bold !important;
-    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4) !important;
-}
-
-.btn-editar, .editar-evento {
-    background-color: #3b82f6 !important;
-    color: #ffffff !important;
-    border: none !important;
-    border-radius: 6px !important;
-    padding: 5px 10px !important;
-    cursor: pointer !important;
-    font-size: 0.85rem !important;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4) !important;
 }
 
 /* Botón Admin */
