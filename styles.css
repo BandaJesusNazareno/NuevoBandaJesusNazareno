@@ -102,6 +102,7 @@ body {
 }
 
 .tarjeta-evento {
+  position: relative; /* Necesario para ubicar la X chica en la esquina */
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-left: 5px solid var(--header-gold);
@@ -118,6 +119,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+  padding-right: 25px; /* Espacio extra para que no pise la X */
 }
 
 .badge {
@@ -159,21 +161,30 @@ body {
   color: var(--header-gold);
 }
 
-.btn-borrar {
-  background: transparent;
-  color: var(--danger-red);
-  border: 1px solid var(--danger-red);
-  padding: 6px 14px;
-  border-radius: 6px;
+/* Botón X pequeña de borrado en la esquina (Solo visile para Administrador) */
+.btn-borrar-x {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 24px;
+  text-align: center;
+  padding: 0;
   cursor: pointer;
-  margin-top: 15px;
-  font-size: 0.85rem;
-  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+  transition: transform 0.2s, background-color 0.2s;
 }
 
-.btn-borrar:hover {
-  background: var(--danger-red);
-  color: white;
+.btn-borrar-x:hover {
+  background: #dc2626;
+  transform: scale(1.15);
 }
 
 /* Pie de página */
@@ -279,34 +290,3 @@ body {
   background: transparent;
   color: var(--text-muted);
   border: 1px solid var(--card-border);
-  padding: 8px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* Botón flotante (+) para Administrador */
-#btnFlotanteAgregar {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  width: 60px;
-  height: 60px;
-  background-color: var(--header-gold);
-  color: var(--header-bg);
-  border: none;
-  border-radius: 50%;
-  font-size: 32px;
-  font-weight: bold;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  cursor: pointer;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s, background-color 0.2s;
-}
-
-#btnFlotanteAgregar:hover {
-  transform: scale(1.1);
-  background-color: #f3cf55;
-}
