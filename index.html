@@ -1,114 +1,67 @@
-<!DOCTYPE html>
+Aquí tienes el código completo de tu archivo index.html con el enlace exacto a tu canal de YouTube ya integrado y un botón personalizado con los colores de YouTube.   Código completo para index.html:HTML<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banda Jesús Nazareno - Agenda Oficial</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banda Jesús Nazareno</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #0b1a30;
+      color: #ffffff;
+      text-align: center;
+    }
+    header {
+      background-color: #6b0014;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .container {
+      padding: 20px;
+    }
+    .escudo {
+      max-width: 200px;
+      margin: 20px auto;
+      display: block;
+    }
+    .btn-youtube {
+      background-color: #FF0000;
+      color: #ffffff;
+      padding: 14px 24px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 16px;
+      display: inline-block;
+      margin-top: 25px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+      transition: background-color 0.3s ease;
+    }
+    .btn-youtube:hover {
+      background-color: #cc0000;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Cabecera -->
-    <header class="header">
-        <div class="header-brand">
-            <img src="escudo.png" alt="Escudo Banda" class="escudo-img">
-            <div class="header-titles">
-                <h1>BANDA JESÚS NAZARENO</h1>
-                <p>Sevilla • Agenda Oficial</p>
-            </div>
-        </div>
-        <button id="btnAdmin" onclick="pedirClave()">Admin</button>
-    </header>
+  <header>
+    Banda Jesús Nazareno
+  </header>
 
-    <!-- Contenido Principal -->
-    <main class="contenedor">
-        <div class="seccion-titulo">
-            <h2>Próximos Actos y Ensayos</h2>
-            <p>Calendario actualizado de la formación</p>
-        </div>
+  <div class="container">
+    <img src="escudo.png" alt="Escudo de la Banda" class="escudo">
+    
+    <h2>Bienvenidos a la App Oficial</h2>
+    <p>Información, marchas y novedades de nuestra banda.</p>
 
-        <!-- Lista de tarjetas de eventos -->
-        <div id="listaEventos">
-            <!-- Los eventos se cargarán dinámicamente aquí -->
-        </div>
-    </main>
+    <!-- Botón directo al canal de YouTube -->
+    <a href="https://www.youtube.com/@bandanazarenosevilla" target="_blank" class="btn-youtube">
+      ▶ Ver Canal de YouTube
+    </a>
+  </div>
 
-    <!-- Pie de página -->
-    <footer class="footer">
-        <p>Banda de Cornetas y Tambores Jesús Nazareno</p>
-        <p class="subfooter">Sevilla • Todos los derechos reservados</p>
-    </footer>
-
-    <!-- Modal Contraseña -->
-    <div id="modalClave" class="modal">
-        <div class="modal-contenido modal-sm">
-            <h3>Acceso Administrador</h3>
-            <div class="form-group">
-                <input type="password" id="inputClave" placeholder="Escribe la clave de acceso">
-            </div>
-            <div class="modal-botones">
-                <button type="button" class="btn-secundario" onclick="cerrarModal('modalClave')">Cancelar</button>
-                <button type="button" class="btn-principal" onclick="validarClave()">Entrar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Formulario de Administración -->
-    <div id="panelAdmin" class="modal">
-        <div class="modal-contenido">
-            <div class="modal-header">
-                <h3>Añadir Nuevo Acto</h3>
-                <span class="btn-cerrar" onclick="cerrarModal('panelAdmin')">&times;</span>
-            </div>
-
-            <form id="formEvento" onsubmit="guardarEvento(event)">
-                <div class="form-group">
-                    <label>Nombre del Acto / Ensayo</label>
-                    <input type="text" id="tituloEvento" placeholder="Ej. Ensayo General" required>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Tipo de Acto</label>
-                        <select id="tipoEvento">
-                            <option value="Ensayo">Ensayo</option>
-                            <option value="Concierto">Concierto</option>
-                            <option value="Procesión">Procesión</option>
-                            <option value="Reunión">Reunión</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Hora</label>
-                        <input type="text" id="horaEvento" placeholder="Ej. 20:30 h" required>
-                    </div>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Fecha</label>
-                        <input type="date" id="fechaEvento" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Lugar</label>
-                        <input type="text" id="lugarEvento" placeholder="Ej. Local de ensayos" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Detalles (Opcional)</label>
-                    <textarea id="detallesEvento" rows="3" placeholder="Ej. Traje de gala..."></textarea>
-                </div>
-
-                <div class="modal-botones">
-                    <button type="button" class="btn-secundario" onclick="cerrarModal('panelAdmin')">Cancelar</button>
-                    <button type="submit" class="btn-principal">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
 </body>
 </html>
