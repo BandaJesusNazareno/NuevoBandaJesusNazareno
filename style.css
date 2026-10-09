@@ -84,7 +84,7 @@ body {
     font-size: 0.85rem;
 }
 
-/* DISEÑO LIMPIO DE LAS TARJETAS (ESTILO REFERENCIA) */
+/* DISEÑO DE LAS TARJETAS */
 .tarjeta-evento {
     background-color: var(--color-tarjeta) !important;
     border-radius: 12px !important;
@@ -99,7 +99,6 @@ body {
     display: block !important;
 }
 
-/* Textos dentro de la tarjeta */
 .tarjeta-evento h3 {
     color: #ffffff !important;
     font-size: 1.25rem !important;
@@ -117,7 +116,7 @@ body {
     color: var(--color-secundario) !important;
 }
 
-/* Insignia de tipo (ENSAYO, CONCIERTO, ETC.) */
+/* Insignia de tipo */
 .badge {
     background-color: #1d4ed8 !important;
     color: #ffffff !important;
@@ -149,7 +148,7 @@ body {
     font-size: 0.95rem !important;
 }
 
-/* BOTÓN DE EDITAR (Lápiz) */
+/* BOTÓN DE EDITAR */
 .btn-editar {
     background-color: #f59e0b !important;
     color: #ffffff !important;
@@ -167,7 +166,7 @@ body {
     box-shadow: 0 3px 8px rgba(245, 158, 11, 0.5) !important;
 }
 
-/* BOTÓN DE ELIMINAR (X Roja) */
+/* BOTÓN DE ELIMINAR */
 .btn-eliminar {
     background-color: #dc2626 !important;
     color: #ffffff !important;
@@ -200,7 +199,7 @@ body {
     cursor: pointer;
 }
 
-/* BOTÓN FLOTANTE CON EL "+" (FAB) ABAJO A LA DERECHA */
+/* BOTÓN FLOTANTE CON EL "+" (FAB) */
 #btnFlotanteAgregar {
     position: fixed !important;
     bottom: 25px !important;
@@ -320,19 +319,31 @@ body {
     color: var(--color-secundario);
 }
 
-/* Footer */
+/* Footer y Botón YouTube Estilizado */
 .footer {
     background-color: #060913;
     color: var(--color-texto-secundario);
     text-align: center;
-    padding: 20px;
+    padding: 25px 20px;
     font-size: 0.85rem;
     margin-top: auto;
     border-top: 2px solid var(--color-secundario);
 }
 
 .btn-youtube {
-    color: var(--color-secundario);
-    text-decoration: none;
-    font-weight: 600;
+    display: inline-block !important;
+    background-color: #ff0000 !important;
+    color: #ffffff !important;
+    padding: 10px 22px !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4) !important;
+    transition: transform 0.2s ease !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.btn-youtube:hover {
+    transform: scale(1.05);
 }
