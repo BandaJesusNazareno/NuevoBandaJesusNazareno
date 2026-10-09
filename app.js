@@ -39,7 +39,7 @@ window.validarClave = function() {
     document.getElementById("inputClave").value = "";
     cerrarModal("modalClave");
     
-    // Muestra el botón flotante (+)
+    // Muestra el botón flotante (+) ÚNICAMENTE AL VALIDAR LA CLAVE
     document.getElementById("btnFlotanteAgregar").style.display = "flex";
     
     // Vuelve a pintar las tarjetas activando la X chica roja sólo para ti
@@ -51,8 +51,13 @@ window.validarClave = function() {
   }
 };
 
+// Se asegura de pedir la clave si alguien hace clic en el (+) sin ser admin
 window.abrirFormularioDirecto = function() {
-  document.getElementById("panelAdmin").style.display = "flex";
+  if (esAdmin) {
+    document.getElementById("panelAdmin").style.display = "flex";
+  } else {
+    window.pedirClave();
+  }
 };
 
 // 3. Cargar y escuchar eventos en tiempo real desde Firebase
@@ -74,7 +79,7 @@ function escucharEventos() {
 
       const tarjeta = document.createElement("div");
       tarjeta.className = "tarjeta-evento";
-      tarjeta.style.position = "relative"; // Necesario para colocar la X chica en la esquina
+      tarjeta.style.position = "relative";
 
       // La X chica roja SOLO se incluye si esAdmin es true
       tarjeta.innerHTML = `
@@ -99,7 +104,10 @@ escucharEventos();
 // 4. Guardar evento en la nube
 window.guardarEvento = async function(e) {
   if (e) e.preventDefault();
-  if (!esAdmin) return;
+  if (!esAdmin) {
+    alert("Acceso denegado: solo el administrador puede añadir eventos.");
+    return;
+  }
   
   const nuevoEvento = {
     titulo: document.getElementById("tituloEvento").value,
