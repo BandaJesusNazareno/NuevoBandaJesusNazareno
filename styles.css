@@ -1,32 +1,32 @@
-/* Paleta de colores original */
+/* Paleta de colores personalizada */
 :root {
-  --primary-color: #4a154b;    /* Morado / Granate Nazareno */
-  --secondary-color: #6b1122;  /* Rojo Burdeos */
-  --accent-color: #d97706;     /* Dorado */
-  --bg-color: #f4f6f9;         /* Fondo claro y limpio */
-  --card-bg: #ffffff;         /* Tarjetas en blanco */
-  --text-color: #1e293b;       /* Texto oscuro */
-  --text-muted: #64748b;      /* Texto secundario */
-  --border-color: #e2e8f0;    /* Bordes suaves */
+  --header-bg: #58111A;        /* Rojo vino / Burdeos elegante */
+  --header-gold: #D4AF37;      /* Dorado para letras y detalles */
+  --bg-dark: #0a1128;          /* Azul marino oscuro para el fondo */
+  --card-bg: #1c2541;          /* Azul marino ligeramente más claro para tarjetas */
+  --card-border: #3a506b;      /* Borde de las tarjetas */
+  --text-white: #ffffff;       /* Texto principal blanco */
+  --text-muted: #a0aec0;      /* Texto secundario */
+  --danger-red: #ef4444;       /* Rojo para botón eliminar */
 }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  background-color: var(--bg-dark);
+  color: var(--text-white);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
 }
 
-/* Cabecera */
+/* Cabecera - Rojo Vino con Letras Doradas */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background-color: var(--primary-color);
-  color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  background-color: var(--header-bg);
+  border-bottom: 3px solid var(--header-gold);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .header-brand {
@@ -36,36 +36,38 @@ body {
 }
 
 .escudo-img {
-  width: 45px;
+  width: 48px;
   height: auto;
 }
 
 .header-titles h1 {
   margin: 0;
-  font-size: 1.2rem;
-  color: #ffffff;
+  font-size: 1.3rem;
+  color: var(--header-gold);
+  font-weight: bold;
   letter-spacing: 0.5px;
 }
 
 .header-titles p {
   margin: 2px 0 0 0;
-  color: #e2e8f0;
+  color: #f1e6b8; /* Dorado suave para el subtítulo */
   font-size: 0.85rem;
 }
 
 #btnAdmin {
-  background: var(--accent-color);
-  color: white;
+  background: var(--header-gold);
+  color: var(--header-bg);
   border: none;
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
-  transition: opacity 0.2s;
+  transition: transform 0.2s, background-color 0.2s;
 }
 
 #btnAdmin:hover {
-  opacity: 0.9;
+  background: #f3cf55;
+  transform: translateY(-1px);
 }
 
 /* Contenedor Principal */
@@ -83,7 +85,7 @@ body {
 .seccion-titulo h2 {
   font-size: 1.8rem;
   margin-bottom: 5px;
-  color: var(--primary-color);
+  color: var(--header-gold);
 }
 
 .seccion-titulo p {
@@ -101,13 +103,13 @@ body {
 
 .tarjeta-evento {
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-left: 5px solid var(--primary-color);
-  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  border-left: 5px solid var(--header-gold);
+  border-radius: 12px;
   padding: 20px;
   width: 100%;
   max-width: 550px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
 }
 
@@ -125,41 +127,42 @@ body {
   font-weight: bold;
   text-transform: uppercase;
   color: white;
-  background-color: var(--primary-color);
+  background-color: var(--header-bg);
+  border: 1px solid var(--header-gold);
 }
 
-/* Colores de etiquetas */
-.badge.ensayo { background-color: #2563eb; }
-.badge.concierto { background-color: #7c3aed; }
-.badge.procesión, .badge.procesion { background-color: var(--secondary-color); }
-.badge.reunión, .badge.reunion { background-color: #059669; }
+/* Colores de etiquetas según el tipo */
+.badge.ensayo { background-color: #1e40af; }
+.badge.concierto { background-color: #6b21a8; }
+.badge.procesión, .badge.procesion { background-color: var(--header-bg); }
+.badge.reunión, .badge.reunion { background-color: #065f46; }
 
 .evento-hora {
   font-weight: bold;
-  color: var(--primary-color);
+  color: var(--header-gold);
   font-size: 0.95rem;
 }
 
 .tarjeta-evento h3 {
   margin: 0 0 10px 0;
   font-size: 1.3rem;
-  color: var(--primary-color);
+  color: #ffffff;
 }
 
 .tarjeta-evento p {
   margin: 6px 0;
-  color: var(--text-color);
+  color: var(--text-muted);
   font-size: 0.95rem;
 }
 
 .tarjeta-evento p strong {
-  color: var(--primary-color);
+  color: var(--header-gold);
 }
 
 .btn-borrar {
   background: transparent;
-  color: #dc2626;
-  border: 1px solid #dc2626;
+  color: var(--danger-red);
+  border: 1px solid var(--danger-red);
   padding: 6px 14px;
   border-radius: 6px;
   cursor: pointer;
@@ -169,7 +172,7 @@ body {
 }
 
 .btn-borrar:hover {
-  background: #dc2626;
+  background: var(--danger-red);
   color: white;
 }
 
@@ -177,10 +180,10 @@ body {
 .footer {
   text-align: center;
   padding: 30px 15px;
-  background: #ffffff;
+  background: #070d1e;
   margin-top: 40px;
-  border-top: 1px solid var(--border-color);
-  color: var(--text-color);
+  border-top: 2px solid var(--header-gold);
+  color: var(--text-white);
 }
 
 .subfooter {
@@ -193,7 +196,7 @@ body {
   display: none;
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.75);
   align-items: center;
   justify-content: center;
   padding: 15px;
@@ -201,12 +204,13 @@ body {
 }
 
 .modal-contenido {
-  background: #ffffff;
+  background: var(--card-bg);
   padding: 25px;
   border-radius: 12px;
   width: 100%;
   max-width: 480px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  border: 1px solid var(--header-gold);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
   box-sizing: border-box;
 }
 
@@ -219,7 +223,7 @@ body {
   margin-bottom: 20px;
 }
 
-.modal-header h3 { margin: 0; color: var(--primary-color); }
+.modal-header h3 { margin: 0; color: var(--header-gold); }
 
 .btn-cerrar {
   font-size: 1.5rem;
@@ -241,10 +245,10 @@ body {
 
 .form-group input, .form-group select, .form-group textarea {
   padding: 10px;
-  background: #f8fafc;
-  border: 1px solid var(--border-color);
+  background: var(--bg-dark);
+  border: 1px solid var(--card-border);
   border-radius: 6px;
-  color: var(--text-color);
+  color: var(--text-white);
   font-size: 0.95rem;
 }
 
@@ -262,8 +266,8 @@ body {
 }
 
 .btn-principal {
-  background: var(--primary-color);
-  color: white;
+  background: var(--header-gold);
+  color: var(--header-bg);
   border: none;
   padding: 8px 18px;
   border-radius: 6px;
@@ -274,7 +278,7 @@ body {
 .btn-secundario {
   background: transparent;
   color: var(--text-muted);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--card-border);
   padding: 8px 18px;
   border-radius: 6px;
   cursor: pointer;
