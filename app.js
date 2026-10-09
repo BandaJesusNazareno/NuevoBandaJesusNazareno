@@ -16,7 +16,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const eventosRef = collection(db, "eventos");
 
-// Variable para recordar si estás dentro como Admin
+// Por defecto, nadie es Administrador
 let esAdmin = false;
 
 // 2. Control de Modales y Clave Admin
@@ -35,10 +35,16 @@ window.cerrarModal = function(idModal) {
 window.validarClave = function() {
   const claveIngresada = document.getElementById("inputClave").value;
   if (claveIngresada === "nazareno2012") { 
-    esAdmin = true;
+    esAdmin = true; // Se activa el modo administrador
     document.getElementById("inputClave").value = "";
     cerrarModal("modalClave");
+    
+    // Muestra el botón flotante (+)
     document.getElementById("btnFlotanteAgregar").style.display = "flex";
+    
+    // Vuelve a pintar las tarjetas activando la X chica roja sólo para ti
+    escucharEventos();
+    
     window.abrirFormularioDirecto();
   } else {
     alert("Contraseña incorrecta");
@@ -50,41 +56,50 @@ window.abrirFormularioDirecto = function() {
 };
 
 // 3. Cargar y escuchar eventos en tiempo real desde Firebase
-onSnapshot(eventosRef, (snapshot) => {
-  const lista = document.getElementById("listaEventos");
-  if (!lista) return;
-  
-  lista.innerHTML = "";
+function escucharEventos() {
+  onSnapshot(eventosRef, (snapshot) => {
+    const lista = document.getElementById("listaEventos");
+    if (!lista) return;
+    
+    lista.innerHTML = "";
 
-  if (snapshot.empty) {
-    lista.innerHTML = "<p style='text-align:center;'>No hay eventos programados.</p>";
-    return;
-  }
+    if (snapshot.empty) {
+      lista.innerHTML = "<p style='text-align:center;'>No hay eventos programados.</p>";
+      return;
+    }
 
-  snapshot.forEach((docSnapshot) => {
-    const evento = docSnapshot.data();
-    const id = docSnapshot.id;
+    snapshot.forEach((docSnapshot) => {
+      const evento = docSnapshot.data();
+      const id = docSnapshot.id;
 
-    const tarjeta = document.createElement("div");
-    tarjeta.className = "tarjeta-evento";
-    tarjeta.innerHTML = `
-      <div class="evento-header">
-        <span class="badge ${evento.tipo ? evento.tipo.toLowerCase() : ''}">${evento.tipo || 'Evento'}</span>
-        <span class="evento-hora">${evento.hora || ''}</span>
-      </div>
-      <h3>${evento.titulo || ''}</h3>
-      <p>📅 <strong>Fecha:</strong> ${evento.fecha || ''}</p>
-      <p>📍 <strong>Lugar:</strong> ${evento.lugar || ''}</p>
-      ${evento.detalles ? `<p>📝 ${evento.detalles}</p>` : ''}
-      ${esAdmin ? `<button class="btn-borrar" onclick="borrarEvento('${id}')">Eliminar</button>` : ''}
-    `;
-    lista.appendChild(tarjeta);
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "tarjeta-evento";
+      tarjeta.style.position = "relative"; // Necesario para colocar la X chica en la esquina
+
+      // La X chica roja SOLO se incluye si esAdmin es true
+      tarjeta.innerHTML = `
+        ${esAdmin ? `<button class="btn-borrar-x" onclick="borrarEvento('${id}')" title="Eliminar acto">✕</button>` : ''}
+        <div class="evento-header">
+          <span class="badge ${evento.tipo ? evento.tipo.toLowerCase() : ''}">${evento.tipo || 'Evento'}</span>
+          <span class="evento-hora">${evento.hora || ''}</span>
+        </div>
+        <h3>${evento.titulo || ''}</h3>
+        <p>📅 <strong>Fecha:</strong> ${evento.fecha || ''}</p>
+        <p>📍 <strong>Lugar:</strong> ${evento.lugar || ''}</p>
+        ${evento.detalles ? `<p>📝 ${evento.detalles}</p>` : ''}
+      `;
+      lista.appendChild(tarjeta);
+    });
   });
-});
+}
+
+// Iniciar la escucha en tiempo real
+escucharEventos();
 
 // 4. Guardar evento en la nube
 window.guardarEvento = async function(e) {
   if (e) e.preventDefault();
+  if (!esAdmin) return;
   
   const nuevoEvento = {
     titulo: document.getElementById("tituloEvento").value,
@@ -106,6 +121,8 @@ window.guardarEvento = async function(e) {
 
 // 5. Borrar evento de la nube
 window.borrarEvento = async function(id) {
+  if (!esAdmin) return;
+  
   if (confirm("¿Seguro que quieres eliminar este acto?")) {
     try {
       await deleteDoc(doc(db, "eventos", id));
