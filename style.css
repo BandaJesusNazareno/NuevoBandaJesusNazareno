@@ -1,9 +1,10 @@
 :root {
-    --color-primario: #58181F; /* Burdeos cofrade */
-    --color-secundario: #D4AF37; /* Dorado */
-    --color-fondo: #f8f9fa;
-    --color-texto: #333333;
-    --color-blanco: #ffffff;
+    --color-fondo-oscuro: #0f172a; /* Fondo oscuro principal */
+    --color-tarjeta: #1e293b;     /* Fondo de las tarjetas */
+    --color-primario: #6B1226;    /* Burdeos corporativo */
+    --color-secundario: #D4AF37;  /* Dorado clásico */
+    --color-texto: #f8fafc;       /* Texto blanco/claro */
+    --color-texto-secundario: #cbd5e1; /* Texto secundario gris claro */
 }
 
 * {
@@ -14,7 +15,7 @@
 }
 
 body {
-    background-color: var(--color-fondo);
+    background-color: var(--color-fondo-oscuro);
     color: var(--color-texto);
     display: flex;
     flex-direction: column;
@@ -24,37 +25,37 @@ body {
 /* Cabecera */
 .header {
     background-color: var(--color-primario);
-    color: var(--color-blanco);
-    padding: 15px 20px;
+    color: #ffffff;
+    padding: 12px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     border-bottom: 3px solid var(--color-secundario);
 }
 
 .header-brand {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .escudo-img {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     object-fit: contain;
 }
 
 .header-titles h1 {
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 1.15rem;
+    font-weight: 700;
     letter-spacing: 0.5px;
-    color: var(--color-blanco);
+    color: var(--color-secundario); /* Títulos en oro como en tu captura */
 }
 
 .header-titles p {
-    font-size: 0.85rem;
-    color: #e0d0d0;
+    font-size: 0.8rem;
+    color: #f1d3d7;
 }
 
 /* Contenido Principal */
@@ -64,41 +65,56 @@ body {
     margin: 20px auto;
     padding: 0 15px;
     flex: 1;
+    padding-bottom: 80px; /* Espacio para el botón flotante */
 }
 
 .seccion-titulo {
     margin-bottom: 20px;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 2px solid #334155;
     padding-bottom: 10px;
 }
 
 .seccion-titulo h2 {
-    color: var(--color-primario);
-    font-size: 1.4rem;
+    color: var(--color-secundario); /* Título de sección en oro */
+    font-size: 1.35rem;
+    font-weight: 700;
 }
 
 .seccion-titulo p {
-    color: #666;
-    font-size: 0.9rem;
+    color: var(--color-texto-secundario);
+    font-size: 0.85rem;
 }
 
-/* Tarjetas de Eventos */
+/* Tarjetas de Eventos (Diseño oscuro con borde izquierdo dorado) */
 .evento-card {
-    background: var(--color-blanco);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    background: var(--color-tarjeta);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     border-left: 5px solid var(--color-secundario);
+    border-top: 1px solid #334155;
+    border-right: 1px solid #334155;
+    border-bottom: 1px solid #334155;
+    position: relative;
     transition: transform 0.2s ease;
 }
 
 .evento-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Botones Generales y Modales (Forzados sin estilo nativo de OS) */
+/* Estilos internos de las tarjetas (Etiquetas, fechas y horas en oro) */
+.evento-card h3, .evento-card strong, .badge-tipo, .evento-card span {
+    color: var(--color-texto);
+}
+
+/* Si tu app usa clases específicas para fechas/horas, las forzamos a oro */
+.evento-card .fecha, .evento-card .lugar, .evento-card label {
+    color: var(--color-texto-secundario);
+}
+
+/* Botones de Admin y Acciones */
 button, .btn-principal, .btn-secundario, .btn-admin {
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
@@ -108,41 +124,57 @@ button, .btn-principal, .btn-secundario, .btn-admin {
     cursor: pointer;
     font-weight: 600;
     border-radius: 6px;
-    padding: 10px 18px;
-    font-size: 0.95rem;
-    transition: background-color 0.2s, opacity 0.2s;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
 }
 
 .btn-principal, button[type="submit"] {
     background-color: var(--color-primario) !important;
-    color: var(--color-blanco) !important;
-}
-
-.btn-principal:hover, button[type="submit"]:hover {
-    background-color: #401116 !important;
+    color: #ffffff !important;
 }
 
 .btn-secundario {
-    background-color: #e2e8f0 !important;
-    color: #4a5568 !important;
-}
-
-.btn-secundario:hover {
-    background-color: #cbd5e1 !important;
+    background-color: #334155 !important;
+    color: #f8fafc !important;
 }
 
 .btn-admin {
     background-color: var(--color-secundario) !important;
-    color: #000 !important;
-    padding: 8px 14px;
-    font-size: 0.85rem;
+    color: #0f172a !important;
+    padding: 7px 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 6px;
 }
 
-.btn-admin:hover {
-    opacity: 0.9;
+/* Botón Flotante Redondo con el "+" dorado (abajo a la derecha) */
+.btn-flotante, #btnAñadir, .fab, .btn-agregar {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--color-secundario) !important;
+    color: #0f172a !important;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    z-index: 99;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    text-decoration: none;
 }
 
-/* Botón YouTube */
+.btn-flotante:hover, #btnAñadir:hover {
+    transform: scale(1.05);
+}
+
+/* Botón de YouTube */
 .btn-youtube {
     background-color: #FF0000;
     color: #ffffff;
@@ -150,12 +182,8 @@ button, .btn-principal, .btn-secundario, .btn-admin {
     text-decoration: none;
     border-radius: 6px;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 0.85rem;
     display: inline-block;
-}
-
-.btn-youtube:hover {
-    opacity: 0.9;
 }
 
 /* Modales */
@@ -167,20 +195,21 @@ button, .btn-principal, .btn-secundario, .btn-admin {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.7);
     justify-content: center;
     align-items: center;
     padding: 15px;
 }
 
 .modal-contenido {
-    background-color: var(--color-blanco);
-    padding: 25px;
-    border-radius: 10px;
+    background-color: var(--color-tarjeta);
+    color: var(--color-texto);
+    padding: 24px;
+    border-radius: 12px;
     width: 100%;
     max-width: 500px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    border-top: 4px solid var(--color-primario);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    border-top: 4px solid var(--color-secundario);
 }
 
 .modal-sm {
@@ -197,17 +226,13 @@ button, .btn-principal, .btn-secundario, .btn-admin {
 .btn-cerrar {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #aaa;
+    color: var(--color-texto-secundario);
     cursor: pointer;
 }
 
-.btn-cerrar:hover {
-    color: #000;
-}
-
-/* Formularios */
+/* Formularios dentro de modales oscuros */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
 .form-group label {
@@ -215,7 +240,7 @@ button, .btn-principal, .btn-secundario, .btn-admin {
     margin-bottom: 5px;
     font-size: 0.85rem;
     font-weight: 600;
-    color: #444;
+    color: var(--color-secundario);
 }
 
 .form-group input, 
@@ -223,18 +248,18 @@ button, .btn-principal, .btn-secundario, .btn-admin {
 .form-group textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    background-color: #0f172a;
+    border: 1px solid #475569;
+    color: #ffffff;
     border-radius: 6px;
     font-size: 0.95rem;
     outline: none;
-    background-color: #fff;
 }
 
 .form-group input:focus, 
 .form-group select:focus, 
 .form-group textarea:focus {
-    border-color: var(--color-primario);
-    box-shadow: 0 0 0 2px rgba(88, 24, 31, 0.1);
+    border-color: var(--color-secundario);
 }
 
 .form-grid {
@@ -252,8 +277,8 @@ button, .btn-principal, .btn-secundario, .btn-admin {
 
 /* Footer */
 .footer {
-    background-color: #222;
-    color: #bbb;
+    background-color: #0b1120;
+    color: var(--color-texto-secundario);
     text-align: center;
     padding: 20px;
     font-size: 0.85rem;
@@ -263,6 +288,6 @@ button, .btn-principal, .btn-secundario, .btn-admin {
 
 .footer .subfooter {
     font-size: 0.75rem;
-    color: #777;
+    color: #64748b;
     margin-top: 5px;
 }
