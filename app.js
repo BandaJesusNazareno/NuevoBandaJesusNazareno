@@ -19,6 +19,16 @@ const eventosRef = collection(db, "eventos");
 // Estado Administrador
 let esAdmin = false;
 
+// Función para formatear la fecha de AAAA-MM-DD a DD/MM/AAAA
+function formatearFecha(fechaOriginal) {
+  if (!fechaOriginal) return '';
+  const partes = fechaOriginal.split('-');
+  if (partes.length === 3) {
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+  }
+  return fechaOriginal;
+}
+
 // 2. Control de Modales y Clave Admin
 window.pedirClave = function() {
   if (esAdmin) {
@@ -85,22 +95,38 @@ function escucharEventos() {
       return;
     }
 
+    // Convertir la lista en un array para poder ordenarlo
+    let eventosArr = [];
     snapshot.forEach((docSnapshot) => {
-      const evento = docSnapshot.data();
-      const id = docSnapshot.id;
+      eventosArr.push({
+        id: docSnapshot.id,
+        ...docSnapshot.data()
+      });
+    });
 
+    // Ordenar de menor a mayor fecha (los días más próximos arriba)
+    eventosArr.sort((a, b) => {
+      if (!a.fecha) return 1;
+      if (!b.fecha) return -1;
+      return a.fecha.localeCompare(b.fecha);
+    });
+
+    // Generar la tarjeta de cada acto
+    eventosArr.forEach((evento) => {
       const tarjeta = document.createElement("div");
       tarjeta.className = "tarjeta-evento";
 
-      // La X roja pequeña SOLO se genera si eres Admin
+      // Formato DD/MM/AAAA
+      const fechaFormateada = formatearFecha(evento.fecha);
+
       tarjeta.innerHTML = `
-        ${esAdmin ? `<button class="btn-borrar-x" onclick="borrarEvento('${id}')" title="Eliminar acto">✕</button>` : ''}
+        ${esAdmin ? `<button class="btn-borrar-x" onclick="borrarEvento('${evento.id}')" title="Eliminar acto">✕</button>` : ''}
         <div class="evento-header">
           <span class="badge ${evento.tipo ? evento.tipo.toLowerCase() : ''}">${evento.tipo || 'Evento'}</span>
           <span class="evento-hora">${evento.hora || ''}</span>
         </div>
         <h3>${evento.titulo || ''}</h3>
-        <p>📅 <strong>Fecha:</strong> ${evento.fecha || ''}</p>
+        <p>📅 <strong>Fecha:</strong> ${fechaFormateada}</p>
         <p>📍 <strong>Lugar:</strong> ${evento.lugar || ''}</p>
         ${evento.detalles ? `<p>📝 ${evento.detalles}</p>` : ''}
       `;
