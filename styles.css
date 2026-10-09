@@ -1,0 +1,306 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #0b1320; /* Fondo azul marino muy oscuro */
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cabecera Burdeos */
+.header {
+    background-color: #610614; /* Rojo vino oscuro */
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #a87932; /* Tono dorado */
+}
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Imagen del Escudo de la Banda */
+.escudo-img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+}
+
+.header-titles h1 {
+    font-size: 1.05rem;
+    color: #e5b35c; /* Dorado brillante */
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+
+.header-titles p {
+    font-size: 0.8rem;
+    color: #d1c4b2;
+}
+
+#btnAdmin {
+    background: transparent;
+    color: #e5b35c;
+    border: 1px solid #e5b35c;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* Contenido Principal */
+.contenedor {
+    padding: 24px 20px;
+    flex: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.seccion-titulo h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.seccion-titulo p {
+    font-size: 0.9rem;
+    color: #8c9ba5;
+    margin-bottom: 20px;
+}
+
+/* Tarjeta de Evento */
+.evento-card {
+    background: #172336;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+}
+
+/* Caja de Fecha (Día + Mes) */
+.fecha-box {
+    background: #0d1726;
+    border: 1px solid #23344e;
+    border-radius: 10px;
+    min-width: 58px;
+    height: 62px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.fecha-box .dia {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #e5b35c;
+    line-height: 1;
+}
+
+.fecha-box .mes {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #8c9ba5;
+    text-transform: uppercase;
+    margin-top: 3px;
+}
+
+.evento-info {
+    flex: 1;
+}
+
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.badge-ensayo {
+    background: #791a26;
+    color: #ffb3ba;
+}
+
+.badge-concierto {
+    background: #1a5679;
+    color: #b3e3ff;
+}
+
+.badge-procesion {
+    background: #621a79;
+    color: #ebb3ff;
+}
+
+.evento-info h3 {
+    font-size: 1.1rem;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.evento-detalle {
+    font-size: 0.88rem;
+    color: #a3b3c2;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-eliminar-evento {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.btn-eliminar-evento:hover {
+    color: #ef4444;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 0.85rem;
+    color: #a3b3c2;
+    border-top: 1px solid #172336;
+}
+
+.footer .subfooter {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+/* Modal Emergente */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 16px;
+}
+
+.modal-contenido {
+    background: #172336;
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 480px;
+    border: 1px solid #e5b35c;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.modal-sm {
+    max-width: 360px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+.btn-cerrar {
+    font-size: 1.5rem;
+    color: #8c9ba5;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.82rem;
+    color: #8c9ba5;
+    margin-bottom: 6px;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    background: #0d1726;
+    border: 1px solid #23344e;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    border-color: #e5b35c;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.modal-botones {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.modal-botones button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-principal {
+    background: #610614;
+    color: #ffffff;
+    border: 1px solid #e5b35c;
+}
+
+.btn-secundario {
+    background: #0d1726;
+    color: #8c9ba5;
+    border: 1px solid #23344e;
+}
