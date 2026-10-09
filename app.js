@@ -54,8 +54,6 @@ window.validarClave = function() {
     
     // Recargar eventos para mostrar las X chicas rojas
     escucharEventos();
-    
-    // (Se ha eliminado la línea que abría el formulario automáticamente aquí)
   } else {
     alert("Contraseña incorrecta");
   }
