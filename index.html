@@ -1,123 +1,387 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banda Jesús Nazareno - Agenda Oficial</title>
-    <!-- v=9 fuerza a todos los móviles a recargar el diseño corregido -->
-    <link rel="stylesheet" href="styles.css?v=9">
-</head>
-<body>
+/* Paleta de colores personalizada */
+:root {
+  --header-bg: #58111A;        /* Rojo vino / Burdeos elegante */
+  --header-gold: #D4AF37;      /* Dorado para letras y detalles */
+  --bg-dark: #0a1128;          /* Azul marino oscuro para el fondo */
+  --card-bg: #1c2541;          /* Azul marino ligeramente más claro para tarjetas */
+  --card-border: #3a506b;      /* Borde de las tarjetas */
+  --text-white: #ffffff;       /* Texto principal blanco */
+  --text-muted: #a0aec0;       /* Texto secundario */
+  --danger-red: #ef4444;       /* Rojo para botón eliminar */
+}
 
-    <!-- Cabecera -->
-    <header class="header">
-        <div class="header-brand">
-            <img src="escudo.png" alt="Escudo Banda" class="escudo-img">
-            <div class="header-titles">
-                <h1>BANDA JESÚS NAZARENO</h1>
-                <p>Sevilla • Agenda Oficial</p>
-            </div>
-        </div>
-        <button id="btnAdmin" onclick="pedirClave()">Admin</button>
-    </header>
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-white);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+}
 
-    <!-- Contenido Principal -->
-    <main class="contenedor">
-        <div class="seccion-titulo">
-            <h2>Próximos Actos y Ensayos</h2>
-            <p>Calendario actualizado de la formación</p>
-        </div>
+/* Cabecera - Rojo Vino con Letras Doradas */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: var(--header-bg);
+  border-bottom: 3px solid var(--header-gold);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
 
-        <!-- Lista de tarjetas de eventos -->
-        <div id="listaEventos">
-            <!-- Los eventos se cargarán dinámicamente aquí -->
-        </div>
-    </main>
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
-    <!-- Pie de página -->
-    <footer class="footer">
-        <p>Banda de Cornetas y Tambores Jesús Nazareno</p>
-        <p class="subfooter">Sevilla • Todos los derechos reservados</p>
-        
-        <!-- Botón de YouTube -->
-        <div style="margin-top: 15px;">
-            <a href="https://www.youtube.com/@bandanazarenosevilla" target="_blank" style="background-color: #FF0000; color: #ffffff; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-weight: bold; font-family: Arial, sans-serif; font-size: 14px; display: inline-block;">
-                ▶ Ver Canal de YouTube
-            </a>
-        </div>
-    </footer>
+.escudo-img {
+  width: 48px;
+  height: auto;
+}
 
-    <!-- Modal Contraseña -->
-    <div id="modalClave" class="modal">
-        <div class="modal-contenido modal-sm">
-            <h3>Acceso Administrador</h3>
-            <div class="form-group">
-                <input type="password" id="inputClave" placeholder="Escribe la clave de acceso">
-            </div>
-            <div class="modal-botones">
-                <button type="button" class="btn-secundario" onclick="cerrarModal('modalClave')">Cancelar</button>
-                <button type="button" class="btn-principal" onclick="validarClave()">Entrar</button>
-            </div>
-        </div>
-    </div>
+.header-titles h1 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--header-gold);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
 
-    <!-- Modal Formulario de Administración -->
-    <div id="panelAdmin" class="modal">
-        <div class="modal-contenido">
-            <div class="modal-header">
-                <h3>Añadir Nuevo Acto</h3>
-                <span class="btn-cerrar" onclick="cerrarModal('panelAdmin')">&times;</span>
-            </div>
+.header-titles p {
+  margin: 2px 0 0 0;
+  color: #f1e6b8;
+  font-size: 0.85rem;
+}
 
-            <form id="formEvento" onsubmit="guardarEvento(event)">
-                <div class="form-group">
-                    <label>Nombre del Acto / Ensayo</label>
-                    <input type="text" id="tituloEvento" placeholder="Ej. Ensayo General" required>
-                </div>
+#btnAdmin {
+  background: var(--header-gold);
+  color: var(--header-bg);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s, background-color 0.2s;
+}
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Tipo de Acto</label>
-                        <select id="tipoEvento">
-                            <option value="Ensayo">Ensayo</option>
-                            <option value="Concierto">Concierto</option>
-                            <option value="Procesión">Procesión</option>
-                            <option value="Reunión">Reunión</option>
-                        </select>
-                    </div>
+#btnAdmin:hover {
+  background: #f3cf55;
+  transform: translateY(-1px);
+}
 
-                    <div class="form-group">
-                        <label>Hora</label>
-                        <input type="text" id="horaEvento" placeholder="Ej. 20:30 h" required>
-                    </div>
-                </div>
+/* Contenedor Principal */
+.contenedor {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px 15px;
+}
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Fecha</label>
-                        <input type="date" id="fechaEvento" required>
-                    </div>
+.seccion-titulo {
+  text-align: center;
+  margin-bottom: 30px;
+}
 
-                    <div class="form-group">
-                        <label>Lugar</label>
-                        <input type="text" id="lugarEvento" placeholder="Ej. Local de ensayos" required>
-                    </div>
-                </div>
+.seccion-titulo h2 {
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+  color: var(--header-gold);
+}
 
-                <div class="form-group">
-                    <label>Detalles (Opcional)</label>
-                    <textarea id="detallesEvento" rows="3" placeholder="Ej. Traje de gala..."></textarea>
-                </div>
+.seccion-titulo p {
+  color: var(--text-muted);
+  margin: 0;
+}
 
-                <div class="modal-botones">
-                    <button type="button" class="btn-secundario" onclick="cerrarModal('panelAdmin')">Cancelar</button>
-                    <button type="submit" class="btn-principal">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
+/* Lista y Tarjetas de Eventos */
+#listaEventos {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
 
-    <!-- Cargar script como módulo ES6 para Firebase -->
-    <script type="module" src="app.js"></script>
-</body>
-</html>
+.tarjeta-evento {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-left: 5px solid var(--header-gold);
+  border-radius: 12px;
+  padding: 20px;
+  width: 100%;
+  max-width: 550px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
+
+.evento-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-right: 50px;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+  background-color: var(--header-bg);
+  border: 1px solid var(--header-gold);
+}
+
+.badge.ensayo { background-color: #1e40af; }
+.badge.concierto { background-color: #6b21a8; }
+.badge.procesión, .badge.procesion { background-color: var(--header-bg); }
+.badge.reunión, .badge.reunion { background-color: #065f46; }
+
+.evento-hora {
+  font-weight: bold;
+  color: var(--header-gold);
+  font-size: 0.95rem;
+}
+
+.tarjeta-evento h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.3rem;
+  color: #ffffff;
+}
+
+.tarjeta-evento p {
+  margin: 6px 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.tarjeta-evento p strong {
+  color: var(--header-gold);
+}
+
+/* Botón X pequeña de borrado */
+.btn-borrar-x {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 26px;
+  text-align: center;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-borrar-x:hover {
+  background: #dc2626;
+  transform: scale(1.15);
+}
+
+/* Botón de editar (lápiz) en las tarjetas */
+.btn-editar {
+  position: absolute;
+  top: 12px;
+  right: 46px;
+  background: var(--header-gold);
+  color: var(--header-bg);
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 26px;
+  text-align: center;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-editar:hover {
+  background: #f3cf55;
+  transform: scale(1.15);
+}
+
+/* BOTÓN FLOTANTE (+) SOLO PARA ADMIN */
+#btnFlotanteAgregar {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
+  background-color: var(--header-gold);
+  color: var(--header-bg);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  font-size: 34px;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+#btnFlotanteAgregar:hover {
+  transform: scale(1.1);
+  background-color: #f3cf55;
+}
+
+/* Pie de página */
+.footer {
+  text-align: center;
+  padding: 30px 15px;
+  background: #070d1e;
+  margin-top: 40px;
+  border-top: 2px solid var(--header-gold);
+  color: var(--text-white);
+}
+
+.subfooter {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* Modales */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  z-index: 10000;
+}
+
+.modal-contenido {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid var(--header-gold);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  box-sizing: border-box;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-sm { max-width: 350px; }
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.modal-header h3 { margin: 0; color: var(--header-gold); }
+
+.btn-cerrar {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.form-group {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  padding: 10px;
+  background: var(--bg-dark);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  color: var(--text-white);
+  font-size: 0.95rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modal-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* BOTONES FORZADOS PARA MÓVILES (Evita estilos nativos del sistema) */
+.btn-principal {
+  background: #D4AF37 !important;
+  color: #58111A !important;
+  border: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 9px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.btn-principal:hover {
+  background: #f3cf55 !important;
+}
+
+.btn-secundario {
+  background: transparent !important;
+  color: #a0aec0 !important;
+  border: 1px solid #3a506b !important;
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 9px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.btn-secundario:hover {
+  color: #ffffff !important;
+  border-color: #D4AF37 !important;
+}
+
+/* Eliminar bordes blancos molestos al enfocar */
+input:focus, select:focus, textarea:focus {
+  outline: none !important;
+  border-color: var(--header-gold) !important;
+  box-shadow: 0 0 5px rgba(212, 175, 55, 0.4);
+}
