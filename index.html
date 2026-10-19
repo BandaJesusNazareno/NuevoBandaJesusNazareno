@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banda Jesús Nazareno - Agenda Oficial</title>
-    <!-- Enlace a la hoja de estilos -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- Carga de SDKs de Firebase compatibles con funciones globales -->
+    <!-- SDKs de Firebase Compatibles -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
@@ -23,8 +22,8 @@
             </div>
         </div>
         <div style="display: flex; gap: 10px;">
-            <button id="btnAsistencia" class="btn-admin" onclick="abrirPanelAsistencia()" style="background-color: var(--color-secundario); color: #0f172a;">📋 Asistencia</button>
-            <button id="btnAdmin" class="btn-admin" onclick="pedirClave()">Admin</button>
+            <button class="btn-admin" onclick="abrirPanelAsistencia()" style="background-color: var(--color-secundario); color: #0f172a;">📋 Asistencia</button>
+            <button class="btn-admin" onclick="pedirClave()">Admin</button>
         </div>
     </header>
 
@@ -35,7 +34,6 @@
             <p>Calendario actualizado de la formación</p>
         </div>
 
-        <!-- Lista de tarjetas de eventos -->
         <div id="listaEventos">
             <!-- Los eventos se cargarán dinámicamente desde Firebase -->
         </div>
@@ -45,8 +43,6 @@
     <footer class="footer">
         <p>Banda de Cornetas y Tambores Jesús Nazareno</p>
         <p class="subfooter" style="margin-bottom: 15px;">Sevilla • Todos los derechos reservados</p>
-        
-        <!-- Botón de YouTube Estilizado -->
         <div>
             <a href="https://www.youtube.com/@bandanazarenosevilla" target="_blank" class="btn-youtube">
                 ▶ Ver Canal de YouTube
@@ -132,13 +128,11 @@
                 <span class="btn-cerrar" onclick="cerrarModal('modalAsistencia')">&times;</span>
             </div>
 
-            <!-- Selector de Fecha -->
             <div class="form-group">
                 <label>Seleccionar Fecha del Ensayo / Acto</label>
                 <input type="date" id="fechaAsistencia" onchange="cargarAsistenciaFecha()">
             </div>
 
-            <!-- Añadir componentes nuevos -->
             <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
                 <h4 style="color: var(--color-secundario); font-size: 0.95rem; margin-bottom: 8px;">Añadir Nuevo Componente</h4>
                 <div style="display: flex; gap: 10px;">
@@ -151,19 +145,14 @@
                 </div>
             </div>
 
-            <!-- Listado por Secciones -->
             <div style="margin-bottom: 15px;">
                 <h3 style="color: var(--color-secundario); border-bottom: 1px solid #334155; padding-bottom: 5px; margin-bottom: 10px;">🎺 Cornetas</h3>
-                <div id="listaCornetasAsistencia">
-                    <!-- Se cargan dinámicamente -->
-                </div>
+                <div id="listaCornetasAsistencia"></div>
             </div>
 
             <div style="margin-bottom: 20px;">
-                <h3 style="color: var(--color-secundario); border-bottom: 1px solid #334155; padding-bottom: 5px; margin-bottom: 10px;">🥁 Batería y Tambores</h3>
-                <div id="listaBateriaAsistencia">
-                    <!-- Se cargan dinámicamente -->
-                </div>
+                <h3 style="color: var(--color-secundario); border-bottom: 1px solid #334155; padding-bottom: 5px; margin-bottom: 10px;">🥁 Batería</h3>
+                <div id="listaBateriaAsistencia"></div>
             </div>
 
             <div class="modal-botones">
@@ -173,7 +162,7 @@
         </div>
     </div>
 
-    <!-- Script principal en modo normal -->
-    <script src="app.js?v=200"></script>
+    <!-- Script principal -->
+    <script src="app.js?v=300"></script>
 </body>
 </html>
