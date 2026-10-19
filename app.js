@@ -1,4 +1,3 @@
-// 1. Configuración e Inicialización de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyA87GdLbgUDMlE-N_wQtJpLnGFgODA6Mpc",
   authDomain: "bandajesusnazareno2012.firebaseapp.com",
@@ -26,7 +25,6 @@ function formatearFecha(fechaOriginal) {
   return fechaOriginal;
 }
 
-// 2. Control de Modales y Clave Admin
 function pedirClave() {
   if (esAdmin) {
     abrirFormularioDirecto();
@@ -54,7 +52,6 @@ function validarClave() {
 
 function crearBotonFlotante() {
   if (document.getElementById("btnFlotanteAgregar")) return;
-
   var btn = document.createElement("button");
   btn.id = "btnFlotanteAgregar";
   btn.innerHTML = "+";
@@ -75,7 +72,6 @@ function abrirFormularioDirecto() {
   }
 }
 
-// 3. Cargar y escuchar eventos en tiempo real
 function escucharEventos() {
   eventosRef.onSnapshot(function(snapshot) {
     var lista = document.getElementById("listaEventos");
@@ -206,7 +202,6 @@ function borrarEvento(id) {
   }
 }
 
-// 4. Panel de Control de Asistencia y Gestión de Músicos
 function abrirPanelAsistencia() {
     var hoy = new Date().toISOString().split('T')[0];
     document.getElementById('fechaAsistencia').value = hoy;
