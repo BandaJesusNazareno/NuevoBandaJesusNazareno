@@ -1,11 +1,11 @@
-cconst firebaseConfig = {
-  apiKey: "AIzaSyA87GdLbgUDMlE-N_wQtJpLnGFgODA6Mpc",
-  authDomain: "bandajesusnazareno2012.firebaseapp.com",
-  projectId: "bandajesusnazareno2012",
-  storageBucket: "bandajesusnazareno2012.firebasestorage.app",
-  messagingSenderId: "330943605319",
-  appId: "1:330943605319:web:bff3c29a673d1982af9f62",
-  measurementId: "G-RZSLXYPJ2B"
+const firebaseConfig = {
+    apiKey: "AIzaSyA87GdLbgUDMlE-N_wQtJpLnGFgODA6Mpc",
+    authDomain: "bandajesusnazareno2012.firebaseapp.com",
+    projectId: "bandajesusnazareno2012",
+    storageBucket: "bandajesusnazareno2012.firebasestorage.app",
+    messagingSenderId: "330943605319",
+    appId: "1:330943605319:web:bff3c29a673d1982af9f62",
+    measurementId: "G-RZSLXYPJ2B"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -17,197 +17,197 @@ var idEventoEditando = null;
 var eventosMap = {};
 
 function formatearFecha(fechaOriginal) {
-  if (!fechaOriginal) return '';
-  var partes = fechaOriginal.split('-');
-  if (partes.length === 3) {
-    return partes[2] + '/' + partes[1] + '/' + partes[0];
-  }
-  return fechaOriginal;
+    if (!fechaOriginal) return '';
+    var partes = fechaOriginal.split('-');
+    if (partes.length === 3) {
+        return partes[2] + '/' + partes[1] + '/' + partes[0];
+    }
+    return fechaOriginal;
 }
 
 function pedirClave() {
-  if (esAdmin) {
-    abrirFormularioDirecto();
-  } else {
-    document.getElementById("modalClave").style.display = "flex";
-  }
+    if (esAdmin) {
+        abrirFormularioDirecto();
+    } else {
+        document.getElementById("modalClave").style.display = "flex";
+    }
 }
 
 function cerrarModal(idModal) {
-  document.getElementById(idModal).style.display = "none";
+    document.getElementById(idModal).style.display = "none";
 }
 
 function validarClave() {
-  var claveIngresada = document.getElementById("inputClave").value;
-  if (claveIngresada === "nazareno2012") {  
-    esAdmin = true;
-    document.getElementById("inputClave").value = "";
-    cerrarModal("modalClave");
-    crearBotonFlotante();
-    escucharEventos();
-    
-    document.querySelectorAll(".admin-only").forEach(function(el) {
-      el.style.display = "block";
-    });
+    var claveIngresada = document.getElementById("inputClave").value;
+    if (claveIngresada === "nazareno2012") {  
+        esAdmin = true;
+        document.getElementById("inputClave").value = "";
+        cerrarModal("modalClave");
+        crearBotonFlotante();
+        escucharEventos();
+        
+        document.querySelectorAll(".admin-only").forEach(function(el) {
+            el.style.display = "block";
+        });
 
-    if (document.getElementById("modalAsistencia").style.display === "flex") {
-      cargarComponentesYAsistencia();
+        if (document.getElementById("modalAsistencia").style.display === "flex") {
+            cargarComponentesYAsistencia();
+        }
+    } else {
+        alert("Contraseña incorrecta");
     }
-  } else {
-    alert("Contraseña incorrecta");
-  }
 }
 
 function crearBotonFlotante() {
-  if (document.getElementById("btnFlotanteAgregar")) return;
-  var btn = document.createElement("button");
-  btn.id = "btnFlotanteAgregar";
-  btn.innerHTML = "+";
-  btn.title = "Añadir acto";
-  btn.onclick = function() {
-    abrirFormularioDirecto();
-  };
-  document.body.appendChild(btn);
+    if (document.getElementById("btnFlotanteAgregar")) return;
+    var btn = document.createElement("button");
+    btn.id = "btnFlotanteAgregar";
+    btn.innerHTML = "+";
+    btn.title = "Añadir acto";
+    btn.onclick = function() {
+        abrirFormularioDirecto();
+    };
+    document.body.appendChild(btn);
 }
 
 function abrirFormularioDirecto() {
-  if (esAdmin) {
-    idEventoEditando = null;
-    document.getElementById("formEvento").reset();
-    document.getElementById("panelAdmin").style.display = "flex";
-  } else {
-    pedirClave();
-  }
+    if (esAdmin) {
+        idEventoEditando = null;
+        document.getElementById("formEvento").reset();
+        document.getElementById("panelAdmin").style.display = "flex";
+    } else {
+        pedirClave();
+    }
 }
 
 function escucharEventos() {
-  eventosRef.onSnapshot(function(snapshot) {
-    var lista = document.getElementById("listaEventos");
-    if (!lista) return;
-    
-    lista.innerHTML = "";
-    eventosMap = {};
+    eventosRef.onSnapshot(function(snapshot) {
+        var lista = document.getElementById("listaEventos");
+        if (!lista) return;
+        
+        lista.innerHTML = "";
+        eventosMap = {};
 
-    if (snapshot.empty) {
-      lista.innerHTML = "<p style='text-align:center;'>No hay eventos programados.</p>";
-      return;
-    }
-
-    var eventosArr = [];
-    snapshot.forEach(function(docSnapshot) {
-      var data = docSnapshot.data();
-      var id = docSnapshot.id;
-      eventosMap[id] = data;
-      data.id = id;
-      eventosArr.push(data);
-    });
-
-    eventosArr.sort(function(a, b) {
-      if (!a.fecha) return 1;
-      if (!b.fecha) return -1;
-      return a.fecha.localeCompare(b.fecha);
-    });
-
-    eventosArr.forEach(function(evento) {
-      if (evento.tipo && evento.tipo.toLowerCase() === "ensayo" && evento.fecha && evento.hora) {
-        var fechaHoraEventoStr = evento.fecha + 'T' + evento.hora + ':00';
-        var fechaHoraEvento = new Date(fechaHoraEventoStr);
-        var tiempoLimite = new Date(fechaHoraEvento.getTime() + 5400000);
-        var ahora = new Date();
-
-        if (ahora > tiempoLimite) {
-          return;
+        if (snapshot.empty) {
+            lista.innerHTML = "<p style='text-align:center;'>No hay eventos programados.</p>";
+            return;
         }
-      }
 
-      var tarjeta = document.createElement("div");
-      tarjeta.className = "tarjeta-evento";
-      var fechaFormateada = formatearFecha(evento.fecha);
+        var eventosArr = [];
+        snapshot.forEach(function(docSnapshot) {
+            var data = docSnapshot.data();
+            var id = docSnapshot.id;
+            eventosMap[id] = data;
+            data.id = id;
+            eventosArr.push(data);
+        });
 
-      var htmlTarjeta = '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">' +
-        '<span class="badge ' + (evento.tipo ? evento.tipo.toLowerCase() : '') + '">' + (evento.tipo || 'Evento') + '</span>' +
-        '<div style="display: flex; align-items: center; gap: 8px;">' +
-          '<span style="color: #D4AF37; font-weight: 700; font-size: 0.95rem;">' + (evento.hora || '') + '</span>';
+        eventosArr.sort(function(a, b) {
+            if (!a.fecha) return 1;
+            if (!b.fecha) return -1;
+            return a.fecha.localeCompare(b.fecha);
+        });
 
-      if (esAdmin) {
-        htmlTarjeta += '<button class="btn-editar" onclick="cargarEdicionEvento(\'' + evento.id + '\')" title="Editar acto">✏️</button>' +
-                       '<button class="btn-eliminar" onclick="borrarEvento(\'' + evento.id + '\')" title="Eliminar acto">✕</button>';
-      }
+        eventosArr.forEach(function(evento) {
+            if (evento.tipo && evento.tipo.toLowerCase() === "ensayo" && evento.fecha && evento.hora) {
+                var fechaHoraEventoStr = evento.fecha + 'T' + evento.hora + ':00';
+                var fechaHoraEvento = new Date(fechaHoraEventoStr);
+                var tiempoLimite = new Date(fechaHoraEvento.getTime() + 5400000);
+                var ahora = new Date();
 
-      htmlTarjeta += '</div></div>' +
-        '<h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 10px; font-weight: 600;">' + (evento.titulo || '') + '</h3>' +
-        '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📅 <strong>Fecha:</strong> ' + fechaFormateada + '</p>' +
-        '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📍 <strong>Lugar:</strong> ' + (evento.lugar || '') + '</p>';
+                if (ahora > tiempoLimite) {
+                    return;
+                }
+            }
 
-      if (evento.detalles) {
-        htmlTarjeta += '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📝 ' + evento.detalles + '</p>';
-      }
+            var tarjeta = document.createElement("div");
+            tarjeta.className = "tarjeta-evento";
+            var fechaFormateada = formatearFecha(evento.fecha);
 
-      tarjeta.innerHTML = htmlTarjeta;
-      lista.appendChild(tarjeta);
+            var htmlTarjeta = '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">' +
+                '<span class="badge ' + (evento.tipo ? evento.tipo.toLowerCase() : '') + '">' + (evento.tipo || 'Evento') + '</span>' +
+                '<div style="display: flex; align-items: center; gap: 8px;">' +
+                  '<span style="color: #D4AF37; font-weight: 700; font-size: 0.95rem;">' + (evento.hora || '') + '</span>';
+
+            if (esAdmin) {
+                htmlTarjeta += '<button class="btn-editar" onclick="cargarEdicionEvento(\'' + evento.id + '\')" title="Editar acto">✏️</button>' +
+                               '<button class="btn-eliminar" onclick="borrarEvento(\'' + evento.id + '\')" title="Eliminar acto">✕</button>';
+            }
+
+            htmlTarjeta += '</div></div>' +
+                '<h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 10px; font-weight: 600;">' + (evento.titulo || '') + '</h3>' +
+                '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📅 <strong>Fecha:</strong> ' + fechaFormateada + '</p>' +
+                '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📍 <strong>Lugar:</strong> ' + (evento.lugar || '') + '</p>';
+
+            if (evento.detalles) {
+                htmlTarjeta += '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📝 ' + evento.detalles + '</p>';
+            }
+
+            tarjeta.innerHTML = htmlTarjeta;
+            lista.appendChild(tarjeta);
+        });
     });
-  });
 }
 
 escucharEventos();
 
 function cargarEdicionEvento(id) {
-  if (!esAdmin) return;
-  var evento = eventosMap[id];
-  if (!evento) return;
+    if (!esAdmin) return;
+    var evento = eventosMap[id];
+    if (!evento) return;
 
-  idEventoEditando = id;
-  document.getElementById("tituloEvento").value = evento.titulo || "";
-  document.getElementById("tipoEvento").value = evento.tipo || "Ensayo";
-  document.getElementById("horaEvento").value = evento.hora || "";
-  document.getElementById("fechaEvento").value = evento.fecha || "";
-  document.getElementById("lugarEvento").value = evento.lugar || "";
-  document.getElementById("detallesEvento").value = evento.detalles || "";
+    idEventoEditando = id;
+    document.getElementById("tituloEvento").value = evento.titulo || "";
+    document.getElementById("tipoEvento").value = evento.tipo || "Ensayo";
+    document.getElementById("horaEvento").value = evento.hora || "";
+    document.getElementById("fechaEvento").value = evento.fecha || "";
+    document.getElementById("lugarEvento").value = evento.lugar || "";
+    document.getElementById("detallesEvento").value = evento.detalles || "";
 
-  document.getElementById("panelAdmin").style.display = "flex";
+    document.getElementById("panelAdmin").style.display = "flex";
 }
 
 function guardarEvento(e) {
-  if (e) e.preventDefault();
-  if (!esAdmin) {
-    alert("Acceso denegado");
-    return;
-  }
-  
-  var datosEvento = {
-    titulo: document.getElementById("tituloEvento").value,
-    tipo: document.getElementById("tipoEvento").value,
-    hora: document.getElementById("horaEvento").value,
-    fecha: document.getElementById("fechaEvento").value,
-    lugar: document.getElementById("lugarEvento").value,
-    detalles: document.getElementById("detallesEvento").value
-  };
+    if (e) e.preventDefault();
+    if (!esAdmin) {
+        alert("Acceso denegado");
+        return;
+    }
+    
+    var datosEvento = {
+        titulo: document.getElementById("tituloEvento").value,
+        tipo: document.getElementById("tipoEvento").value,
+        hora: document.getElementById("horaEvento").value,
+        fecha: document.getElementById("fechaEvento").value,
+        lugar: document.getElementById("lugarEvento").value,
+        detalles: document.getElementById("detallesEvento").value
+    };
 
-  if (idEventoEditando) {
-    eventosRef.doc(idEventoEditando).update(datosEvento)
-      .then(function() {
-        idEventoEditando = null;
-        document.getElementById("formEvento").reset();
-        cerrarModal('panelAdmin');
-      })
-      .catch(function(error) { alert("Error: " + error.message); });
-  } else {
-    eventosRef.add(datosEvento)
-      .then(function() {
-        document.getElementById("formEvento").reset();
-        cerrarModal('panelAdmin');
-      })
-      .catch(function(error) { alert("Error: " + error.message); });
-  }
+    if (idEventoEditando) {
+        eventosRef.doc(idEventoEditando).update(datosEvento)
+            .then(function() {
+                idEventoEditando = null;
+                document.getElementById("formEvento").reset();
+                cerrarModal('panelAdmin');
+            })
+            .catch(function(error) { alert("Error: " + error.message); });
+    } else {
+        eventosRef.add(datosEvento)
+            .then(function() {
+                document.getElementById("formEvento").reset();
+                cerrarModal('panelAdmin');
+            })
+            .catch(function(error) { alert("Error: " + error.message); });
+    }
 }
 
 function borrarEvento(id) {
-  if (!esAdmin) return;
-  if (confirm("¿Seguro que quieres eliminar este acto?")) {
-    eventosRef.doc(id).delete().catch(function(error) {
-      alert("Error al eliminar: " + error.message);
-    });
-  }
+    if (!esAdmin) return;
+    if (confirm("¿Seguro que quieres eliminar este acto?")) {
+        eventosRef.doc(id).delete().catch(function(error) {
+            alert("Error al eliminar: " + error.message);
+        });
+    }
 }
 
 function abrirPanelAsistencia() {
@@ -248,7 +248,7 @@ function cargarComponentesYAsistencia() {
             componentesArr.push(data);
         });
 
-        // 🔄 ORDENAR: Los más antiguos arriba, los nuevos abajo por orden de creación
+        // Ordenar: Los más antiguos arriba, los nuevos abajo
         componentesArr.sort(function(a, b) {
             var tA = a.creadoEn || 0;
             var tB = b.creadoEn || 0;
@@ -375,7 +375,6 @@ function agregarComponente() {
         return;
     }
 
-    // Obtenemos la fecha actual en formato DD/MM/YYYY
     var hoy = new Date();
     var anio = hoy.getFullYear();
     var mes = String(hoy.getMonth() + 1).padStart(2, '0');
@@ -386,7 +385,7 @@ function agregarComponente() {
         nombre: nombre, 
         seccion: seccion,
         fechaAlta: fechaAltaFormateada,
-        creadoEn: Date.now() // 👈 Sello de tiempo para que se coloquen abajo al agregarlos
+        creadoEn: Date.now() 
     }).then(function() {
         document.getElementById('nuevoNombreComponente').value = '';
         cargarComponentesYAsistencia();
