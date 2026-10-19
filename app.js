@@ -1,4 +1,4 @@
-const firebaseConfig = {
+cconst firebaseConfig = {
   apiKey: "AIzaSyA87GdLbgUDMlE-N_wQtJpLnGFgODA6Mpc",
   authDomain: "bandajesusnazareno2012.firebaseapp.com",
   projectId: "bandajesusnazareno2012",
@@ -46,12 +46,10 @@ function validarClave() {
     crearBotonFlotante();
     escucharEventos();
     
-    // Activar visibilidad de elementos exclusivos de administrador en la interfaz
     document.querySelectorAll(".admin-only").forEach(function(el) {
       el.style.display = "block";
     });
 
-    // Recargar la asistencia si el modal está abierto para que aparezcan los botones de admin
     if (document.getElementById("modalAsistencia").style.display === "flex") {
       cargarComponentesYAsistencia();
     }
@@ -232,7 +230,6 @@ function cargarComponentesYAsistencia() {
     var fechaInput = document.getElementById('fechaAsistencia').value;
     if (!fechaInput) return;
 
-    // Normalizar fecha seleccionada a formato comparable (YYYYMMDD numérico)
     var partsSel = fechaInput.includes('/') ? fechaInput.split('/') : fechaInput.split('-');
     var numSel = 0;
     if (partsSel.length === 3) {
@@ -244,6 +241,20 @@ function cargarComponentesYAsistencia() {
     }
 
     db.collection("componentes").get().then(function(querySnapshot) {
+        var componentesArr = [];
+        querySnapshot.forEach(function(resDoc) {
+            var data = resDoc.data();
+            data.id = resDoc.id;
+            componentesArr.push(data);
+        });
+
+        // 🔄 ORDENAR: Los más antiguos arriba, los nuevos abajo por orden de creación
+        componentesArr.sort(function(a, b) {
+            var tA = a.creadoEn || 0;
+            var tB = b.creadoEn || 0;
+            return tA - tB;
+        });
+
         var cornetasHTML = '';
         var bateriaHTML = '';
         
@@ -251,7 +262,6 @@ function cargarComponentesYAsistencia() {
         var totalPresentes = 0;
         var totalAusentes = 0;
 
-        // Para consultar en Firestore usamos el formato YYYY-MM-DD del input o convertimos
         var fechaFirestore = fechaInput;
         if (fechaInput.includes('/')) {
             var p = fechaInput.split('/');
@@ -261,11 +271,9 @@ function cargarComponentesYAsistencia() {
         db.collection("asistencias").doc(fechaFirestore).get().then(function(asistenciaDoc) {
             var registrosAsistencia = asistenciaDoc.exists ? asistenciaDoc.data().registros || {} : {};
 
-            querySnapshot.forEach(function(resDoc) {
-                var comp = resDoc.data();
-                var idComp = resDoc.id;
+            componentesArr.forEach(function(comp) {
+                var idComp = comp.id;
                 
-                // Normalizar la fecha de alta del componente (viene en DD/MM/YYYY o YYYY-MM-DD)
                 var fechaAltaStr = comp.fechaAlta || "01/01/2024";
                 var partsAlta = fechaAltaStr.includes('/') ? fechaAltaStr.split('/') : fechaAltaStr.split('-');
                 var numAlta = 0;
@@ -277,9 +285,8 @@ function cargarComponentesYAsistencia() {
                     }
                 }
 
-                // 🛑 Comprobar si la fecha seleccionada es anterior a la fecha de alta
                 if (numSel < numAlta) {
-                    return; // Oculta al músico si aún no estaba en la banda en este día
+                    return; 
                 }
 
                 var estado = registrosAsistencia[idComp] || ''; 
@@ -368,17 +375,18 @@ function agregarComponente() {
         return;
     }
 
-    // Obtener la fecha actual en formato DD/MM/YYYY
+    // Obtenemos la fecha actual en formato DD/MM/YYYY
     var hoy = new Date();
     var anio = hoy.getFullYear();
     var mes = String(hoy.getMonth() + 1).padStart(2, '0');
     var dia = String(hoy.getDate()).padStart(2, '0');
-    var fechaAltaFormateada = dia + '/' + mes + '/' + anio; // 👈 Formato Día, Mes, Año
+    var fechaAltaFormateada = dia + '/' + mes + '/' + anio;
 
     db.collection("componentes").add({ 
         nombre: nombre, 
         seccion: seccion,
-        fechaAlta: fechaAltaFormateada 
+        fechaAlta: fechaAltaFormateada,
+        creadoEn: Date.now() // 👈 Sello de tiempo para que se coloquen abajo al agregarlos
     }).then(function() {
         document.getElementById('nuevoNombreComponente').value = '';
         cargarComponentesYAsistencia();
