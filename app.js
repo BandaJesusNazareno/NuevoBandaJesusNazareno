@@ -45,6 +45,16 @@ function validarClave() {
     cerrarModal("modalClave");
     crearBotonFlotante();
     escucharEventos();
+    
+    // Activar visibilidad de elementos exclusivos de administrador en la interfaz
+    document.querySelectorAll(".admin-only").forEach(function(el) {
+      el.style.display = "block";
+    });
+
+    // Recargar la asistencia si el modal está abierto para que aparezcan los botones de admin
+    if (document.getElementById("modalAsistencia").style.display === "flex") {
+      cargarComponentesYAsistencia();
+    }
   } else {
     alert("Contraseña incorrecta");
   }
@@ -206,6 +216,13 @@ function abrirPanelAsistencia() {
     var hoy = new Date().toISOString().split('T')[0];
     document.getElementById('fechaAsistencia').value = hoy;
     document.getElementById('modalAsistencia').style.display = 'flex';
+    
+    // Asegurar visibilidad de controles de admin si ya inició sesión
+    var seccionAdmin = document.getElementById('adminSeccionComponentes');
+    if (seccionAdmin) {
+        seccionAdmin.style.display = esAdmin ? 'block' : 'none';
+    }
+    
     cargarComponentesYAsistencia();
 }
 
@@ -225,14 +242,27 @@ function cargarComponentesYAsistencia() {
                 var idComp = resDoc.id;
                 var estado = registrosAsistencia[idComp] || ''; 
 
-                var htmlItem = '<div class="item-componente">' +
+                var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">' +
                     '<span style="color: #fff; font-size: 0.9rem;">' + comp.nombre + '</span>' +
-                    '<div class="acciones-asistencia">' +
-                        '<button type="button" class="btn-asiste ' + (estado === 'asiste' ? 'activo' : '') + '" onclick="marcarAsistencia(event, \'' + idComp + '\', \'asiste\')">Sí</button>' +
-                        '<button type="button" class="btn-no-asiste ' + (estado === 'no' ? 'activo' : '') + '" onclick="marcarAsistencia(event, \'' + idComp + '\', \'no\')">No</button>' +
-                        '<button type="button" class="btn-borrar-componente" onclick="eliminarComponente(\'' + idComp + '\')" title="Dar de baja">🗑️</button>' +
-                    '</div>' +
-                '</div>';
+                    '<div class="acciones-asistencia" style="display: flex; gap: 6px; align-items: center;">';
+
+                if (esAdmin) {
+                    // MODO ADMIN: Botones interactivos para modificar asistencia y papelera para borrar
+                    htmlItem += '<button type="button" class="btn-asiste ' + (estado === 'asiste' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'asiste\')">Sí</button>' +
+                                '<button type="button" class="btn-no-asiste ' + (estado === 'no' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'no\')">No</button>' +
+                                '<button type="button" class="btn-borrar-componente" onclick="eliminarComponente(\'' + idComp + '\')" title="Dar de baja" style="background:none; border:none; cursor:pointer; font-size: 1rem;">🗑️</button>';
+                } else {
+                    // MODO VISITANTE: Solo texto estático de solo lectura
+                    if (estado === 'asiste') {
+                        htmlItem += '<span class="asistencia-badge-si">SÍ</span>';
+                    } else if (estado === 'no') {
+                        htmlItem += '<span class="asistencia-badge-no">NO</span>';
+                    } else {
+                        htmlItem += '<span style="color: #94a3b8; font-size: 0.85rem; font-style: italic;">Sin registrar</span>';
+                    }
+                }
+
+                htmlItem += '</div></div>';
 
                 if (comp.seccion === 'corneta') {
                     cornetasHTML += htmlItem;
@@ -249,21 +279,34 @@ function cargarComponentesYAsistencia() {
     });
 }
 
-var asistenciaTemporal = {};
+// Función directa para que el admin guarde el cambio de asistencia al instante en Firebase
+function marcarAsistenciaDirecto(e, idComp, estado) {
+    if (!esAdmin) return;
+    var fecha = document.getElementById('fechaAsistencia').value;
+    if (!fecha) return;
 
-function marcarAsistencia(e, idComp, estado) {
-    asistenciaTemporal[idComp] = estado;
-    var item = e.target.closest('.acciones-asistencia');
-    item.querySelector('.btn-asiste').classList.toggle('activo', estado === 'asiste');
-    item.querySelector('.btn-no-asiste').classList.toggle('activo', estado === 'no');
+    var ref = db.collection("asistencias").doc(fecha);
+    ref.get().then(function(doc) {
+        var currentRegistros = doc.exists ? doc.data().registros || {} : {};
+        currentRegistros[idComp] = estado;
+
+        ref.set({ fecha: fecha, registros: currentRegistros }).then(function() {
+            // Actualizar clases visuales de los botones de forma fluida
+            var item = e.target.closest('.acciones-asistencia');
+            item.querySelector('.btn-asiste').classList.toggle('activo', estado === 'asiste');
+            item.querySelector('.btn-no-asiste').classList.toggle('activo', estado === 'no');
+        });
+    }).catch(function(error) {
+        console.error("Error al actualizar asistencia:", error);
+    });
 }
 
 function cargarAsistenciaFecha() {
-    asistenciaTemporal = {};
     cargarComponentesYAsistencia();
 }
 
 function agregarComponente() {
+    if (!esAdmin) return;
     var nombre = document.getElementById('nuevoNombreComponente').value.trim();
     var seccion = document.getElementById('nuevoSeccionComponente').value;
 
@@ -281,6 +324,7 @@ function agregarComponente() {
 }
 
 function eliminarComponente(idComp) {
+    if (!esAdmin) return;
     if (confirm("¿Estás seguro de dar de baja a este componente de la banda?")) {
         db.collection("componentes").doc(idComp).delete().then(function() {
             cargarComponentesYAsistencia();
@@ -288,29 +332,4 @@ function eliminarComponente(idComp) {
             console.error("Error al eliminar componente:", error);
         });
     }
-}
-
-function guardarAsistenciaFirebase() {
-    var fecha = document.getElementById('fechaAsistencia').value;
-    if (!fecha) {
-        alert("Selecciona una fecha.");
-        return;
-    }
-
-    var ref = db.collection("asistencias").doc(fecha);
-    ref.get().then(function(actualDoc) {
-        var currentRegistros = actualDoc.exists ? actualDoc.data().registros || {} : {};
-        
-        for (var k in asistenciaTemporal) {
-            currentRegistros[k] = asistenciaTemporal[k];
-        }
-
-        ref.set({ fecha: fecha, registros: currentRegistros }).then(function() {
-            alert("¡Asistencia guardada correctamente!");
-            cerrarModal('modalAsistencia');
-        });
-    }).catch(function(error) {
-        console.error("Error al guardar asistencia:", error);
-        alert("Hubo un error al guardar.");
-    });
 }
