@@ -1,6 +1,6 @@
 // 1. Configuración de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, updateDoc, onSnapshot, deleteDoc, doc, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA87GdLbgUDMlE-N_wQtJpLnGFgODA6Mpc",
@@ -231,3 +231,10 @@ window.borrarEvento = async function(id) {
     }
   }
 };
+
+// 7. Panel de Control de Asistencia y Gestión de Músicos
+window.abrirPanelAsistencia = function() {
+    if (!esAdmin) {
+        alert("Se requiere acceso de administrador para ver la asistencia.");
+        window.pedirClave();
+        return;
