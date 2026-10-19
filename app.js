@@ -341,25 +341,19 @@ async function guardarAsistenciaFirebase() {
     }
 }
 
-// 5. Asignación automática de eventos
-document.addEventListener("DOMContentLoaded", () => {
-    // Botones de la cabecera
-    document.getElementById("btnAsistencia")?.addEventListener("click", abrirPanelAsistencia);
-    document.getElementById("btnAdmin")?.addEventListener("click", pedirClave);
+// 5. Enlaces directos para los botones y modales
+document.getElementById("btnAsistencia")?.addEventListener("click", abrirPanelAsistencia);
+document.getElementById("btnAdmin")?.addEventListener("click", pedirClave);
 
-    // Modal Clave
-    document.getElementById("btnCerrarClave")?.addEventListener("click", () => cerrarModal('modalClave'));
-    document.getElementById("btnEntrarClave")?.addEventListener("click", validarClave);
+document.getElementById("btnCerrarClave")?.addEventListener("click", () => cerrarModal('modalClave'));
+document.getElementById("btnEntrarClave")?.addEventListener("click", validarClave);
 
-    // Modal Admin
-    document.getElementById("btnCerrarPanelAdminX")?.addEventListener("click", () => cerrarModal('panelAdmin'));
-    document.getElementById("btnCancelarPanelAdmin")?.addEventListener("click", () => cerrarModal('panelAdmin'));
-    document.getElementById("formEvento")?.addEventListener("submit", guardarEvento);
+document.getElementById("btnCerrarPanelAdminX")?.addEventListener("click", () => cerrarModal('panelAdmin'));
+document.getElementById("btnCancelarPanelAdmin")?.addEventListener("click", () => cerrarModal('panelAdmin'));
+document.getElementById("formEvento")?.addEventListener("submit", guardarEvento);
 
-    // Modal Asistencia
-    document.getElementById("btnCerrarModalAsistenciaX")?.addEventListener("click", () => cerrarModal('modalAsistencia'));
-    document.getElementById("btnCerrarAsistenciaBtn")?.addEventListener("click", () => cerrarModal('modalAsistencia'));
-    document.getElementById("fechaAsistencia")?.addEventListener("change", cargarAsistenciaFecha);
-    document.getElementById("btnAgregarComponente")?.addEventListener("click", agregarComponente);
-    document.getElementById("btnGuardarAsistenciaFirebase")?.addEventListener("click", guardarAsistenciaFirebase);
-});
+document.getElementById("btnCerrarModalAsistenciaX")?.addEventListener("click", () => cerrarModal('modalAsistencia'));
+document.getElementById("btnCerrarAsistenciaBtn")?.addEventListener("click", () => cerrarModal('modalAsistencia'));
+document.getElementById("fechaAsistencia")?.addEventListener("change", cargarAsistenciaFecha);
+document.getElementById("btnAgregarComponente")?.addEventListener("click", agregarComponente);
+document.getElementById("btnGuardarAsistenciaFirebase")?.addEventListener("click", guardarAsistenciaFirebase);
