@@ -19,8 +19,8 @@
             </div>
         </div>
         <div style="display: flex; gap: 10px;">
-            <button id="btnAsistencia" class="btn-admin" style="background-color: var(--color-secundario); color: #0f172a;">📋 Asistencia</button>
-            <button id="btnAdmin" class="btn-admin">Admin</button>
+            <button id="btnAsistencia" class="btn-admin" onclick="abrirPanelAsistencia()" style="background-color: var(--color-secundario); color: #0f172a;">📋 Asistencia</button>
+            <button id="btnAdmin" class="btn-admin" onclick="pedirClave()">Admin</button>
         </div>
     </header>
 
@@ -170,6 +170,6 @@
     </div>
 
     <!-- Cargar script como módulo ES6 con control de caché actualizado -->
-    <script type="module" src="app.js?v=104"></script>
+    <script type="module" src="app.js?v=106"></script>
 </body>
 </html>
