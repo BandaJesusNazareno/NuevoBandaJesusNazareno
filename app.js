@@ -233,6 +233,10 @@ function cargarComponentesYAsistencia() {
     db.collection("componentes").get().then(function(querySnapshot) {
         var cornetasHTML = '';
         var bateriaHTML = '';
+        
+        var totalMusicos = 0;
+        var totalPresentes = 0;
+        var totalAusentes = 0;
 
         db.collection("asistencias").doc(fecha).get().then(function(asistenciaDoc) {
             var registrosAsistencia = asistenciaDoc.exists ? asistenciaDoc.data().registros || {} : {};
@@ -241,6 +245,13 @@ function cargarComponentesYAsistencia() {
                 var comp = resDoc.data();
                 var idComp = resDoc.id;
                 var estado = registrosAsistencia[idComp] || ''; 
+
+                totalMusicos++;
+                if (estado === 'asiste') {
+                    totalPresentes++;
+                } else if (estado === 'no') {
+                    totalAusentes++;
+                }
 
                 var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">' +
                     '<span style="color: #fff; font-size: 0.9rem;">' + comp.nombre + '</span>' +
@@ -271,6 +282,11 @@ function cargarComponentesYAsistencia() {
                 }
             });
 
+            // Actualizar los contadores visuales en el modal
+            document.getElementById('totalMusicosCount').innerText = totalMusicos;
+            document.getElementById('totalPresentesCount').innerText = totalPresentes;
+            document.getElementById('totalAusentesCount').innerText = totalAusentes;
+
             document.getElementById('listaCornetasAsistencia').innerHTML = cornetasHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay cornetas registradas.</p>';
             document.getElementById('listaBateriaAsistencia').innerHTML = bateriaHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay batería/tambores registrados.</p>';
         });
@@ -291,10 +307,8 @@ function marcarAsistenciaDirecto(e, idComp, estado) {
         currentRegistros[idComp] = estado;
 
         ref.set({ fecha: fecha, registros: currentRegistros }).then(function() {
-            // Actualizar clases visuales de los botones de forma fluida
-            var item = e.target.closest('.acciones-asistencia');
-            item.querySelector('.btn-asiste').classList.toggle('activo', estado === 'asiste');
-            item.querySelector('.btn-no-asiste').classList.toggle('activo', estado === 'no');
+            // Recargamos los datos para actualizar al instante los contadores de la cabecera del modal
+            cargarComponentesYAsistencia();
         });
     }).catch(function(error) {
         console.error("Error al actualizar asistencia:", error);
