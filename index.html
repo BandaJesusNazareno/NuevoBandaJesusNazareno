@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Cabecera corporativa -->
+    <!-- Cabecera limpia, ancha y sin apretujamientos -->
     <header class="header">
         <div class="header-brand">
             <img src="escudo.png" alt="Escudo Banda" class="escudo-img">
@@ -21,11 +21,13 @@
                 <p>Sevilla • Agenda Oficial</p>
             </div>
         </div>
-        <div class="header-botones">
-            <button class="btn-admin" onclick="abrirPanelAsistencia()">📋 Asistencia</button>
-            <button class="btn-admin" onclick="pedirClave()">Admin</button>
-        </div>
     </header>
+
+    <!-- Barra de Botones de Gestión (Ubicada exactamente en la zona inferior que querías) -->
+    <div class="barra-botones-superior">
+        <button class="btn-accion-principal" onclick="abrirPanelAsistencia()">📋 Asistencia</button>
+        <button class="btn-accion-principal" onclick="pedirClave()">⚙️ Admin</button>
+    </div>
 
     <!-- Contenido Principal -->
     <main class="contenedor">
@@ -179,6 +181,6 @@
     </div>
 
     <!-- Script principal -->
-    <script src="app.js?v=306"></script>
+    <script src="app.js?v=308"></script>
 </body>
 </html>
