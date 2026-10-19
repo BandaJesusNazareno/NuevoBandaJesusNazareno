@@ -133,6 +133,22 @@
                 <input type="date" id="fechaAsistencia" onchange="cargarAsistenciaFecha()">
             </div>
 
+            <!-- CUADRO RESUMEN DE ASISTENCIA -->
+            <div id="resumenAsistenciaDia" style="display: flex; justify-content: space-around; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--color-secundario); padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center;">
+                <div>
+                    <span style="display: block; font-size: 0.75rem; color: var(--color-secundario);">TOTAL</span>
+                    <strong id="totalMusicosCount" style="font-size: 1.1rem; color: #fff;">0</strong>
+                </div>
+                <div>
+                    <span style="display: block; font-size: 0.75rem; color: #22c55e;">PRESENTES</span>
+                    <strong id="totalPresentesCount" style="font-size: 1.1rem; color: #22c55e;">0</strong>
+                </div>
+                <div>
+                    <span style="display: block; font-size: 0.75rem; color: #ef4444;">FALTAN</span>
+                    <strong id="totalAusentesCount" style="font-size: 1.1rem; color: #ef4444;">0</strong>
+                </div>
+            </div>
+
             <!-- SECCIÓN EXCLUSIVA PARA ADMIN: Añadir o borrar componentes fijos -->
             <div id="adminSeccionComponentes" class="admin-only" style="display: none; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
                 <h4 style="color: var(--color-secundario); font-size: 0.95rem; margin-bottom: 8px;">Añadir Nuevo Componente (Se queda fijo para todos los días)</h4>
@@ -163,6 +179,6 @@
     </div>
 
     <!-- Script principal -->
-    <script src="app.js?v=301"></script>
+    <script src="app.js?v=302"></script>
 </body>
 </html>
