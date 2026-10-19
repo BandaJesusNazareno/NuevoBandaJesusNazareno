@@ -30,13 +30,13 @@ function formatearFecha(fechaOriginal) {
 }
 
 // 2. Control de Modales y Clave Admin
-window.pedirClave = function() {
+function pedirClave() {
   if (esAdmin) {
-    window.abrirFormularioDirecto();
+    abrirFormularioDirecto();
   } else {
     document.getElementById("modalClave").style.display = "flex";
   }
-};
+}
 
 window.cerrarModal = function(idModal) {
   document.getElementById(idModal).style.display = "none";
@@ -63,20 +63,20 @@ function crearBotonFlotante() {
   btn.innerHTML = "+";
   btn.title = "Añadir acto";
   btn.onclick = function() {
-    window.abrirFormularioDirecto();
+    abrirFormularioDirecto();
   };
   document.body.appendChild(btn);
 }
 
-window.abrirFormularioDirecto = function() {
+function abrirFormularioDirecto() {
   if (esAdmin) {
     idEventoEditando = null;
     document.getElementById("formEvento").reset();
     document.getElementById("panelAdmin").style.display = "flex";
   } else {
-    window.pedirClave();
+    pedirClave();
   }
-};
+}
 
 // 3. Cargar y escuchar eventos en tiempo real
 function escucharEventos() {
@@ -128,8 +128,8 @@ function escucharEventos() {
           <div style="display: flex; align-items: center; gap: 8px;">
             <span style="color: #D4AF37; font-weight: 700; font-size: 0.95rem;">${evento.hora || ''}</span>
             ${esAdmin ? `
-              <button class="btn-editar" onclick="cargarEdicionEvento('${evento.id}')" title="Editar acto">✏️</button>
-              <button class="btn-eliminar" onclick="borrarEvento('${evento.id}')" title="Eliminar acto">✕</button>
+              <button class="btn-editar" data-id="${evento.id}" title="Editar acto">✏️</button>
+              <button class="btn-eliminar" data-id="${evento.id}" title="Eliminar acto">✕</button>
             ` : ''}
           </div>
         </div>
@@ -138,6 +138,17 @@ function escucharEventos() {
         <p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📍 <strong>Lugar:</strong> ${evento.lugar || ''}</p>
         ${evento.detalles ? `<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📝 ${evento.detalles}</p>` : ''}
       `;
+      
+      const btnEditar = tarjeta.querySelector('.btn-editar');
+      if (btnEditar) {
+        btnEditar.addEventListener('click', () => cargarEdicionEvento(evento.id));
+      }
+
+      const btnEliminar = tarjeta.querySelector('.btn-eliminar');
+      if (btnEliminar) {
+        btnEliminar.addEventListener('click', () => borrarEvento(evento.id));
+      }
+
       lista.appendChild(tarjeta);
     });
   });
@@ -145,7 +156,7 @@ function escucharEventos() {
 
 escucharEventos();
 
-window.cargarEdicionEvento = function(id) {
+function cargarEdicionEvento(id) {
   if (!esAdmin) return;
   const evento = eventosMap[id];
   if (!evento) return;
@@ -159,7 +170,7 @@ window.cargarEdicionEvento = function(id) {
   document.getElementById("detallesEvento").value = evento.detalles || "";
 
   document.getElementById("panelAdmin").style.display = "flex";
-};
+}
 
 window.guardarEvento = async function(e) {
   if (e) e.preventDefault();
@@ -192,7 +203,7 @@ window.guardarEvento = async function(e) {
   }
 };
 
-window.borrarEvento = async function(id) {
+async function borrarEvento(id) {
   if (!esAdmin) return;
   
   if (confirm("¿Seguro que quieres eliminar este acto?")) {
@@ -202,17 +213,17 @@ window.borrarEvento = async function(id) {
       alert("Error al eliminar: " + error.message);
     }
   }
-};
+}
 
 // 4. Panel de Control de Asistencia y Gestión de Músicos
-window.abrirPanelAsistencia = function() {
+function abrirPanelAsistencia() {
     const hoy = new Date().toISOString().split('T')[0];
     document.getElementById('fechaAsistencia').value = hoy;
     document.getElementById('modalAsistencia').style.display = 'flex';
     cargarComponentesYAsistencia();
-};
+}
 
-window.cargarComponentesYAsistencia = async function() {
+async function cargarComponentesYAsistencia() {
     const fecha = document.getElementById('fechaAsistencia').value;
     if (!fecha) return;
 
@@ -230,12 +241,12 @@ window.cargarComponentesYAsistencia = async function() {
             const estado = registrosAsistencia[idComp] || ''; 
 
             const htmlItem = `
-                <div class="item-componente">
+                <div class="item-componente" data-id="${idComp}">
                     <span style="color: #fff; font-size: 0.9rem;">${comp.nombre}</span>
                     <div class="acciones-asistencia">
-                        <button type="button" class="btn-asiste ${estado === 'asiste' ? 'activo' : ''}" onclick="marcarAsistencia(event, '${idComp}', 'asiste')">Sí</button>
-                        <button type="button" class="btn-no-asiste ${estado === 'no' ? 'activo' : ''}" onclick="marcarAsistencia(event, '${idComp}', 'no')">No</button>
-                        <button type="button" class="btn-borrar-componente" onclick="eliminarComponente('${idComp}')" title="Dar de baja">🗑️</button>
+                        <button type="button" class="btn-asiste ${estado === 'asiste' ? 'activo' : ''}" data-estado="asiste">Sí</button>
+                        <button type="button" class="btn-no-asiste ${estado === 'no' ? 'activo' : ''}" data-estado="no">No</button>
+                        <button type="button" class="btn-borrar-componente" title="Dar de baja">🗑️</button>
                     </div>
                 </div>
             `;
@@ -250,20 +261,28 @@ window.cargarComponentesYAsistencia = async function() {
         document.getElementById('listaCornetasAsistencia').innerHTML = cornetasHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay cornetas registradas.</p>';
         document.getElementById('listaBateriaAsistencia').innerHTML = bateriaHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay batería/tambores registrados.</p>';
 
+        document.querySelectorAll('.item-componente').forEach(item => {
+            const idComp = item.dataset.id;
+            
+            item.querySelector('.btn-asiste').addEventListener('click', (e) => marcarAsistencia(e, idComp, 'asiste'));
+            item.querySelector('.btn-no-asiste').addEventListener('click', (e) => marcarAsistencia(e, idComp, 'no'));
+            item.querySelector('.btn-borrar-componente').addEventListener('click', () => eliminarComponente(idComp));
+        });
+
     } catch (error) {
         console.error("Error al cargar componentes:", error);
     }
-};
+}
 
 let asistenciaTemporal = {};
 
-window.marcarAsistencia = function(e, idComp, estado) {
+function marcarAsistencia(e, idComp, estado) {
     asistenciaTemporal[idComp] = estado;
     
     const item = e.target.closest('.acciones-asistencia');
     item.querySelector('.btn-asiste').classList.toggle('activo', estado === 'asiste');
     item.querySelector('.btn-no-asiste').classList.toggle('activo', estado === 'no');
-};
+}
 
 window.cargarAsistenciaFecha = function() {
     asistenciaTemporal = {};
@@ -288,7 +307,7 @@ window.agregarComponente = async function() {
     }
 };
 
-window.eliminarComponente = async function(idComp) {
+async function eliminarComponente(idComp) {
     if (confirm("¿Estás seguro de dar de baja a este componente de la banda?")) {
         try {
             await deleteDoc(doc(db, "componentes", idComp));
@@ -297,7 +316,7 @@ window.eliminarComponente = async function(idComp) {
             console.error("Error al eliminar componente:", error);
         }
     }
-};
+}
 
 window.guardarAsistenciaFirebase = async function() {
     const fecha = document.getElementById('fechaAsistencia').value;
@@ -322,15 +341,9 @@ window.guardarAsistenciaFirebase = async function() {
     }
 };
 
-// 5. Enlace seguro de los botones de la cabecera para módulos
+// 5. Enlaces automáticos seguros para los botones principales
 document.addEventListener("DOMContentLoaded", () => {
-    const btnAsistencia = document.getElementById("btnAsistencia");
-    if (btnAsistencia) {
-        btnAsistencia.addEventListener("click", abrirPanelAsistencia);
-    }
-
-    const btnAdmin = document.getElementById("btnAdmin");
-    if (btnAdmin) {
-        btnAdmin.addEventListener("click", pedirClave);
-    }
+    document.getElementById("btnAsistencia")?.addEventListener("click", abrirPanelAsistencia);
+    document.getElementById("btnAdmin")?.addEventListener("click", pedirClave);
+    document.getElementById("formEvento")?.addEventListener("submit", guardarEvento);
 });
