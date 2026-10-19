@@ -149,6 +149,7 @@ function escucharEventos() {
     });
 }
 
+// 🛑 AQUÍ ESTABA EL OLVIDO: Arrancar la escucha de eventos al cargar la página
 escucharEventos();
 
 function cargarEdicionEvento(id) {
@@ -212,10 +213,7 @@ function borrarEvento(id) {
 
 function abrirPanelAsistencia() {
     var hoy = new Date().toISOString().split('T')[0];
-    var partesHoy = hoy.split('-');
-    var hoyFormateado = partesHoy[2] + '/' + partesHoy[1] + '/' + partesHoy[0];
-
-    document.getElementById('fechaAsistencia').value = hoyFormateado;
+    document.getElementById('fechaAsistencia').value = hoy;
     document.getElementById('modalAsistencia').style.display = 'flex';
     
     var seccionAdmin = document.getElementById('adminSeccionComponentes');
@@ -227,18 +225,10 @@ function abrirPanelAsistencia() {
 }
 
 function cargarComponentesYAsistencia() {
-    var fechaInput = document.getElementById('fechaAsistencia').value;
-    if (!fechaInput) return;
+    var fechaSeleccionada = document.getElementById('fechaAsistencia').value;
+    if (!fechaSeleccionada) return;
 
-    var partsSel = fechaInput.includes('/') ? fechaInput.split('/') : fechaInput.split('-');
-    var numSel = 0;
-    if (partsSel.length === 3) {
-        if (partsSel[0].length === 4) {
-            numSel = parseInt(partsSel[0] + partsSel[1] + partsSel[2], 10);
-        } else {
-            numSel = parseInt(partsSel[2] + partsSel[1] + partsSel[0], 10);
-        }
-    }
+    var numSel = parseInt(fechaSeleccionada.replace(/-/g, ''), 10);
 
     db.collection("componentes").get().then(function(querySnapshot) {
         var componentesArr = [];
@@ -248,7 +238,6 @@ function cargarComponentesYAsistencia() {
             componentesArr.push(data);
         });
 
-        // Ordenar: Los más antiguos arriba, los nuevos abajo
         componentesArr.sort(function(a, b) {
             var tA = a.creadoEn || 0;
             var tB = b.creadoEn || 0;
@@ -262,28 +251,18 @@ function cargarComponentesYAsistencia() {
         var totalPresentes = 0;
         var totalAusentes = 0;
 
-        var fechaFirestore = fechaInput;
-        if (fechaInput.includes('/')) {
-            var p = fechaInput.split('/');
-            fechaFirestore = p[2] + '-' + p[1] + '-' + p[0];
-        }
-
-        db.collection("asistencias").doc(fechaFirestore).get().then(function(asistenciaDoc) {
+        db.collection("asistencias").doc(fechaSeleccionada).get().then(function(asistenciaDoc) {
             var registrosAsistencia = asistenciaDoc.exists ? asistenciaDoc.data().registros || {} : {};
 
             componentesArr.forEach(function(comp) {
                 var idComp = comp.id;
                 
-                var fechaAltaStr = comp.fechaAlta || "01/01/2024";
-                var partsAlta = fechaAltaStr.includes('/') ? fechaAltaStr.split('/') : fechaAltaStr.split('-');
-                var numAlta = 0;
-                if (partsAlta.length === 3) {
-                    if (partsAlta[0].length === 4) {
-                        numAlta = parseInt(partsAlta[0] + partsAlta[1] + partsAlta[2], 10);
-                    } else {
-                        numAlta = parseInt(partsAlta[2] + partsAlta[1] + partsAlta[0], 10);
-                    }
+                var fechaAltaStr = comp.fechaAlta || "2024-01-01";
+                if (fechaAltaStr.includes('/')) {
+                    var p = fechaAltaStr.split('/');
+                    fechaAltaStr = p[2] + '-' + p[1] + '-' + p[0];
                 }
+                var numAlta = parseInt(fechaAltaStr.replace(/-/g, ''), 10);
 
                 if (numSel < numAlta) {
                     return; 
@@ -339,21 +318,15 @@ function cargarComponentesYAsistencia() {
 
 function marcarAsistenciaDirecto(e, idComp, estado) {
     if (!esAdmin) return;
-    var fechaInput = document.getElementById('fechaAsistencia').value;
-    if (!fechaInput) return;
+    var fechaSeleccionada = document.getElementById('fechaAsistencia').value;
+    if (!fechaSeleccionada) return;
 
-    var fechaFirestore = fechaInput;
-    if (fechaInput.includes('/')) {
-        var p = fechaInput.split('/');
-        fechaFirestore = p[2] + '-' + p[1] + '-' + p[0];
-    }
-
-    var ref = db.collection("asistencias").doc(fechaFirestore);
+    var ref = db.collection("asistencias").doc(fechaSeleccionada);
     ref.get().then(function(doc) {
         var currentRegistros = doc.exists ? doc.data().registros || {} : {};
         currentRegistros[idComp] = estado;
 
-        ref.set({ fecha: fechaFirestore, registros: currentRegistros }).then(function() {
+        ref.set({ fecha: fechaSeleccionada, registros: currentRegistros }).then(function() {
             cargarComponentesYAsistencia();
         });
     }).catch(function(error) {
@@ -379,12 +352,12 @@ function agregarComponente() {
     var anio = hoy.getFullYear();
     var mes = String(hoy.getMonth() + 1).padStart(2, '0');
     var dia = String(hoy.getDate()).padStart(2, '0');
-    var fechaAltaFormateada = dia + '/' + mes + '/' + anio;
+    var fechaAltaISO = anio + '-' + mes + '-' + dia;
 
     db.collection("componentes").add({ 
         nombre: nombre, 
         seccion: seccion,
-        fechaAlta: fechaAltaFormateada,
+        fechaAlta: fechaAltaISO,
         creadoEn: Date.now() 
     }).then(function() {
         document.getElementById('nuevoNombreComponente').value = '';
