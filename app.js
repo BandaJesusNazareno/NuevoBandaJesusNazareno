@@ -149,7 +149,6 @@ function escucharEventos() {
     });
 }
 
-// 🛑 AQUÍ ESTABA EL OLVIDO: Arrancar la escucha de eventos al cargar la página
 escucharEventos();
 
 function cargarEdicionEvento(id) {
@@ -212,8 +211,10 @@ function borrarEvento(id) {
 }
 
 function abrirPanelAsistencia() {
+    // Establecer automáticamente la fecha de hoy en formato YYYY-MM-DD que exige el input date
     var hoy = new Date().toISOString().split('T')[0];
     document.getElementById('fechaAsistencia').value = hoy;
+    
     document.getElementById('modalAsistencia').style.display = 'flex';
     
     var seccionAdmin = document.getElementById('adminSeccionComponentes');
