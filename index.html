@@ -89,4 +89,87 @@
                         </select>
                     </div>
 
-                    <div class="form-
+                    <div class="form-group">
+                        <label>Hora</label>
+                        <input type="text" id="horaEvento" placeholder="Ej. 20:30 h" required>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="date" id="fechaEvento" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Lugar</label>
+                        <input type="text" id="lugarEvento" placeholder="Ej. Local de ensayos" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Detalles (Opcional)</label>
+                    <textarea id="detallesEvento" rows="3" placeholder="Ej. Traje de gala..."></textarea>
+                </div>
+
+                <div class="modal-botones">
+                    <button type="button" class="btn-secundario" onclick="cerrarModal('panelAdmin')">Cancelar</button>
+                    <button type="submit" class="btn-principal">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Control de Asistencia y Gestión de Músicos -->
+    <div id="modalAsistencia" class="modal">
+        <div class="modal-contenido" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3>Control de Asistencia</h3>
+                <span class="btn-cerrar" onclick="cerrarModal('modalAsistencia')">&times;</span>
+            </div>
+
+            <!-- Selector de Fecha -->
+            <div class="form-group">
+                <label>Seleccionar Fecha del Ensayo / Acto</label>
+                <input type="date" id="fechaAsistencia" onchange="cargarAsistenciaFecha()">
+            </div>
+
+            <!-- Añadir componentes nuevos -->
+            <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                <h4 style="color: var(--color-secundario); font-size: 0.95rem; margin-bottom: 8px;">Añadir Nuevo Componente</h4>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="nuevoNombreComponente" placeholder="Nombre y Apellidos" style="flex: 1; padding: 8px; background: #0a0f1d; border: 1px solid #334155; color: #fff; border-radius: 6px;">
+                    <select id="nuevoSeccionComponente" style="padding: 8px; background: #0a0f1d; border: 1px solid #334155; color: #fff; border-radius: 6px;">
+                        <option value="corneta">Corneta</option>
+                        <option value="bateria">Batería / Tambor</option>
+                    </select>
+                    <button type="button" class="btn-principal" onclick="agregarComponente()">Añadir</button>
+                </div>
+            </div>
+
+            <!-- Listado por Secciones -->
+            <div style="margin-bottom: 15px;">
+                <h3 style="color: var(--color-secundario); border-bottom: 1px solid #334155; padding-bottom: 5px; margin-bottom: 10px;">🎺 Cornetas</h3>
+                <div id="listaCornetasAsistencia">
+                    <!-- Se cargan dinámicamente -->
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h3 style="color: var(--color-secundario); border-bottom: 1px solid #334155; padding-bottom: 5px; margin-bottom: 10px;">🥁 Batería y Tambores</h3>
+                <div id="listaBateriaAsistencia">
+                    <!-- Se cargan dinámicamente -->
+                </div>
+            </div>
+
+            <div class="modal-botones">
+                <button type="button" class="btn-secundario" onclick="cerrarModal('modalAsistencia')">Cerrar</button>
+                <button type="button" class="btn-principal" onclick="guardarAsistenciaFirebase()">Guardar Asistencia</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cargar script como módulo ES6 con control de caché actualizado -->
+    <script type="module" src="app.js?v=102"></script>
+</body>
+</html>
