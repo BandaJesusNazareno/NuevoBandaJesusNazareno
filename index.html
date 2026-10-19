@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Cabecera -->
+    <!-- Cabecera con más espacio y desahogo -->
     <header class="header">
         <div class="header-brand">
             <img src="escudo.png" alt="Escudo Banda" class="escudo-img">
@@ -21,11 +21,13 @@
                 <p>Sevilla • Agenda Oficial</p>
             </div>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <button class="btn-admin" onclick="abrirPanelAsistencia()" style="background-color: var(--color-secundario); color: #0f172a;">📋 Asistencia</button>
-            <button class="btn-admin" onclick="pedirClave()">Admin</button>
-        </div>
     </header>
+
+    <!-- Barra de Botones (Ubicada exactamente en la zona que marcaste debajo de la cabecera) -->
+    <div class="barra-botones-superior">
+        <button class="btn-accion-principal" onclick="abrirPanelAsistencia()">📋 Asistencia</button>
+        <button class="btn-accion-principal" onclick="pedirClave()">⚙️ Admin</button>
+    </div>
 
     <!-- Contenido Principal -->
     <main class="contenedor">
@@ -179,6 +181,6 @@
     </div>
 
     <!-- Script principal -->
-    <script src="app.js?v=302"></script>
+    <script src="app.js?v=304"></script>
 </body>
 </html>
