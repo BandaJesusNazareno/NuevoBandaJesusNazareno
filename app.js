@@ -227,8 +227,8 @@ function abrirPanelAsistencia() {
 }
 
 function cargarComponentesYAsistencia() {
-    var fecha = document.getElementById('fechaAsistencia').value;
-    if (!fecha) return;
+    var fechaSeleccionada = document.getElementById('fechaAsistencia').value;
+    if (!fechaSeleccionada) return;
 
     db.collection("componentes").get().then(function(querySnapshot) {
         var cornetasHTML = '';
@@ -238,12 +238,19 @@ function cargarComponentesYAsistencia() {
         var totalPresentes = 0;
         var totalAusentes = 0;
 
-        db.collection("asistencias").doc(fecha).get().then(function(asistenciaDoc) {
+        db.collection("asistencias").doc(fechaSeleccionada).get().then(function(asistenciaDoc) {
             var registrosAsistencia = asistenciaDoc.exists ? asistenciaDoc.data().registros || {} : {};
 
             querySnapshot.forEach(function(resDoc) {
                 var comp = resDoc.data();
                 var idComp = resDoc.id;
+                
+                // Si el componente tiene fecha de alta registrada, comprobamos que la fecha seleccionada no sea anterior
+                var fechaAlta = comp.fechaAlta || "2024-01-01"; // Por defecto si es un músico antiguo sin fecha guardada
+                if (fechaSeleccionada < fechaAlta) {
+                    return; // 🛑 Salta este músico porque aún no estaba dado de alta en esta fecha histórica
+                }
+
                 var estado = registrosAsistencia[idComp] || ''; 
 
                 totalMusicos++;
@@ -287,8 +294,8 @@ function cargarComponentesYAsistencia() {
             document.getElementById('totalPresentesCount').innerText = totalPresentes;
             document.getElementById('totalAusentesCount').innerText = totalAusentes;
 
-            document.getElementById('listaCornetasAsistencia').innerHTML = cornetasHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay cornetas registradas.</p>';
-            document.getElementById('listaBateriaAsistencia').innerHTML = bateriaHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay batería/tambores registrados.</p>';
+            document.getElementById('listaCornetasAsistencia').innerHTML = cornetasHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay cornetas registradas para esta fecha.</p>';
+            document.getElementById('listaBateriaAsistencia').innerHTML = bateriaHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay batería/tambores registrados para esta fecha.</p>';
         });
     }).catch(function(error) {
         console.error("Error al cargar componentes:", error);
@@ -329,7 +336,18 @@ function agregarComponente() {
         return;
     }
 
-    db.collection("componentes").add({ nombre: nombre, seccion: seccion }).then(function() {
+    // Obtenemos la fecha actual exacta en formato YYYY-MM-DD para asignarla como su fecha de alta
+    var hoy = new Date();
+    var anio = hoy.getFullYear();
+    var mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    var dia = String(hoy.getDate()).padStart(2, '0');
+    var fechaAltaHoy = anio + '-' + mes + '-' + dia;
+
+    db.collection("componentes").add({ 
+        nombre: nombre, 
+        seccion: seccion,
+        fechaAlta: fechaAltaHoy // 👈 Guardamos el día en que se dio de alta
+    }).then(function() {
         document.getElementById('nuevoNombreComponente').value = '';
         cargarComponentesYAsistencia();
     }).catch(function(error) {
