@@ -38,11 +38,11 @@ function pedirClave() {
   }
 }
 
-window.cerrarModal = function(idModal) {
+function cerrarModal(idModal) {
   document.getElementById(idModal).style.display = "none";
-};
+}
 
-window.validarClave = function() {
+function validarClave() {
   const claveIngresada = document.getElementById("inputClave").value;
   if (claveIngresada === "nazareno2012") {  
     esAdmin = true;
@@ -53,7 +53,7 @@ window.validarClave = function() {
   } else {
     alert("Contraseña incorrecta");
   }
-};
+}
 
 function crearBotonFlotante() {
   if (document.getElementById("btnFlotanteAgregar")) return;
@@ -128,8 +128,8 @@ function escucharEventos() {
           <div style="display: flex; align-items: center; gap: 8px;">
             <span style="color: #D4AF37; font-weight: 700; font-size: 0.95rem;">${evento.hora || ''}</span>
             ${esAdmin ? `
-              <button class="btn-editar" data-id="${evento.id}" title="Editar acto">✏️</button>
-              <button class="btn-eliminar" data-id="${evento.id}" title="Eliminar acto">✕</button>
+              <button class="btn-editar" title="Editar acto">✏️</button>
+              <button class="btn-eliminar" title="Eliminar acto">✕</button>
             ` : ''}
           </div>
         </div>
@@ -172,7 +172,7 @@ function cargarEdicionEvento(id) {
   document.getElementById("panelAdmin").style.display = "flex";
 }
 
-window.guardarEvento = async function(e) {
+async function guardarEvento(e) {
   if (e) e.preventDefault();
   if (!esAdmin) {
     alert("Acceso denegado");
@@ -201,7 +201,7 @@ window.guardarEvento = async function(e) {
   } catch (error) {
     alert("Error al guardar en la nube: " + error.message);
   }
-};
+}
 
 async function borrarEvento(id) {
   if (!esAdmin) return;
@@ -244,8 +244,8 @@ async function cargarComponentesYAsistencia() {
                 <div class="item-componente" data-id="${idComp}">
                     <span style="color: #fff; font-size: 0.9rem;">${comp.nombre}</span>
                     <div class="acciones-asistencia">
-                        <button type="button" class="btn-asiste ${estado === 'asiste' ? 'activo' : ''}" data-estado="asiste">Sí</button>
-                        <button type="button" class="btn-no-asiste ${estado === 'no' ? 'activo' : ''}" data-estado="no">No</button>
+                        <button type="button" class="btn-asiste ${estado === 'asiste' ? 'activo' : ''}">Sí</button>
+                        <button type="button" class="btn-no-asiste ${estado === 'no' ? 'activo' : ''}">No</button>
                         <button type="button" class="btn-borrar-componente" title="Dar de baja">🗑️</button>
                     </div>
                 </div>
@@ -284,12 +284,12 @@ function marcarAsistencia(e, idComp, estado) {
     item.querySelector('.btn-no-asiste').classList.toggle('activo', estado === 'no');
 }
 
-window.cargarAsistenciaFecha = function() {
+function cargarAsistenciaFecha() {
     asistenciaTemporal = {};
     cargarComponentesYAsistencia();
-};
+}
 
-window.agregarComponente = async function() {
+async function agregarComponente() {
     const nombre = document.getElementById('nuevoNombreComponente').value.trim();
     const seccion = document.getElementById('nuevoSeccionComponente').value;
 
@@ -305,7 +305,7 @@ window.agregarComponente = async function() {
     } catch (error) {
         console.error("Error al añadir componente:", error);
     }
-};
+}
 
 async function eliminarComponente(idComp) {
     if (confirm("¿Estás seguro de dar de baja a este componente de la banda?")) {
@@ -318,7 +318,7 @@ async function eliminarComponente(idComp) {
     }
 }
 
-window.guardarAsistenciaFirebase = async function() {
+async function guardarAsistenciaFirebase() {
     const fecha = document.getElementById('fechaAsistencia').value;
     if (!fecha) {
         alert("Selecciona una fecha.");
@@ -339,11 +339,27 @@ window.guardarAsistenciaFirebase = async function() {
         console.error("Error al guardar asistencia:", error);
         alert("Hubo un error al guardar.");
     }
-};
+}
 
-// 5. Enlaces automáticos seguros para los botones principales
+// 5. Asignación automática de eventos
 document.addEventListener("DOMContentLoaded", () => {
+    // Botones de la cabecera
     document.getElementById("btnAsistencia")?.addEventListener("click", abrirPanelAsistencia);
     document.getElementById("btnAdmin")?.addEventListener("click", pedirClave);
+
+    // Modal Clave
+    document.getElementById("btnCerrarClave")?.addEventListener("click", () => cerrarModal('modalClave'));
+    document.getElementById("btnEntrarClave")?.addEventListener("click", validarClave);
+
+    // Modal Admin
+    document.getElementById("btnCerrarPanelAdminX")?.addEventListener("click", () => cerrarModal('panelAdmin'));
+    document.getElementById("btnCancelarPanelAdmin")?.addEventListener("click", () => cerrarModal('panelAdmin'));
     document.getElementById("formEvento")?.addEventListener("submit", guardarEvento);
+
+    // Modal Asistencia
+    document.getElementById("btnCerrarModalAsistenciaX")?.addEventListener("click", () => cerrarModal('modalAsistencia'));
+    document.getElementById("btnCerrarAsistenciaBtn")?.addEventListener("click", () => cerrarModal('modalAsistencia'));
+    document.getElementById("fechaAsistencia")?.addEventListener("change", cargarAsistenciaFecha);
+    document.getElementById("btnAgregarComponente")?.addEventListener("click", agregarComponente);
+    document.getElementById("btnGuardarAsistenciaFirebase")?.addEventListener("click", guardarAsistenciaFirebase);
 });
