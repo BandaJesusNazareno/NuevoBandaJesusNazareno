@@ -29,7 +29,7 @@ function formatearFecha(fechaOriginal) {
   return fechaOriginal;
 }
 
-// 2. Control de Modales y Clave Admin (Asignados a window para HTML)
+// 2. Control de Modales y Clave Admin
 window.pedirClave = function() {
   if (esAdmin) {
     window.abrirFormularioDirecto();
@@ -321,3 +321,16 @@ window.guardarAsistenciaFirebase = async function() {
         alert("Hubo un error al guardar.");
     }
 };
+
+// 5. Enlace seguro de los botones de la cabecera para módulos
+document.addEventListener("DOMContentLoaded", () => {
+    const btnAsistencia = document.getElementById("btnAsistencia");
+    if (btnAsistencia) {
+        btnAsistencia.addEventListener("click", abrirPanelAsistencia);
+    }
+
+    const btnAdmin = document.getElementById("btnAdmin");
+    if (btnAdmin) {
+        btnAdmin.addEventListener("click", pedirClave);
+    }
+});
