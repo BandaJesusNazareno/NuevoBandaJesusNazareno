@@ -133,13 +133,14 @@
                 <input type="date" id="fechaAsistencia" onchange="cargarAsistenciaFecha()">
             </div>
 
-            <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
-                <h4 style="color: var(--color-secundario); font-size: 0.95rem; margin-bottom: 8px;">Añadir Nuevo Componente</h4>
+            <!-- SECCIÓN EXCLUSIVA PARA ADMIN: Añadir o borrar componentes fijos -->
+            <div id="adminSeccionComponentes" class="admin-only" style="display: none; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                <h4 style="color: var(--color-secundario); font-size: 0.95rem; margin-bottom: 8px;">Añadir Nuevo Componente (Se queda fijo para todos los días)</h4>
                 <div style="display: flex; gap: 10px;">
                     <input type="text" id="nuevoNombreComponente" placeholder="Nombre y Apellidos" style="flex: 1; padding: 8px; background: #0a0f1d; border: 1px solid #334155; color: #fff; border-radius: 6px;">
                     <select id="nuevoSeccionComponente" style="padding: 8px; background: #0a0f1d; border: 1px solid #334155; color: #fff; border-radius: 6px;">
                         <option value="corneta">Corneta</option>
-                        <option value="bateria">Batería / Tambor</option>
+                        <option value="bateria">Tambor</option>
                     </select>
                     <button type="button" class="btn-principal" onclick="agregarComponente()">Añadir</button>
                 </div>
@@ -151,18 +152,17 @@
             </div>
 
             <div style="margin-bottom: 20px;">
-                <h3 style="color: var(--color-secundario); border-bottom: 1px solid #334155; padding-bottom: 5px; margin-bottom: 10px;">🥁 Batería</h3>
+                <h3 style="color: var(--color-secundario); border-bottom: 1px solid #334155; padding-bottom: 5px; margin-bottom: 10px;">🥁 Tambores</h3>
                 <div id="listaBateriaAsistencia"></div>
             </div>
 
             <div class="modal-botones">
                 <button type="button" class="btn-secundario" onclick="cerrarModal('modalAsistencia')">Cerrar</button>
-                <button type="button" class="btn-principal" onclick="guardarAsistenciaFirebase()">Guardar Asistencia</button>
             </div>
         </div>
     </div>
 
     <!-- Script principal -->
-    <script src="app.js?v=300"></script>
+    <script src="app.js?v=301"></script>
 </body>
 </html>
