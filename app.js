@@ -16,12 +16,10 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const eventosRef = collection(db, "eventos");
 
-// Estado Administrador y Control de Edición
 let esAdmin = false;
-let idEventoEditando = null; // Variable para saber si estamos editando un evento existente
-let eventosMap = {}; // Mapa para guardar los datos de los eventos en memoria
+let idEventoEditando = null;
+let eventosMap = {};
 
-// Función para formatear la fecha de AAAA-MM-DD a DD/MM/AAAA
 function formatearFecha(fechaOriginal) {
   if (!fechaOriginal) return '';
   const partes = fechaOriginal.split('-');
@@ -31,7 +29,7 @@ function formatearFecha(fechaOriginal) {
   return fechaOriginal;
 }
 
-// 2. Control de Modales y Clave Admin
+// 2. Control de Modales y Clave Admin (Asignados a window para HTML)
 window.pedirClave = function() {
   if (esAdmin) {
     window.abrirFormularioDirecto();
@@ -50,11 +48,7 @@ window.validarClave = function() {
     esAdmin = true;
     document.getElementById("inputClave").value = "";
     cerrarModal("modalClave");
-    
-    // CREAR EL BOTÓN FLOTANTE (+) SOLO CUANDO SE INGRESA LA CLAVE CORRECTA
     crearBotonFlotante();
-    
-    // Recargar eventos para mostrar los botones de administración
     escucharEventos();
   } else {
     alert("Contraseña incorrecta");
@@ -76,7 +70,6 @@ function crearBotonFlotante() {
 
 window.abrirFormularioDirecto = function() {
   if (esAdmin) {
-    // Si se abre con el '+', limpiamos la id de edición para crear uno nuevo
     idEventoEditando = null;
     document.getElementById("formEvento").reset();
     document.getElementById("panelAdmin").style.display = "flex";
@@ -85,51 +78,41 @@ window.abrirFormularioDirecto = function() {
   }
 };
 
-// 3. Cargar y escuchar eventos en tiempo real desde Firebase
+// 3. Cargar y escuchar eventos en tiempo real
 function escucharEventos() {
   onSnapshot(eventosRef, (snapshot) => {
     const lista = document.getElementById("listaEventos");
     if (!lista) return;
     
     lista.innerHTML = "";
-    eventosMap = {}; // Limpiar el mapa local en cada actualización
+    eventosMap = {};
 
     if (snapshot.empty) {
       lista.innerHTML = "<p style='text-align:center;'>No hay eventos programados.</p>";
       return;
     }
 
-    // Convertir la lista en un array para poder ordenarlo
     let eventosArr = [];
     snapshot.forEach((docSnapshot) => {
       const data = docSnapshot.data();
       const id = docSnapshot.id;
-      eventosMap[id] = data; // Guardamos los datos para poder editarlos después
-      eventosArr.push({
-        id,
-        ...data
-      });
+      eventosMap[id] = data;
+      eventosArr.push({ id, ...data });
     });
 
-    // Ordenar de menor a mayor fecha (los días más próximos arriba)
     eventosArr.sort((a, b) => {
       if (!a.fecha) return 1;
       if (!b.fecha) return -1;
       return a.fecha.localeCompare(b.fecha);
     });
 
-    // Generar la tarjeta de cada acto con diseño estructurado
     eventosArr.forEach((evento) => {
-      // COMPROBACIÓN: Ocultar ensayos 1 hora y media después de su inicio
       if (evento.tipo && evento.tipo.toLowerCase() === "ensayo" && evento.fecha && evento.hora) {
         const fechaHoraEventoStr = `${evento.fecha}T${evento.hora}:00`;
         const fechaHoraEvento = new Date(fechaHoraEventoStr);
-        
-        // 1 hora y media en milisegundos (5400000ms)
         const tiempoLimite = new Date(fechaHoraEvento.getTime() + 5400000);
         const ahora = new Date();
 
-        // Si ya ha pasado 1 hora y media, se omite y no se dibuja
         if (ahora > tiempoLimite) {
           return;
         }
@@ -137,8 +120,6 @@ function escucharEventos() {
 
       const tarjeta = document.createElement("div");
       tarjeta.className = "tarjeta-evento";
-
-      // Formato DD/MM/AAAA
       const fechaFormateada = formatearFecha(evento.fecha);
 
       tarjeta.innerHTML = `
@@ -162,18 +143,14 @@ function escucharEventos() {
   });
 }
 
-// Iniciar escucha
 escucharEventos();
 
-// 4. Preparar formulario para editar evento existente
 window.cargarEdicionEvento = function(id) {
   if (!esAdmin) return;
   const evento = eventosMap[id];
   if (!evento) return;
 
-  idEventoEditando = id; // Guardamos el ID del documento que vamos a modificar
-
-  // Rellenar el formulario con los datos actuales del evento
+  idEventoEditando = id;
   document.getElementById("tituloEvento").value = evento.titulo || "";
   document.getElementById("tipoEvento").value = evento.tipo || "Ensayo";
   document.getElementById("horaEvento").value = evento.hora || "";
@@ -181,11 +158,9 @@ window.cargarEdicionEvento = function(id) {
   document.getElementById("lugarEvento").value = evento.lugar || "";
   document.getElementById("detallesEvento").value = evento.detalles || "";
 
-  // Mostrar el modal
   document.getElementById("panelAdmin").style.display = "flex";
 };
 
-// 5. Guardar evento (Nuevo o Editado)
 window.guardarEvento = async function(e) {
   if (e) e.preventDefault();
   if (!esAdmin) {
@@ -204,11 +179,9 @@ window.guardarEvento = async function(e) {
 
   try {
     if (idEventoEditando) {
-      // Si estamos editando, actualizamos el documento existente en Firestore
       await updateDoc(doc(db, "eventos", idEventoEditando), datosEvento);
-      idEventoEditando = null; // Reiniciamos la variable de edición
+      idEventoEditando = null;
     } else {
-      // Si no, creamos uno nuevo
       await addDoc(eventosRef, datosEvento);
     }
 
@@ -219,7 +192,6 @@ window.guardarEvento = async function(e) {
   }
 };
 
-// 6. Borrar evento
 window.borrarEvento = async function(id) {
   if (!esAdmin) return;
   
@@ -232,9 +204,120 @@ window.borrarEvento = async function(id) {
   }
 };
 
-// 7. Panel de Control de Asistencia y Gestión de Músicos
+// 4. Panel de Control de Asistencia y Gestión de Músicos
 window.abrirPanelAsistencia = function() {
-    if (!esAdmin) {
-        alert("Se requiere acceso de administrador para ver la asistencia.");
-        window.pedirClave();
+    const hoy = new Date().toISOString().split('T')[0];
+    document.getElementById('fechaAsistencia').value = hoy;
+    document.getElementById('modalAsistencia').style.display = 'flex';
+    cargarComponentesYAsistencia();
+};
+
+window.cargarComponentesYAsistencia = async function() {
+    const fecha = document.getElementById('fechaAsistencia').value;
+    if (!fecha) return;
+
+    try {
+        const querySnapshot = await getDocs(collection(db, "componentes"));
+        let cornetasHTML = '';
+        let bateriaHTML = '';
+
+        const asistenciaDoc = await getDoc(doc(db, "asistencias", fecha));
+        let registrosAsistencia = asistenciaDoc.exists() ? asistenciaDoc.data().registros || {} : {};
+
+        querySnapshot.forEach((resDoc) => {
+            const comp = resDoc.data();
+            const idComp = resDoc.id;
+            const estado = registrosAsistencia[idComp] || ''; 
+
+            const htmlItem = `
+                <div class="item-componente">
+                    <span style="color: #fff; font-size: 0.9rem;">${comp.nombre}</span>
+                    <div class="acciones-asistencia">
+                        <button type="button" class="btn-asiste ${estado === 'asiste' ? 'activo' : ''}" onclick="marcarAsistencia(event, '${idComp}', 'asiste')">Sí</button>
+                        <button type="button" class="btn-no-asiste ${estado === 'no' ? 'activo' : ''}" onclick="marcarAsistencia(event, '${idComp}', 'no')">No</button>
+                        <button type="button" class="btn-borrar-componente" onclick="eliminarComponente('${idComp}')" title="Dar de baja">🗑️</button>
+                    </div>
+                </div>
+            `;
+
+            if (comp.seccion === 'corneta') {
+                cornetasHTML += htmlItem;
+            } else {
+                bateriaHTML += htmlItem;
+            }
+        });
+
+        document.getElementById('listaCornetasAsistencia').innerHTML = cornetasHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay cornetas registradas.</p>';
+        document.getElementById('listaBateriaAsistencia').innerHTML = bateriaHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay batería/tambores registrados.</p>';
+
+    } catch (error) {
+        console.error("Error al cargar componentes:", error);
+    }
+};
+
+let asistenciaTemporal = {};
+
+window.marcarAsistencia = function(e, idComp, estado) {
+    asistenciaTemporal[idComp] = estado;
+    
+    const item = e.target.closest('.acciones-asistencia');
+    item.querySelector('.btn-asiste').classList.toggle('activo', estado === 'asiste');
+    item.querySelector('.btn-no-asiste').classList.toggle('activo', estado === 'no');
+};
+
+window.cargarAsistenciaFecha = function() {
+    asistenciaTemporal = {};
+    cargarComponentesYAsistencia();
+};
+
+window.agregarComponente = async function() {
+    const nombre = document.getElementById('nuevoNombreComponente').value.trim();
+    const seccion = document.getElementById('nuevoSeccionComponente').value;
+
+    if (!nombre) {
+        alert("Por favor, escribe el nombre del componente.");
         return;
+    }
+
+    try {
+        await addDoc(collection(db, "componentes"), { nombre, seccion });
+        document.getElementById('nuevoNombreComponente').value = '';
+        cargarComponentesYAsistencia();
+    } catch (error) {
+        console.error("Error al añadir componente:", error);
+    }
+};
+
+window.eliminarComponente = async function(idComp) {
+    if (confirm("¿Estás seguro de dar de baja a este componente de la banda?")) {
+        try {
+            await deleteDoc(doc(db, "componentes", idComp));
+            cargarComponentesYAsistencia();
+        } catch (error) {
+            console.error("Error al eliminar componente:", error);
+        }
+    }
+};
+
+window.guardarAsistenciaFirebase = async function() {
+    const fecha = document.getElementById('fechaAsistencia').value;
+    if (!fecha) {
+        alert("Selecciona una fecha.");
+        return;
+    }
+
+    try {
+        const ref = doc(db, "asistencias", fecha);
+        const actualDoc = await getDoc(ref);
+        let currentRegistros = actualDoc.exists() ? actualDoc.data().registros || {} : {};
+
+        const registrosFinales = { ...currentRegistros, ...asistenciaTemporal };
+
+        await setDoc(ref, { fecha, registros: registrosFinales });
+        alert("¡Asistencia guardada correctamente!");
+        cerrarModal('modalAsistencia');
+    } catch (error) {
+        console.error("Error al guardar asistencia:", error);
+        alert("Hubo un error al guardar.");
+    }
+};
