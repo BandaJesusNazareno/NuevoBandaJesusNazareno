@@ -214,10 +214,12 @@ function borrarEvento(id) {
 
 function abrirPanelAsistencia() {
     var hoy = new Date().toISOString().split('T')[0];
-    document.getElementById('fechaAsistencia').value = hoy;
+    var partesHoy = hoy.split('-');
+    var hoyFormateado = partesHoy[2] + '/' + partesHoy[1] + '/' + partesHoy[0];
+
+    document.getElementById('fechaAsistencia').value = hoyFormateado;
     document.getElementById('modalAsistencia').style.display = 'flex';
     
-    // Asegurar visibilidad de controles de admin si ya inició sesión
     var seccionAdmin = document.getElementById('adminSeccionComponentes');
     if (seccionAdmin) {
         seccionAdmin.style.display = esAdmin ? 'block' : 'none';
@@ -227,8 +229,19 @@ function abrirPanelAsistencia() {
 }
 
 function cargarComponentesYAsistencia() {
-    var fechaSeleccionada = document.getElementById('fechaAsistencia').value;
-    if (!fechaSeleccionada) return;
+    var fechaInput = document.getElementById('fechaAsistencia').value;
+    if (!fechaInput) return;
+
+    // Normalizar fecha seleccionada a formato comparable (YYYYMMDD numérico)
+    var partsSel = fechaInput.includes('/') ? fechaInput.split('/') : fechaInput.split('-');
+    var numSel = 0;
+    if (partsSel.length === 3) {
+        if (partsSel[0].length === 4) {
+            numSel = parseInt(partsSel[0] + partsSel[1] + partsSel[2], 10);
+        } else {
+            numSel = parseInt(partsSel[2] + partsSel[1] + partsSel[0], 10);
+        }
+    }
 
     db.collection("componentes").get().then(function(querySnapshot) {
         var cornetasHTML = '';
@@ -238,17 +251,35 @@ function cargarComponentesYAsistencia() {
         var totalPresentes = 0;
         var totalAusentes = 0;
 
-        db.collection("asistencias").doc(fechaSeleccionada).get().then(function(asistenciaDoc) {
+        // Para consultar en Firestore usamos el formato YYYY-MM-DD del input o convertimos
+        var fechaFirestore = fechaInput;
+        if (fechaInput.includes('/')) {
+            var p = fechaInput.split('/');
+            fechaFirestore = p[2] + '-' + p[1] + '-' + p[0];
+        }
+
+        db.collection("asistencias").doc(fechaFirestore).get().then(function(asistenciaDoc) {
             var registrosAsistencia = asistenciaDoc.exists ? asistenciaDoc.data().registros || {} : {};
 
             querySnapshot.forEach(function(resDoc) {
                 var comp = resDoc.data();
                 var idComp = resDoc.id;
                 
-                // Si el componente tiene fecha de alta registrada, comprobamos que la fecha seleccionada no sea anterior
-                var fechaAlta = comp.fechaAlta || "2024-01-01"; // Por defecto si es un músico antiguo sin fecha guardada
-                if (fechaSeleccionada < fechaAlta) {
-                    return; // 🛑 Salta este músico porque aún no estaba dado de alta en esta fecha histórica
+                // Normalizar la fecha de alta del componente (viene en DD/MM/YYYY o YYYY-MM-DD)
+                var fechaAltaStr = comp.fechaAlta || "01/01/2024";
+                var partsAlta = fechaAltaStr.includes('/') ? fechaAltaStr.split('/') : fechaAltaStr.split('-');
+                var numAlta = 0;
+                if (partsAlta.length === 3) {
+                    if (partsAlta[0].length === 4) {
+                        numAlta = parseInt(partsAlta[0] + partsAlta[1] + partsAlta[2], 10);
+                    } else {
+                        numAlta = parseInt(partsAlta[2] + partsAlta[1] + partsAlta[0], 10);
+                    }
+                }
+
+                // 🛑 Comprobar si la fecha seleccionada es anterior a la fecha de alta
+                if (numSel < numAlta) {
+                    return; // Oculta al músico si aún no estaba en la banda en este día
                 }
 
                 var estado = registrosAsistencia[idComp] || ''; 
@@ -265,12 +296,10 @@ function cargarComponentesYAsistencia() {
                     '<div class="acciones-asistencia" style="display: flex; gap: 6px; align-items: center;">';
 
                 if (esAdmin) {
-                    // MODO ADMIN: Botones interactivos para modificar asistencia y papelera para borrar
                     htmlItem += '<button type="button" class="btn-asiste ' + (estado === 'asiste' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'asiste\')">Sí</button>' +
                                 '<button type="button" class="btn-no-asiste ' + (estado === 'no' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'no\')">No</button>' +
                                 '<button type="button" class="btn-borrar-componente" onclick="eliminarComponente(\'' + idComp + '\')" title="Dar de baja" style="background:none; border:none; cursor:pointer; font-size: 1rem;">🗑️</button>';
                 } else {
-                    // MODO VISITANTE: Solo texto estático de solo lectura
                     if (estado === 'asiste') {
                         htmlItem += '<span class="asistencia-badge-si">SÍ</span>';
                     } else if (estado === 'no') {
@@ -289,7 +318,6 @@ function cargarComponentesYAsistencia() {
                 }
             });
 
-            // Actualizar los contadores visuales en el modal
             document.getElementById('totalMusicosCount').innerText = totalMusicos;
             document.getElementById('totalPresentesCount').innerText = totalPresentes;
             document.getElementById('totalAusentesCount').innerText = totalAusentes;
@@ -302,19 +330,23 @@ function cargarComponentesYAsistencia() {
     });
 }
 
-// Función directa para que el admin guarde el cambio de asistencia al instante en Firebase
 function marcarAsistenciaDirecto(e, idComp, estado) {
     if (!esAdmin) return;
-    var fecha = document.getElementById('fechaAsistencia').value;
-    if (!fecha) return;
+    var fechaInput = document.getElementById('fechaAsistencia').value;
+    if (!fechaInput) return;
 
-    var ref = db.collection("asistencias").doc(fecha);
+    var fechaFirestore = fechaInput;
+    if (fechaInput.includes('/')) {
+        var p = fechaInput.split('/');
+        fechaFirestore = p[2] + '-' + p[1] + '-' + p[0];
+    }
+
+    var ref = db.collection("asistencias").doc(fechaFirestore);
     ref.get().then(function(doc) {
         var currentRegistros = doc.exists ? doc.data().registros || {} : {};
         currentRegistros[idComp] = estado;
 
-        ref.set({ fecha: fecha, registros: currentRegistros }).then(function() {
-            // Recargamos los datos para actualizar al instante los contadores de la cabecera del modal
+        ref.set({ fecha: fechaFirestore, registros: currentRegistros }).then(function() {
             cargarComponentesYAsistencia();
         });
     }).catch(function(error) {
@@ -336,17 +368,17 @@ function agregarComponente() {
         return;
     }
 
-    // Obtenemos la fecha actual exacta en formato YYYY-MM-DD para asignarla como su fecha de alta
+    // Obtener la fecha actual en formato DD/MM/YYYY
     var hoy = new Date();
     var anio = hoy.getFullYear();
     var mes = String(hoy.getMonth() + 1).padStart(2, '0');
     var dia = String(hoy.getDate()).padStart(2, '0');
-    var fechaAltaHoy = anio + '-' + mes + '-' + dia;
+    var fechaAltaFormateada = dia + '/' + mes + '/' + anio; // 👈 Formato Día, Mes, Año
 
     db.collection("componentes").add({ 
         nombre: nombre, 
         seccion: seccion,
-        fechaAlta: fechaAltaHoy // 👈 Guardamos el día en que se dio de alta
+        fechaAlta: fechaAltaFormateada 
     }).then(function() {
         document.getElementById('nuevoNombreComponente').value = '';
         cargarComponentesYAsistencia();
