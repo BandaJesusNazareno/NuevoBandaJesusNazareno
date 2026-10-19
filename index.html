@@ -19,8 +19,8 @@
             </div>
         </div>
         <div style="display: flex; gap: 10px;">
-            <button id="btnAsistencia" class="btn-admin" onclick="abrirPanelAsistencia()" style="background-color: var(--color-secundario); color: #0f172a;">📋 Asistencia</button>
-            <button id="btnAdmin" class="btn-admin" onclick="pedirClave()">Admin</button>
+            <button id="btnAsistencia" class="btn-admin" style="background-color: var(--color-secundario); color: #0f172a;">📋 Asistencia</button>
+            <button id="btnAdmin" class="btn-admin">Admin</button>
         </div>
     </header>
 
@@ -149,4 +149,27 @@
 
             <!-- Listado por Secciones -->
             <div style="margin-bottom: 15px;">
-                <h3 style="color: var(--color-secundario); border-bottom: 1px solid #334155; padding-bottom:
+                <h3 style="color: var(--color-secundario); border-bottom: 1px solid #334155; padding-bottom: 5px; margin-bottom: 10px;">🎺 Cornetas</h3>
+                <div id="listaCornetasAsistencia">
+                    <!-- Se cargan dinámicamente -->
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h3 style="color: var(--color-secundario); border-bottom: 1px solid #334155; padding-bottom: 5px; margin-bottom: 10px;">🥁 Batería y Tambores</h3>
+                <div id="listaBateriaAsistencia">
+                    <!-- Se cargan dinámicamente -->
+                </div>
+            </div>
+
+            <div class="modal-botones">
+                <button type="button" class="btn-secundario" onclick="cerrarModal('modalAsistencia')">Cerrar</button>
+                <button type="button" class="btn-principal" onclick="guardarAsistenciaFirebase()">Guardar Asistencia</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cargar script como módulo ES6 con control de caché actualizado -->
+    <script type="module" src="app.js?v=104"></script>
+</body>
+</html>
