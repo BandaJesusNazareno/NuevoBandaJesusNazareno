@@ -19,8 +19,8 @@
             </div>
         </div>
         <div style="display: flex; gap: 10px;">
-            <button id="btnAsistencia" class="btn-admin" onclick="abrirPanelAsistencia()" style="background-color: var(--color-secundario); color: #0f172a;">📋 Asistencia</button>
-            <button id="btnAdmin" class="btn-admin" onclick="pedirClave()">Admin</button>
+            <button id="btnAsistencia" class="btn-admin" style="background-color: var(--color-secundario); color: #0f172a;">📋 Asistencia</button>
+            <button id="btnAdmin" class="btn-admin">Admin</button>
         </div>
     </header>
 
@@ -72,7 +72,7 @@
                 <span class="btn-cerrar" onclick="cerrarModal('panelAdmin')">&times;</span>
             </div>
 
-            <form id="formEvento" onsubmit="guardarEvento(event)">
+            <form id="formEvento">
                 <div class="form-group">
                     <label>Nombre del Acto / Ensayo</label>
                     <input type="text" id="tituloEvento" placeholder="Ej. Ensayo General" required>
@@ -131,7 +131,7 @@
             <!-- Selector de Fecha -->
             <div class="form-group">
                 <label>Seleccionar Fecha del Ensayo / Acto</label>
-                <input type="date" id="fechaAsistencia" onchange="cargarAsistenciaFecha()">
+                <input type="date" id="fechaAsistencia">
             </div>
 
             <!-- Añadir componentes nuevos -->
@@ -143,7 +143,7 @@
                         <option value="corneta">Corneta</option>
                         <option value="bateria">Batería / Tambor</option>
                     </select>
-                    <button type="button" class="btn-principal" onclick="agregarComponente()">Añadir</button>
+                    <button type="button" id="btnAgregarComponente" class="btn-principal">Añadir</button>
                 </div>
             </div>
 
@@ -164,12 +164,12 @@
 
             <div class="modal-botones">
                 <button type="button" class="btn-secundario" onclick="cerrarModal('modalAsistencia')">Cerrar</button>
-                <button type="button" class="btn-principal" onclick="guardarAsistenciaFirebase()">Guardar Asistencia</button>
+                <button type="button" id="btnGuardarAsistenciaFirebase" class="btn-principal">Guardar Asistencia</button>
             </div>
         </div>
     </div>
 
     <!-- Cargar script como módulo ES6 con control de caché actualizado -->
-    <script type="module" src="app.js?v=106"></script>
+    <script type="module" src="app.js?v=107"></script>
 </body>
 </html>
