@@ -268,6 +268,8 @@ body {
     justify-content: center;
     align-items: center;
     padding: 15px;
+    /* 🛑 Evita el gesto de recarga en móviles al estirar el modal */
+    overscroll-behavior-y: contain;
 }
 
 .modal-contenido {
@@ -279,6 +281,8 @@ body {
     max-width: 500px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.6);
     border-top: 4px solid var(--color-secundario);
+    /* 🛑 Evita rebotes y recargas al hacer scroll dentro del modal */
+    overscroll-behavior-y: contain;
 }
 
 .form-group {
@@ -338,136 +342,4 @@ body {
 /* Botones Secundarios (Cancelar, Cerrar) - Estilo Moderno Redondeado */
 .btn-secundario {
     background-color: #334155 !important;
-    color: #ffffff !important;
-    border: 1px solid #475569 !important;
-    padding: 9px 18px !important;
-    border-radius: 8px !important;
-    font-size: 0.9rem !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    transition: background-color 0.2s ease !important;
-}
-
-.btn-secundario:hover {
-    background-color: #475569 !important;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.btn-cerrar {
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--color-secundario);
-}
-
-/* Estilos para el pase de lista y componentes */
-.item-componente {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #0a0f1d;
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin-bottom: 8px;
-    border: 1px solid #1e293b;
-}
-
-.acciones-asistencia {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-}
-
-.btn-asiste {
-    background-color: #166534;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-.btn-asiste.activo {
-    background-color: #22c55e;
-    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
-}
-
-.btn-no-asiste {
-    background-color: #991b1b;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-.btn-no-asiste.activo {
-    background-color: #ef4444;
-    box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
-}
-
-.btn-borrar-componente {
-    background: transparent;
-    border: none;
-    color: #ef4444;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-left: 8px;
-}
-
-/* Insignias de solo lectura para los visitantes / músicos normales */
-.asistencia-badge-si {
-    background-color: #10b981;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-.asistencia-badge-no {
-    background-color: #ef4444;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-/* Footer y Botón YouTube Estilizado */
-.footer {
-    background-color: #060913;
-    color: var(--color-texto-secundario);
-    text-align: center;
-    padding: 25px 20px;
-    font-size: 0.85rem;
-    margin-top: auto;
-    border-top: 2px solid var(--color-secundario);
-}
-
-.btn-youtube {
-    display: inline-block !important;
-    background-color: #ff0000 !important;
-    color: #ffffff !important;
-    padding: 10px 22px !important;
-    border-radius: 8px !important;
-    text-decoration: none !important;
-    font-weight: 700 !important;
-    font-size: 0.9rem !important;
-    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4) !important;
-    transition: transform 0.2s ease !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-.btn-youtube:hover {
-    transform: scale(1.05);
-}
+    color: #
