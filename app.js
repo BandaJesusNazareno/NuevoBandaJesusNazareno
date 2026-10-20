@@ -232,7 +232,6 @@ function abrirPanelAsistencia() {
         inputFecha.value = hoy;
     }
     
-    // Mostramos la asistencia a pantalla completa de forma independiente
     document.getElementById('modalAsistencia').style.display = 'block';
     document.body.style.overflow = 'hidden';
     window.scrollTo(0, 0);
@@ -390,11 +389,18 @@ function agregarComponente() {
 
 function eliminarComponente(idComp) {
     if (!esAdmin) return;
-    if (confirm("¿Estás seguro de dar de baja a este componente de la banda?")) {
+    
+    // Ventana emergente de seguridad que pide escribir la palabra 'borrar'
+    var confirmacion = prompt("⚠️ ATENCIÓN: Vas a dar de baja a este componente de la banda.\n\nPara confirmar, escribe la palabra 'borrar' a continuación:");
+    
+    if (confirmacion && confirmacion.trim().toLowerCase() === "borrar") {
         db.collection("componentes").doc(idComp).delete().then(function() {
             cargarComponentesYAsistencia();
         }).catch(function(error) {
             console.error("Error al eliminar componente:", error);
+            alert("Ocurrió un error al intentar eliminar el componente.");
         });
+    } else if (confirmacion !== null) {
+        alert("La palabra introducida no es correcta. No se ha eliminado al componente.");
     }
 }
