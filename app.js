@@ -30,11 +30,17 @@ function pedirClave() {
         abrirFormularioDirecto();
     } else {
         document.getElementById("modalClave").style.display = "flex";
+        document.body.style.overflow = 'hidden';
     }
 }
 
 function cerrarModal(idModal) {
     document.getElementById(idModal).style.display = "none";
+    
+    // Si ya no quedan modales abiertos, devolvemos el scroll a la página principal
+    if (document.querySelectorAll('.modal[style*="flex"]').length === 0) {
+        document.body.style.overflow = 'auto';
+    }
 }
 
 function validarClave() {
@@ -75,6 +81,7 @@ function abrirFormularioDirecto() {
         idEventoEditando = null;
         document.getElementById("formEvento").reset();
         document.getElementById("panelAdmin").style.display = "flex";
+        document.body.style.overflow = 'hidden';
     } else {
         pedirClave();
     }
@@ -165,6 +172,7 @@ function cargarEdicionEvento(id) {
     document.getElementById("detallesEvento").value = evento.detalles || "";
 
     document.getElementById("panelAdmin").style.display = "flex";
+    document.body.style.overflow = 'hidden';
 }
 
 function guardarEvento(e) {
@@ -211,11 +219,11 @@ function borrarEvento(id) {
 }
 
 function abrirPanelAsistencia() {
-    // Establecer automáticamente la fecha de hoy en formato YYYY-MM-DD que exige el input date
     var hoy = new Date().toISOString().split('T')[0];
     document.getElementById('fechaAsistencia').value = hoy;
     
     document.getElementById('modalAsistencia').style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // 🛑 Congela el fondo por completo al abrir asistencia
     
     var seccionAdmin = document.getElementById('adminSeccionComponentes');
     if (seccionAdmin) {
