@@ -244,9 +244,47 @@ function abrirPanelAsistencia() {
     cargarComponentesYAsistencia();
 }
 
+// 🟢 Función para mostrar el indicador de color del evento del día seleccionado
+function verificarActoEnFecha(fechaSeleccionada) {
+    var contenedorIndicador = document.getElementById('indicadorActoDia');
+    if (!contenedorIndicador) return;
+    
+    contenedorIndicador.innerHTML = '';
+
+    var eventoEncontrado = null;
+    for (var id in eventosMap) {
+        if (eventosMap[id].fecha === fechaSeleccionada) {
+            eventoEncontrado = eventosMap[id];
+            break;
+        }
+    }
+
+    if (eventoEncontrado) {
+        var tipo = eventoEncontrado.tipo || 'Evento';
+        var tipoClase = tipo.toLowerCase();
+        var titulo = eventoEncontrado.titulo || '';
+        var hora = eventoEncontrado.hora || '';
+
+        var htmlBadge = '<div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 6px; border-left: 4px solid var(--color-secundario);">' +
+            '<div style="display: flex; align-items: center; gap: 8px;">' +
+                '<span class="badge ' + tipoClase + '">' + tipo + '</span>' +
+                '<span style="color: #fff; font-size: 0.9rem; font-weight: 600;">' + titulo + '</span>' +
+            '</div>' +
+            '<span style="color: var(--color-secundario); font-size: 0.85rem; font-weight: 700;">' + hora + '</span>' +
+        '</div>';
+
+        contenedorIndicador.innerHTML = htmlBadge;
+    } else {
+        contenedorIndicador.innerHTML = '<span style="color: #94a3b8; font-size: 0.8rem; font-style: italic;">No hay ningún acto oficial registrado para este día.</span>';
+    }
+}
+
 function cargarComponentesYAsistencia() {
     var fechaSeleccionada = document.getElementById('fechaAsistencia').value;
     if (!fechaSeleccionada) return;
+
+    // 🟢 Actualizamos el indicador visual de color del acto en esta fecha
+    verificarActoEnFecha(fechaSeleccionada);
 
     var numSel = parseInt(fechaSeleccionada.replace(/-/g, ''), 10);
 
