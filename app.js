@@ -37,13 +37,11 @@ function pedirClave() {
 function cerrarModal(idModal) {
     document.getElementById(idModal).style.display = "none";
     
-    // Si ya no quedan modales abiertos, devolvemos el scroll a la página principal
     if (document.querySelectorAll('.modal[style*="flex"]').length === 0) {
         document.body.style.overflow = 'auto';
     }
 }
 
-// 🛑 Función específica para cerrar la pantalla independiente de asistencia
 function cerrarModalAsistencia() {
     document.getElementById('modalAsistencia').style.display = 'none';
     document.body.style.overflow = 'auto';
@@ -244,7 +242,6 @@ function abrirPanelAsistencia() {
     cargarComponentesYAsistencia();
 }
 
-// 🟢 Función para mostrar el indicador de color del evento del día seleccionado
 function verificarActoEnFecha(fechaSeleccionada) {
     var contenedorIndicador = document.getElementById('indicadorActoDia');
     if (!contenedorIndicador) return;
@@ -283,7 +280,6 @@ function cargarComponentesYAsistencia() {
     var fechaSeleccionada = document.getElementById('fechaAsistencia').value;
     if (!fechaSeleccionada) return;
 
-    // 🟢 Actualizamos el indicador visual de color del acto en esta fecha
     verificarActoEnFecha(fechaSeleccionada);
 
     var numSel = parseInt(fechaSeleccionada.replace(/-/g, ''), 10);
@@ -428,7 +424,6 @@ function agregarComponente() {
 function eliminarComponente(idComp) {
     if (!esAdmin) return;
     
-    // Ventana emergente de seguridad que pide escribir la palabra 'borrar'
     var confirmacion = prompt("⚠️ ATENCIÓN: Vas a dar de baja a este componente de la banda.\n\nPara confirmar, escribe la palabra 'borrar' a continuación:");
     
     if (confirmacion && confirmacion.trim().toLowerCase() === "borrar") {
@@ -442,3 +437,20 @@ function eliminarComponente(idComp) {
         alert("La palabra introducida no es correcta. No se ha eliminado al componente.");
     }
 }
+
+function iniciarVigilanteDeDia() {
+    setInterval(function() {
+        var modalAsistencia = document.getElementById('modalAsistencia');
+        if (modalAsistencia && modalAsistencia.style.display === 'block') {
+            var hoy = new Date().toISOString().split('T')[0];
+            var inputFecha = document.getElementById('fechaAsistencia');
+            
+            if (inputFecha && inputFecha.value !== hoy) {
+                inputFecha.value = hoy;
+                cargarComponentesYAsistencia();
+            }
+        }
+    }, 60000); 
+}
+
+iniciarVigilanteDeDia();
