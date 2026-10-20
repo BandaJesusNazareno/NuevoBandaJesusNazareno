@@ -43,6 +43,13 @@ function cerrarModal(idModal) {
     }
 }
 
+// 🛑 Función específica para cerrar la pantalla independiente de asistencia
+function cerrarModalAsistencia() {
+    document.getElementById('modalAsistencia').style.display = 'none';
+    document.body.style.overflow = 'auto';
+    window.scrollTo(0, 0);
+}
+
 function validarClave() {
     var claveIngresada = document.getElementById("inputClave").value;
     if (claveIngresada === "nazareno2012") {  
@@ -56,7 +63,7 @@ function validarClave() {
             el.style.display = "block";
         });
 
-        if (document.getElementById("modalAsistencia").style.display === "flex") {
+        if (document.getElementById("modalAsistencia").style.display === "block") {
             cargarComponentesYAsistencia();
         }
     } else {
@@ -220,10 +227,15 @@ function borrarEvento(id) {
 
 function abrirPanelAsistencia() {
     var hoy = new Date().toISOString().split('T')[0];
-    document.getElementById('fechaAsistencia').value = hoy;
+    var inputFecha = document.getElementById('fechaAsistencia');
+    if (inputFecha) {
+        inputFecha.value = hoy;
+    }
     
-    document.getElementById('modalAsistencia').style.display = 'flex';
-    document.body.style.overflow = 'hidden'; // 🛑 Congela el fondo por completo al abrir asistencia
+    // Mostramos la asistencia a pantalla completa de forma independiente
+    document.getElementById('modalAsistencia').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
     
     var seccionAdmin = document.getElementById('adminSeccionComponentes');
     if (seccionAdmin) {
