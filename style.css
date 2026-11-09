@@ -1,5 +1,5 @@
 :root {
-    --color-fondo: #0f172a;
+    --color-fondo: #070a14;     /* Azul noche profundo que aparece en tu captura */
     --color-primario: #1e293b;
     --color-secundario: #D4AF37;
     --color-texto: #f8fafc;
@@ -50,7 +50,7 @@ body {
     justify-content: center;
     gap: 10px;
     padding: 15px;
-    background: rgba(15, 23, 42, 0.9);
+    background: rgba(7, 10, 20, 0.95);
 }
 
 .btn-accion-principal {
