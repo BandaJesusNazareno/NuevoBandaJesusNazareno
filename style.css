@@ -1,476 +1,515 @@
-:root {
-    --color-fondo: #0a0f1d;
-    --color-tarjeta: #131c31;
-    --color-primario: #5b0f1e; /* Burdeos cofrade */
-    --color-secundario: #D4AF37; /* Dorado clásico */
-    --color-texto: #ffffff;
-    --color-texto-secundario: #cbd5e1;
+const firebaseConfig = {
+    apiKey: "AIzaSyA87GdLbgUDMlE-N_wQtJpLnGFgODA6Mpc",
+    authDomain: "bandajesusnazareno2012.firebaseapp.com",
+    projectId: "bandajesusnazareno2012",
+    storageBucket: "bandajesusnazareno2012.firebasestorage.app",
+    messagingSenderId: "330943605319",
+    appId: "1:330943605319:web:bff3c29a673d1982af9f62",
+    measurementId: "G-RZSLXYPJ2B"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const eventosRef = db.collection("eventos");
+
+var esAdmin = false;
+var idEventoEditando = null;
+var eventosMap = {};
+
+function formatearFecha(fechaOriginal) {
+    if (!fechaOriginal) return '';
+    var partes = fechaOriginal.split('-');
+    if (partes.length === 3) {
+        return partes[2] + '/' + partes[1] + '/' + partes[0];
+    }
+    return fechaOriginal;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+function pedirClave() {
+    if (esAdmin) {
+        abrirFormularioDirecto();
+    } else {
+        document.getElementById("modalClave").style.display = "flex";
+        document.body.style.overflow = 'hidden';
+    }
 }
 
-body {
-    background-color: var(--color-fondo);
-    color: var(--color-texto);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+function cerrarModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+    
+    if (document.querySelectorAll('.modal[style*="flex"]').length === 0) {
+        document.body.style.overflow = 'auto';
+    }
 }
 
-/* Cabecera corporativa amplia y limpia */
-.header {
-    background-color: var(--color-primario);
-    color: #ffffff;
-    padding: 18px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    border-bottom: 2px solid var(--color-secundario);
+function cerrarModalAsistencia() {
+    document.getElementById('modalAsistencia').style.display = 'none';
+    document.body.style.overflow = 'auto';
+    window.scrollTo(0, 0);
 }
 
-.header-brand {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+function validarClave() {
+    var claveIngresada = document.getElementById("inputClave").value;
+    if (claveIngresada === "nazareno2012") {  
+        esAdmin = true;
+        document.getElementById("inputClave").value = "";
+        cerrarModal("modalClave");
+        crearBotonFlotante();
+        escucharEventos();
+        
+        document.querySelectorAll(".admin-only").forEach(function(el) {
+            el.style.display = "block";
+        });
+
+        if (document.getElementById("modalAsistencia").style.display === "block") {
+            cargarComponentesYAsistencia();
+        }
+    } else {
+        alert("Contraseña incorrecta");
+    }
 }
 
-.escudo-img {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
+function crearBotonFlotante() {
+    if (document.getElementById("btnFlotanteAgregar")) return;
+    var btn = document.createElement("button");
+    btn.id = "btnFlotanteAgregar";
+    btn.innerHTML = "+";
+    btn.title = "Añadir acto";
+    btn.onclick = function() {
+        abrirFormularioDirecto();
+    };
+    document.body.appendChild(btn);
 }
 
-.header-titles h1 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: 0.5px;
+function abrirFormularioDirecto() {
+    if (esAdmin) {
+        idEventoEditando = null;
+        document.getElementById("formEvento").reset();
+        document.getElementById("panelAdmin").style.display = "flex";
+        document.body.style.overflow = 'hidden';
+    } else {
+        pedirClave();
+    }
 }
 
-.header-titles p {
-    font-size: 0.8rem;
-    color: #e2e8f0;
+function escucharEventos() {
+    eventosRef.onSnapshot(function(snapshot) {
+        var lista = document.getElementById("listaEventos");
+        if (!lista) return;
+        
+        lista.innerHTML = "";
+        eventosMap = {};
+
+        if (snapshot.empty) {
+            lista.innerHTML = "<p style='text-align:center;'>No hay eventos programados.</p>";
+            return;
+        }
+
+        var eventosArr = [];
+        snapshot.forEach(function(docSnapshot) {
+            var data = docSnapshot.data();
+            var id = docSnapshot.id;
+            eventosMap[id] = data;
+            data.id = id;
+            eventosArr.push(data);
+        });
+
+        eventosArr.sort(function(a, b) {
+            if (!a.fecha) return 1;
+            if (!b.fecha) return -1;
+            return a.fecha.localeCompare(b.fecha);
+        });
+
+        eventosArr.forEach(function(evento) {
+            if (evento.tipo && evento.tipo.toLowerCase() === "ensayo" && evento.fecha && evento.hora) {
+                var fechaHoraEventoStr = evento.fecha + 'T' + evento.hora + ':00';
+                var fechaHoraEvento = new Date(fechaHoraEventoStr);
+                var tiempoLimite = new Date(fechaHoraEvento.getTime() + 5400000);
+                var ahora = new Date();
+
+                if (ahora > tiempoLimite) {
+                    return;
+                }
+            }
+
+            var tarjeta = document.createElement("div");
+            tarjeta.className = "tarjeta-evento";
+            var fechaFormateada = formatearFecha(evento.fecha);
+
+            var htmlTarjeta = '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">' +
+                '<span class="badge ' + (evento.tipo ? evento.tipo.toLowerCase() : '') + '">' + (evento.tipo || 'Evento') + '</span>' +
+                '<div style="display: flex; align-items: center; gap: 8px;">' +
+                  '<span style="color: #D4AF37; font-weight: 700; font-size: 0.95rem;">' + (evento.hora || '') + '</span>';
+
+            if (esAdmin) {
+                htmlTarjeta += '<button class="btn-editar" onclick="cargarEdicionEvento(\'' + evento.id + '\')" title="Editar acto">✏️</button>' +
+                               '<button class="btn-eliminar" onclick="borrarEvento(\'' + evento.id + '\')" title="Eliminar acto">✕</button>';
+            }
+
+            htmlTarjeta += '</div></div>' +
+                '<h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 10px; font-weight: 600;">' + (evento.titulo || '') + '</h3>' +
+                '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📅 <strong>Fecha:</strong> ' + fechaFormateada + '</p>' +
+                '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📍 <strong>Lugar:</strong> ' + (evento.lugar || '') + '</p>';
+
+            if (evento.detalles) {
+                htmlTarjeta += '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📝 ' + evento.detalles + '</p>';
+            }
+
+            tarjeta.innerHTML = htmlTarjeta;
+            lista.appendChild(tarjeta);
+        });
+    });
 }
 
-/* Barra de Botones Inferior a la Cabecera */
-.barra-botones-superior {
-    display: flex;
-    gap: 12px;
-    padding: 12px 15px;
-    background-color: #0d1424;
-    border-bottom: 1px solid #1e293b;
-    justify-content: center;
+escucharEventos();
+
+function cargarEdicionEvento(id) {
+    if (!esAdmin) return;
+    var evento = eventosMap[id];
+    if (!evento) return;
+
+    idEventoEditando = id;
+    document.getElementById("tituloEvento").value = evento.titulo || "";
+    document.getElementById("tipoEvento").value = evento.tipo || "Ensayo";
+    document.getElementById("horaEvento").value = evento.hora || "";
+    document.getElementById("fechaEvento").value = evento.fecha || "";
+    document.getElementById("lugarEvento").value = evento.lugar || "";
+    document.getElementById("detallesEvento").value = evento.detalles || "";
+
+    document.getElementById("panelAdmin").style.display = "flex";
+    document.body.style.overflow = 'hidden';
 }
 
-.btn-accion-principal {
-    flex: 1;
-    max-width: 380px;
-    background-color: var(--color-secundario);
-    color: #0f172a;
-    border: none;
-    padding: 10px 15px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: center;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-    transition: transform 0.1s ease;
+function guardarEvento(e) {
+    if (e) e.preventDefault();
+    if (!esAdmin) {
+        alert("Acceso denegado");
+        return;
+    }
+    
+    var datosEvento = {
+        titulo: document.getElementById("tituloEvento").value,
+        tipo: document.getElementById("tipoEvento").value,
+        hora: document.getElementById("horaEvento").value,
+        fecha: document.getElementById("fechaEvento").value,
+        lugar: document.getElementById("lugarEvento").value,
+        detalles: document.getElementById("detallesEvento").value
+    };
+
+    if (idEventoEditando) {
+        eventosRef.doc(idEventoEditando).update(datosEvento)
+            .then(function() {
+                idEventoEditando = null;
+                document.getElementById("formEvento").reset();
+                cerrarModal('panelAdmin');
+            })
+            .catch(function(error) { alert("Error: " + error.message); });
+    } else {
+        eventosRef.add(datosEvento)
+            .then(function() {
+                document.getElementById("formEvento").reset();
+                cerrarModal('panelAdmin');
+            })
+            .catch(function(error) { alert("Error: " + error.message); });
+    }
 }
 
-.btn-accion-principal:active {
-    transform: scale(0.97);
+function borrarEvento(id) {
+    if (!esAdmin) return;
+    if (confirm("¿Seguro que quieres eliminar este acto?")) {
+        eventosRef.doc(id).delete().catch(function(error) {
+            alert("Error al eliminar: " + error.message);
+        });
+    }
 }
 
-/* Contenido Principal */
-.contenedor {
-    max-width: 800px;
-    width: 100%;
-    margin: 20px auto;
-    padding: 0 15px;
-    flex: 1;
-    padding-bottom: 90px;
+function abrirPanelAsistencia() {
+    var hoy = new Date().toISOString().split('T')[0];
+    var inputFecha = document.getElementById('fechaAsistencia');
+    if (inputFecha) {
+        inputFecha.value = hoy;
+    }
+    
+    document.getElementById('modalAsistencia').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
+    
+    var seccionAdmin = document.getElementById('adminSeccionComponentes');
+    if (seccionAdmin) {
+        seccionAdmin.style.display = esAdmin ? 'block' : 'none';
+    }
+    
+    cargarComponentesYAsistencia();
 }
 
-.seccion-titulo {
-    margin-bottom: 24px;
+function verificarActoEnFecha(fechaSeleccionada) {
+    var contenedorIndicador = document.getElementById('indicadorActoDia');
+    if (!contenedorIndicador) return;
+    
+    contenedorIndicador.innerHTML = '';
+
+    var eventoEncontrado = null;
+    for (var id in eventosMap) {
+        if (eventosMap[id].fecha === fechaSeleccionada) {
+            eventoEncontrado = eventosMap[id];
+            break;
+        }
+    }
+
+    if (eventoEncontrado) {
+        var tipo = eventoEncontrado.tipo || 'Evento';
+        var tipoClase = tipo.toLowerCase();
+        var titulo = eventoEncontrado.titulo || '';
+        var hora = eventoEncontrado.hora || '';
+
+        var htmlBadge = '<div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 6px; border-left: 4px solid var(--color-secundario);">' +
+            '<div style="display: flex; align-items: center; gap: 8px;">' +
+                '<span class="badge ' + tipoClase + '">' + tipo + '</span>' +
+                '<span style="color: #fff; font-size: 0.9rem; font-weight: 600;">' + titulo + '</span>' +
+            '</div>' +
+            '<span style="color: var(--color-secundario); font-size: 0.85rem; font-weight: 700;">' + hora + '</span>' +
+        '</div>';
+
+        contenedorIndicador.innerHTML = htmlBadge;
+    } else {
+        contenedorIndicador.innerHTML = '<span style="color: #94a3b8; font-size: 0.8rem; font-style: italic;">No hay ningún acto oficial registrado para este día.</span>';
+    }
 }
 
-.seccion-titulo h2 {
-    color: var(--color-secundario);
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 4px;
+function cargarComponentesYAsistencia() {
+    var fechaSeleccionada = document.getElementById('fechaAsistencia').value;
+    if (!fechaSeleccionada) return;
+
+    verificarActoEnFecha(fechaSeleccionada);
+
+    var numSel = parseInt(fechaSeleccionada.replace(/-/g, ''), 10);
+
+    var tiposPorFecha = {};
+    for (var idEv in eventosMap) {
+        var ev = eventosMap[idEv];
+        if (ev.fecha && ev.tipo) {
+            tiposPorFecha[ev.fecha] = ev.tipo.toLowerCase();
+        }
+    }
+
+    db.collection("asistencias").get().then(function(snapshotAsistencias) {
+        var conteoPorTipo = {}; 
+
+        snapshotAsistencias.forEach(function(docAsis) {
+            var fechaAsis = docAsis.id;
+            var tipoDeEseDia = tiposPorFecha[fechaAsis] || 'ensayo';
+            
+            var datosAsis = docAsis.data();
+            var regs = datosAsis.registros || {};
+            for (var idC in regs) {
+                if (!conteoPorTipo[idC]) {
+                    conteoPorTipo[idC] = {};
+                }
+                if (!conteoPorTipo[idC][tipoDeEseDia]) {
+                    conteoPorTipo[idC][tipoDeEseDia] = { asiste: 0, no: 0 };
+                }
+                if (regs[idC] === 'asiste') {
+                    conteoPorTipo[idC][tipoDeEseDia].asiste++;
+                } else if (regs[idC] === 'no') {
+                    conteoPorTipo[idC][tipoDeEseDia].no++;
+                }
+            }
+        });
+
+        db.collection("componentes").get().then(function(querySnapshot) {
+            var componentesArr = [];
+            querySnapshot.forEach(function(resDoc) {
+                var data = resDoc.data();
+                data.id = resDoc.id;
+                componentesArr.push(data);
+            });
+
+            componentesArr.sort(function(a, b) {
+                var tA = a.creadoEn || 0;
+                var tB = b.creadoEn || 0;
+                return tA - tB;
+            });
+
+            var cornetasHTML = '';
+            var bateriaHTML = '';
+            
+            var totalMusicos = 0;
+            var totalPresentes = 0;
+            var totalAusentes = 0;
+
+            db.collection("asistencias").doc(fechaSeleccionada).get().then(function(asistenciaDoc) {
+                var registrosAsistencia = asistenciaDoc.exists ? asistenciaDoc.data().registros || {} : {};
+
+                componentesArr.forEach(function(comp) {
+                    var idComp = comp.id;
+                    
+                    var fechaAltaStr = comp.fechaAlta || "2024-01-01";
+                    if (fechaAltaStr.includes('/')) {
+                        var p = fechaAltaStr.split('/');
+                        fechaAltaStr = p[2] + '-' + p[1] + '-' + p[0];
+                    }
+                    var numAlta = parseInt(fechaAltaStr.replace(/-/g, ''), 10);
+
+                    if (numSel < numAlta) {
+                        return; 
+                    }
+
+                    var estado = registrosAsistencia[idComp] || ''; 
+
+                    totalMusicos++;
+                    if (estado === 'asiste') {
+                        totalPresentes++;
+                    } else if (estado === 'no') {
+                        totalAusentes++;
+                    }
+
+                    var tiposDelMusico = conteoPorTipo[idComp] || {};
+                    var tiposDisponibles = ['ensayo', 'procesion', 'reunion', 'concierto'];
+                    var badgesHTML = '';
+
+                    for (var i = 0; i < tiposDisponibles.length; i++) {
+                        var t = tiposDisponibles[i];
+                        var statsTipo = tiposDelMusico[t] || { asiste: 0, no: 0 };
+                        
+                        if (statsTipo.asiste > 0 || statsTipo.no > 0) {
+                            // Asistencia con la pastilla de color del tipo de acto
+                            badgesHTML += '<span class="badge ' + t + '" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">' + t.toUpperCase().substring(0,3) + ' A:' + statsTipo.asiste + '</span>';
+                            // Falta solo con la letra y número en rojo (sin cuadro ni fondo)
+                            badgesHTML += '<span style="font-size: 0.75rem; color: #ef4444; font-weight: 700; margin: 2px 4px 2px 2px; display: inline-block;">' + t.toUpperCase().substring(0,3) + ' F:' + statsTipo.no + '</span>';
+                        }
+                    }
+
+                    if (!badgesHTML) {
+                        badgesHTML = '<span class="badge ensayo" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">ENS A:0</span>' +
+                                     '<span style="font-size: 0.75rem; color: #ef4444; font-weight: 700; margin: 2px 4px 2px 2px; display: inline-block;">ENS F:0</span>';
+                    }
+
+                    var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 6px; border-bottom: 1px solid rgba(255,255,255,0.08);">' +
+                        '<div style="display: flex; flex-direction: column; gap: 6px; flex: 1; padding-right: 8px;">' +
+                            '<span style="color: #fff; font-size: 0.95rem; font-weight: 500;">' + comp.nombre + '</span>' +
+                            '<div style="display: flex; flex-wrap: wrap; gap: 2px; align-items: center;">' + badgesHTML + '</div>' +
+                        '</div>' +
+                        '<div class="acciones-asistencia" style="display: flex; gap: 6px; align-items: center; flex-shrink: 0;">';
+
+                    if (esAdmin) {
+                        htmlItem += '<button type="button" class="btn-asiste ' + (estado === 'asiste' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'asiste\')">Sí</button>' +
+                                    '<button type="button" class="btn-no-asiste ' + (estado === 'no' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'no\')">No</button>' +
+                                    '<button type="button" class="btn-borrar-componente" onclick="eliminarComponente(\'' + idComp + '\')" title="Dar de baja" style="background:none; border:none; cursor:pointer; font-size: 1rem;">🗑️</button>';
+                    } else {
+                        if (estado === 'asiste') {
+                            htmlItem += '<span class="asistencia-badge-si">SÍ</span>';
+                        } else if (estado === 'no') {
+                            htmlItem += '<span class="asistencia-badge-no">NO</span>';
+                        } else {
+                            htmlItem += '<span style="color: #94a3b8; font-size: 0.85rem; font-style: italic;">Sin registrar</span>';
+                        }
+                    }
+
+                    htmlItem += '</div></div>';
+
+                    if (comp.seccion === 'corneta') {
+                        cornetasHTML += htmlItem;
+                    } else {
+                        bateriaHTML += htmlItem;
+                    }
+                });
+
+                document.getElementById('totalMusicosCount').innerText = totalMusicos;
+                document.getElementById('totalPresentesCount').innerText = totalPresentes;
+                document.getElementById('totalAusentesCount').innerText = totalAusentes;
+
+                document.getElementById('listaCornetasAsistencia').innerHTML = cornetasHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay cornetas registradas para esta fecha.</p>';
+                document.getElementById('listaBateriaAsistencia').innerHTML = bateriaHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay batería/tambores registrados para esta fecha.</p>';
+            });
+        }).catch(function(error) {
+            console.error("Error al cargar componentes:", error);
+        });
+    }).catch(function(error) {
+        console.error("Error al cargar histórico de asistencias:", error);
+    });
 }
 
-.seccion-titulo p {
-    color: var(--color-texto-secundario);
-    font-size: 0.85rem;
+function marcarAsistenciaDirecto(e, idComp, estado) {
+    if (!esAdmin) return;
+    var fechaSeleccionada = document.getElementById('fechaAsistencia').value;
+    if (!fechaSeleccionada) return;
+
+    var ref = db.collection("asistencias").doc(fechaSeleccionada);
+    ref.get().then(function(doc) {
+        var currentRegistros = doc.exists ? doc.data().registros || {} : {};
+        currentRegistros[idComp] = estado;
+
+        ref.set({ fecha: fechaSeleccionada, registros: currentRegistros }).then(function() {
+            cargarComponentesYAsistencia();
+        });
+    }).catch(function(error) {
+        console.error("Error al actualizar asistencia:", error);
+    });
 }
 
-/* DISEÑO DE LAS TARJETAS */
-.tarjeta-evento {
-    background-color: var(--color-tarjeta) !important;
-    border-radius: 12px !important;
-    padding: 18px !important;
-    margin-bottom: 22px !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
-    border-left: 6px solid var(--color-secundario) !important;
-    border-top: 1px solid #1e293b !important;
-    border-right: 1px solid #1e293b !important;
-    border-bottom: 1px solid #1e293b !important;
-    position: relative !important;
-    display: block !important;
+function cargarAsistenciaFecha() {
+    cargarComponentesYAsistencia();
 }
 
-.tarjeta-evento h3 {
-    color: #ffffff !important;
-    font-size: 1.25rem !important;
-    margin: 10px 0 10px 0 !important;
-    font-weight: 600 !important;
+function agregarComponente() {
+    if (!esAdmin) return;
+    var nombre = document.getElementById('nuevoNombreComponente').value.trim();
+    var seccion = document.getElementById('nuevoSeccionComponente').value;
+
+    if (!nombre) {
+        alert("Por favor, escribe el nombre del componente.");
+        return;
+    }
+
+    var hoy = new Date();
+    var anio = hoy.getFullYear();
+    var mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    var dia = String(hoy.getDate()).padStart(2, '0');
+    var fechaAltaISO = anio + '-' + mes + '-' + dia;
+
+    db.collection("componentes").add({ 
+        nombre: nombre, 
+        seccion: seccion,
+        fechaAlta: fechaAltaISO,
+        creadoEn: Date.now() 
+    }).then(function() {
+        document.getElementById('nuevoNombreComponente').value = '';
+        cargarComponentesYAsistencia();
+    }).catch(function(error) {
+        console.error("Error al añadir componente:", error);
+    });
 }
 
-.tarjeta-evento p {
-    color: var(--color-texto-secundario) !important;
-    font-size: 0.9rem !important;
-    margin: 5px 0 !important;
+function eliminarComponente(idComp) {
+    if (!esAdmin) return;
+    
+    var confirmacion = prompt("⚠️ ATENCIÓN: Vas a dar de baja a este componente de la banda.\n\nPara confirmar, escribe la palabra 'borrar' a continuación:");
+    
+    if (confirmacion && confirmacion.trim().toLowerCase() === "borrar") {
+        db.collection("componentes").doc(idComp).delete().then(function() {
+            cargarComponentesYAsistencia();
+        }).catch(function(error) {
+            console.error("Error al eliminar componente:", error);
+            alert("Ocurrió un error al intentar eliminar el componente.");
+        });
+    } else if (confirmacion !== null) {
+        alert("La palabra introducida no es correcta. No se ha eliminado al componente.");
+    }
 }
 
-.tarjeta-evento strong {
-    color: var(--color-secundario) !important;
+function iniciarVigilanteDeDia() {
+    setInterval(function() {
+        var modalAsistencia = document.getElementById('modalAsistencia');
+        if (modalAsistencia && modalAsistencia.style.display === 'block') {
+            var hoy = new Date().toISOString().split('T')[0];
+            var inputFecha = document.getElementById('fechaAsistencia');
+            
+            if (inputFecha && inputFecha.value !== hoy) {
+                inputFecha.value = hoy;
+                cargarComponentesYAsistencia();
+            }
+        }
+    }, 60000); 
 }
 
-/* Insignia de tipo */
-.badge {
-    background-color: #1d4ed8 !important;
-    color: #ffffff !important;
-    padding: 4px 12px !important;
-    border-radius: 20px !important;
-    font-size: 0.75rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    display: inline-block !important;
-}
-
-.badge.concierto {
-    background-color: #7c2d12 !important;
-}
-
-.badge.procesión {
-    background-color: #14532d !important;
-}
-
-.badge.reunión {
-    background-color: #581c87 !important;
-}
-
-/* HORA A LA DERECHA */
-.evento-hora {
-    color: var(--color-secundario) !important;
-    font-weight: 700 !important;
-    font-size: 0.95rem !important;
-}
-
-/* BOTÓN DE EDITAR */
-.btn-editar {
-    background-color: #f59e0b !important;
-    color: #ffffff !important;
-    border: 2px solid #fbbf24 !important;
-    border-radius: 50% !important;
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-    font-size: 0.95rem !important;
-    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.5) !important;
-}
-
-/* BOTÓN DE ELIMINAR */
-.btn-eliminar {
-    background-color: #dc2626 !important;
-    color: #ffffff !important;
-    border: 2px solid #ef4444 !important;
-    border-radius: 50% !important;
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-    font-size: 1rem !important;
-    font-weight: 900 !important;
-    box-shadow: 0 3px 8px rgba(220, 38, 38, 0.6) !important;
-    text-align: center !important;
-    line-height: 1 !important;
-}
-
-/* Botón Admin y Asistencia por si se usa en modales */
-.btn-admin {
-    background-color: var(--color-secundario) !important;
-    color: #0f172a !important;
-    padding: 7px 15px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-}
-
-/* BOTÓN FLOTANTE CON EL "+" (FAB) */
-#btnFlotanteAgregar {
-    position: fixed !important;
-    bottom: 25px !important;
-    right: 25px !important;
-    width: 60px !important;
-    height: 60px !important;
-    background-color: var(--color-secundario) !important;
-    color: #5b0f1e !important;
-    border-radius: 50% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 2.2rem !important;
-    font-weight: bold !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
-    z-index: 9999 !important;
-    cursor: pointer;
-    border: 2px solid #ffffff !important;
-    text-decoration: none !important;
-}
-
-#btnFlotanteAgregar:hover {
-    transform: scale(1.08);
-}
-
-/* Modales */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.85);
-    justify-content: center;
-    align-items: center;
-    padding: 15px;
-    overflow: hidden;
-    overscroll-behavior: none;
-}
-
-.modal-contenido {
-    background-color: var(--color-tarjeta);
-    color: var(--color-texto);
-    padding: 24px;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 500px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-    border-top: 4px solid var(--color-secundario);
-    overscroll-behavior-y: contain;
-}
-
-.form-group {
-    margin-bottom: 14px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--color-secundario);
-}
-
-.form-group input, 
-.form-group select, 
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    background-color: #0a0f1d;
-    border: 1px solid #334155;
-    color: #ffffff;
-    border-radius: 6px;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.modal-botones {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-/* Botones Principales (Entrar, Guardar) - Estilo Dorado Clásico Unificado */
-.btn-principal {
-    background-color: var(--color-secundario) !important;
-    color: #0f172a !important;
-    border: none !important;
-    padding: 9px 18px !important;
-    border-radius: 8px !important;
-    font-size: 0.9rem !important;
-    font-weight: 700 !important;
-    cursor: pointer !important;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.3) !important;
-    transition: transform 0.1s ease !important;
-}
-
-.btn-principal:active {
-    transform: scale(0.97);
-}
-
-/* Botones Secundarios (Cancelar, Cerrar) - Estilo Moderno Redondeado */
-.btn-secundario {
-    background-color: #334155 !important;
-    color: #ffffff !important;
-    border: 1px solid #475569 !important;
-    padding: 9px 18px !important;
-    border-radius: 8px !important;
-    font-size: 0.9rem !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    transition: background-color 0.2s ease !important;
-}
-
-.btn-secundario:hover {
-    background-color: #475569 !important;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.btn-cerrar {
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--color-secundario);
-}
-
-/* Estilos para el pase de lista y componentes */
-.item-componente {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #0a0f1d;
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin-bottom: 8px;
-    border: 1px solid #1e293b;
-}
-
-.acciones-asistencia {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-}
-
-.btn-asiste {
-    background-color: #166534;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-.btn-asiste.activo {
-    background-color: #22c55e;
-    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
-}
-
-.btn-no-asiste {
-    background-color: #991b1b;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-.btn-no-asiste.activo {
-    background-color: #ef4444;
-    box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
-}
-
-.btn-borrar-componente {
-    background: transparent;
-    border: none;
-    color: #ef4444;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-left: 8px;
-}
-
-/* Insignias de solo lectura para los visitantes / músicos normales */
-.asistencia-badge-si {
-    background-color: #10b981;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-.asistencia-badge-no {
-    background-color: #ef4444;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-/* Footer y Botón YouTube Estilizado */
-.footer {
-    background-color: #060913;
-    color: var(--color-texto-secundario);
-    text-align: center;
-    padding: 25px 20px;
-    font-size: 0.85rem;
-    margin-top: auto;
-    border-top: 2px solid var(--color-secundario);
-}
-
-.btn-youtube {
-    display: inline-block !important;
-    background-color: #ff0000 !important;
-    color: #ffffff !important;
-    padding: 10px 22px !important;
-    border-radius: 8px !important;
-    text-decoration: none !important;
-    font-weight: 700 !important;
-    font-size: 0.9rem !important;
-    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4) !important;
-    transition: transform 0.2s ease !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-.btn-youtube:hover {
-    transform: scale(1.05);
-}
+iniciarVigilanteDeDia();
