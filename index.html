@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banda Jesús Nazareno - Agenda Oficial</title>
     <!-- Versión actualizada para forzar la caché del móvil -->
-    <link rel="stylesheet" href="style.css?v=405">
+    <link rel="stylesheet" href="style.css?v=406">
 
     <!-- SDKs de Firebase Compatibles -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -138,6 +138,11 @@
                 <div id="indicadorActoDia" style="margin-top: 8px;"></div>
             </div>
 
+            <!-- Buscador rápido de músicos -->
+            <div class="form-group" style="margin-top: 15px;">
+                <input type="text" id="buscadorMusico" placeholder="🔍 Buscar músico por nombre..." oninput="filtrarMusicos()" style="width: 100%; padding: 9px; background: #0a0f1d; border: 1px solid #334155; color: #fff; border-radius: 6px; box-sizing: border-box;">
+            </div>
+
             <div id="resumenAsistenciaDia" style="display: flex; justify-content: space-around; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--color-secundario); padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center;">
                 <div>
                     <span style="display: block; font-size: 0.75rem; color: var(--color-secundario);">TOTAL</span>
@@ -186,6 +191,6 @@
     </div>
 
     <!-- Script principal actualizado con versión para la caché -->
-    <script src="app.js?v=405"></script>
+    <script src="app.js?v=406"></script>
 </body>
 </html>
