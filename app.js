@@ -229,6 +229,12 @@ function abrirPanelAsistencia() {
         inputFecha.value = hoy;
     }
     
+    // Limpiar buscador al abrir el panel
+    var inputBuscador = document.getElementById('buscadorMusico');
+    if (inputBuscador) {
+        inputBuscador.value = '';
+    }
+    
     document.getElementById('modalAsistencia').style.display = 'block';
     document.body.style.overflow = 'hidden';
     window.scrollTo(0, 0);
@@ -275,7 +281,25 @@ function verificarActoEnFecha(fechaSeleccionada) {
     }
 }
 
-// FUNCIÓN NUEVA: Marcar o desmarcar Músico de Honor de forma permanente en Firestore
+// NUEVA FUNCIÓN: Filtrar músicos en tiempo real
+function filtrarMusicos() {
+    var textoBusqueda = document.getElementById('buscadorMusico').value.toLowerCase().trim();
+    var elementos = document.querySelectorAll('.item-componente');
+
+    elementos.forEach(function(el) {
+        var spanNombre = el.querySelector('span');
+        if (spanNombre) {
+            var nombreMusico = spanNombre.innerText.toLowerCase();
+            if (nombreMusico.includes(textoBusqueda)) {
+                el.style.display = 'flex';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+    });
+}
+
+// FUNCIÓN: Marcar o desmarcar Músico de Honor de forma permanente en Firestore
 function toggleMusicoHonor(idComp, estadoActual) {
     if (!esAdmin) return;
     
@@ -445,6 +469,12 @@ function cargarComponentesYAsistencia() {
 
                 document.getElementById('listaCornetasAsistencia').innerHTML = cornetasHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay cornetas registradas para esta fecha.</p>';
                 document.getElementById('listaBateriaAsistencia').innerHTML = bateriaHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay batería/tambores registrados para esta fecha.</p>';
+                
+                // Aplicar el filtro actual en caso de que hubiera texto escrito al recargar
+                var inputBuscador = document.getElementById('buscadorMusico');
+                if (inputBuscador && inputBuscador.value.trim() !== '') {
+                    filtrarMusicos();
+                }
             });
         }).catch(function(error) {
             console.error("Error al cargar componentes:", error);
