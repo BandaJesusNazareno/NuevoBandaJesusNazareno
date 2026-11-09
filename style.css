@@ -13,9 +13,8 @@ body {
     padding: 0;
 }
 
-/* Cabecera superior con el tono rojo granate corporativo */
 .header {
-    background-color: #581c1c;
+    background-color: #4a0e17; /* Rojo granate cofrade profundo */
     padding: 15px 20px;
     border-bottom: 2px solid var(--color-secundario);
     text-align: center;
