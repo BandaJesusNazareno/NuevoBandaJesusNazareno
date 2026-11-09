@@ -282,16 +282,6 @@ function cargarComponentesYAsistencia() {
 
     verificarActoEnFecha(fechaSeleccionada);
 
-    var tipoActoDia = 'ensayo';
-    for (var idEv in eventosMap) {
-        if (eventosMap[idEv].fecha === fechaSeleccionada) {
-            if (eventosMap[idEv].tipo) {
-                tipoActoDia = eventosMap[idEv].tipo.toLowerCase();
-            }
-            break;
-        }
-    }
-
     var numSel = parseInt(fechaSeleccionada.replace(/-/g, ''), 10);
 
     // Mapeamos las fechas de los eventos con sus tipos correspondientes
@@ -374,14 +364,27 @@ function cargarComponentesYAsistencia() {
                         totalAusentes++;
                     }
 
-                    // Obtenemos los contadores específicos para el tipo de acto de este día
-                    var stats = (conteoPorTipo[idComp] && conteoPorTipo[idComp][tipoActoDia]) ? conteoPorTipo[idComp][tipoActoDia] : { asiste: 0, no: 0 };
+                    var tiposDelMusico = conteoPorTipo[idComp] || {};
+                    var tiposDisponibles = ['ensayo', 'procesion', 'reunion', 'concierto'];
+                    var badgesHTML = '';
+
+                    for (var i = 0; i < tiposDisponibles.length; i++) {
+                        var t = tiposDisponibles[i];
+                        var statsTipo = tiposDelMusico[t] || { asiste: 0, no: 0 };
+                        
+                        if (statsTipo.asiste > 0 || statsTipo.no > 0) {
+                            badgesHTML += '<span class="badge ' + t + '" style="font-size: 0.65rem; padding: 2px 5px; margin-right: 4px;">' + t.toUpperCase().substring(0,3) + ' A:' + statsTipo.asiste + ' F:'  + statsTipo.no + '</span>';
+                        }
+                    }
+
+                    if (!badgesHTML) {
+                        badgesHTML = '<span class="badge ensayo" style="font-size: 0.65rem; padding: 2px 5px; margin-right: 4px;">ENS A:0 F:0</span>';
+                    }
 
                     var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">' +
                         '<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">' +
                             '<span style="color: #fff; font-size: 0.9rem;">' + comp.nombre + '</span>' +
-                            '<span class="badge ' + tipoActoDia + '" style="font-size: 0.65rem; padding: 2px 5px; margin: 0;">A: ' + stats.asiste + '</span>' +
-                            '<span class="badge" style="font-size: 0.65rem; padding: 2px 5px; margin: 0; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4);">F: ' + stats.no + '</span>' +
+                            '<div style="display: flex; gap: 4px; flex-wrap: wrap;">' + badgesHTML + '</div>' +
                         '</div>' +
                         '<div class="acciones-asistencia" style="display: flex; gap: 6px; align-items: center;">';
 
