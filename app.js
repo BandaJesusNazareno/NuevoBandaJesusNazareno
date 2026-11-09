@@ -373,16 +373,16 @@ function cargarComponentesYAsistencia() {
                         var statsTipo = tiposDelMusico[t] || { asiste: 0, no: 0 };
                         
                         if (statsTipo.asiste > 0 || statsTipo.no > 0) {
-                            // Asistencias con el color del tipo de acto
+                            // Asistencia con el color correspondiente del tipo de acto
                             badgesHTML += '<span class="badge ' + t + '" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">' + t.toUpperCase().substring(0,3) + ' A:' + statsTipo.asiste + '</span>';
-                            // Faltas completamente en rojo
-                            badgesHTML += '<span class="badge" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4);">' + t.toUpperCase().substring(0,3) + ' F:' + statsTipo.no + '</span>';
+                            // Falta completamente en rojo llamativo
+                            badgesHTML += '<span style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block; background: rgba(239, 68, 68, 0.25); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.5); border-radius: 4px; font-weight: 600;">' + t.toUpperCase().substring(0,3) + ' F:' + statsTipo.no + '</span>';
                         }
                     }
 
                     if (!badgesHTML) {
                         badgesHTML = '<span class="badge ensayo" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">ENS A:0</span>' +
-                                     '<span class="badge" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4);">ENS F:0</span>';
+                                     '<span style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block; background: rgba(239, 68, 68, 0.25); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.5); border-radius: 4px; font-weight: 600;">ENS F:0</span>';
                     }
 
                     var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 6px; border-bottom: 1px solid rgba(255,255,255,0.08);">' +
