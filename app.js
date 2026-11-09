@@ -36,7 +36,6 @@ function pedirClave() {
 
 function cerrarModal(idModal) {
     document.getElementById(idModal).style.display = "none";
-    
     if (document.querySelectorAll('.modal[style*="flex"]').length === 0) {
         document.body.style.overflow = 'auto';
     }
@@ -372,15 +371,12 @@ function cargarComponentesYAsistencia() {
                         var statsTipo = tiposDelMusico[t] || { asiste: 0, no: 0 };
                         
                         if (statsTipo.asiste > 0 || statsTipo.no > 0) {
-                            // Asistencia con color del acto + Falta en rojo brillante independiente y limpio
-                            badgesHTML += '<span class="badge ' + t + '" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">' + t.toUpperCase().substring(0,3) + ' A:' + statsTipo.asiste + '</span>' +
-                                          '<span style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block; color: #ef4444; font-weight: 700;">' + t.toUpperCase().substring(0,3) + ' F:' + statsTipo.no + '</span>';
+                            badgesHTML += '<span class="badge ' + t + '" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">' + t.toUpperCase().substring(0,3) + ' A:' + statsTipo.asiste + ' F:' + statsTipo.no + '</span>';
                         }
                     }
 
                     if (!badgesHTML) {
-                        badgesHTML = '<span class="badge ensayo" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">ENS A:0</span>' +
-                                     '<span style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block; color: #ef4444; font-weight: 700;">ENS F:0</span>';
+                        badgesHTML = '<span class="badge ensayo" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">ENS A:0 F:0</span>';
                     }
 
                     var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 6px; border-bottom: 1px solid rgba(255,255,255,0.08);">' +
