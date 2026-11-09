@@ -138,7 +138,7 @@ function escucharEventos() {
             var htmlTarjeta = '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">' +
                 '<span class="badge ' + (evento.tipo ? evento.tipo.toLowerCase() : '') + '">' + (evento.tipo || 'Evento') + '</span>' +
                 '<div style="display: flex; align-items: center; gap: 8px;">' +
-                  '<span style="color: #D4AF37; font-weight: 700; font-size: 0.95rem;">' + (evento.hora || '') + '</span>';
+                '<span style="color: #D4AF37; font-weight: 700; font-size: 0.95rem;">' + (evento.hora || '') + '</span>';
 
             if (esAdmin) {
                 htmlTarjeta += '<button class="btn-editar" onclick="cargarEdicionEvento(\'' + evento.id + '\')" title="Editar acto">✏️</button>' +
@@ -275,6 +275,22 @@ function verificarActoEnFecha(fechaSeleccionada) {
     }
 }
 
+// FUNCIÓN NUEVA: Marcar o desmarcar Músico de Honor de forma permanente en Firestore
+function toggleMusicoHonor(idComp, estadoActual) {
+    if (!esAdmin) return;
+    
+    var nuevoEstado = !estadoActual;
+    
+    db.collection("componentes").doc(idComp).update({
+        esHonor: nuevoEstado
+    }).then(function() {
+        cargarComponentesYAsistencia();
+    }).catch(function(error) {
+        console.error("Error al actualizar Músico de Honor:", error);
+        alert("Ocurrió un error al actualizar el estado.");
+    });
+}
+
 function cargarComponentesYAsistencia() {
     var fechaSeleccionada = document.getElementById('fechaAsistencia').value;
     if (!fechaSeleccionada) return;
@@ -379,18 +395,32 @@ function cargarComponentesYAsistencia() {
                         badgesHTML = '<span class="badge ensayo" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">ENS A:0 F:0</span>';
                     }
 
+                    // Verificamos si es músico de honor
+                    var esHonor = comp.esHonor === true;
+                    var estiloNombre = esHonor ? 'color: #D4AF37; font-weight: 600;' : 'color: #fff; font-weight: 500;';
+                    var iconoHonor = esHonor ? ' ⭐' : '';
+                    var textoHonorBadge = esHonor ? '<span class="etiqueta-honor" title="Reconocimiento oficial">Músico de Honor</span>' : '';
+
                     var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 6px; border-bottom: 1px solid rgba(255,255,255,0.08);">' +
                         '<div style="display: flex; flex-direction: column; gap: 6px; flex: 1; padding-right: 8px;">' +
-                            '<span style="color: #fff; font-size: 0.95rem; font-weight: 500;">' + comp.nombre + '</span>' +
+                            '<div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">' +
+                                '<span style="' + estiloNombre + ' font-size: 0.95rem;">' + comp.nombre + iconoHonor + '</span>' +
+                                textoHonorBadge +
+                            '</div>' +
                             '<div style="display: flex; flex-wrap: wrap; gap: 2px;">' + badgesHTML + '</div>' +
                         '</div>' +
                         '<div class="acciones-asistencia" style="display: flex; gap: 6px; align-items: center; flex-shrink: 0;">';
 
                     if (esAdmin) {
-                        htmlItem += '<button type="button" class="btn-asiste ' + (estado === 'asiste' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'asiste\')">Sí</button>' +
+                        var claseHonorActiva = esHonor ? 'activo-honor' : '';
+                        htmlItem += '<button type="button" class="btn-honor ' + claseHonorActiva + '" onclick="toggleMusicoHonor(\'' + idComp + '\', ' + esHonor + ')" title="Marcar como Músico de Honor">⭐</button>' +
+                                    '<button type="button" class="btn-asiste ' + (estado === 'asiste' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'asiste\')">Sí</button>' +
                                     '<button type="button" class="btn-no-asiste ' + (estado === 'no' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'no\')">No</button>' +
                                     '<button type="button" class="btn-borrar-componente" onclick="eliminarComponente(\'' + idComp + '\')" title="Dar de baja" style="background:none; border:none; cursor:pointer; font-size: 1rem;">🗑️</button>';
                     } else {
+                        if (esHonor) {
+                            htmlItem += '<span class="etiqueta-honor">⭐ Honor</span>';
+                        }
                         if (estado === 'asiste') {
                             htmlItem += '<span class="asistencia-badge-si">SÍ</span>';
                         } else if (estado === 'no') {
