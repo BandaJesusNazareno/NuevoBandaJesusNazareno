@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banda Jesús Nazareno - Agenda Oficial</title>
-    <!-- Versión actualizada en el CSS para evitar caché y pantalla blanca -->
-    <link rel="stylesheet" href="style.css?v=317">
+    <link rel="stylesheet" href="style.css">
 
     <!-- SDKs de Firebase Compatibles -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -13,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Cabecera limpia, ancha y sin apretujamientos -->
+    <!-- Cabecera -->
     <header class="header">
         <div class="header-brand">
             <img src="escudo.png" alt="Escudo Banda" class="escudo-img">
@@ -37,7 +36,6 @@
             <p>Calendario actualizado de la formación</p>
         </div>
 
-        <!-- ID CRÍTICO: Aquí es donde JavaScript carga los ensayos de Firebase -->
         <div id="listaEventos">
             <!-- Los eventos se cargarán dinámicamente desde Firebase -->
         </div>
@@ -124,11 +122,10 @@
         </div>
     </div>
 
-    <!-- Pantalla de Asistencia Independiente (Pantalla Completa) -->
+    <!-- Pantalla de Asistencia -->
     <div id="modalAsistencia" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: var(--color-fondo); overflow-y: auto; overscroll-behavior-y: contain; padding: 20px 15px;">
         <div style="max-width: 700px; margin: 0 auto; padding-bottom: 50px;">
             
-            <!-- Cabecera con botón de Volver -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--color-secundario); padding-bottom: 12px;">
                 <h3 style="color: var(--color-secundario); font-size: 1.25rem;">Control de Asistencia</h3>
                 <button type="button" class="btn-secundario" onclick="cerrarModalAsistencia()" style="background-color: var(--color-primario) !important; border: 1px solid var(--color-secundario); padding: 6px 14px;">⬅ Volver</button>
@@ -137,11 +134,9 @@
             <div class="form-group">
                 <label>Seleccionar Fecha del Ensayo / Acto</label>
                 <input type="date" id="fechaAsistencia" onchange="cargarAsistenciaFecha()">
-                <!-- Indicador visual del tipo de acto del día -->
                 <div id="indicadorActoDia" style="margin-top: 8px;"></div>
             </div>
 
-            <!-- CUADRO RESUMEN DE ASISTENCIA -->
             <div id="resumenAsistenciaDia" style="display: flex; justify-content: space-around; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--color-secundario); padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center;">
                 <div>
                     <span style="display: block; font-size: 0.75rem; color: var(--color-secundario);">TOTAL</span>
@@ -157,7 +152,6 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN EXCLUSIVA PARA ADMIN: Añadir componentes fijos -->
             <div id="adminSeccionComponentes" class="admin-only" style="display: none; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
                 <h4 style="color: var(--color-secundario); font-size: 0.95rem; margin-bottom: 8px;">Añadir Nuevo Componente (Se queda fijo para todos los días)</h4>
                 
@@ -190,7 +184,7 @@
         </div>
     </div>
 
-    <!-- Script principal con versión actualizada para evitar caché -->
-    <script src="app.js?v=317"></script>
+    <!-- Script principal con versión limpia -->
+    <script src="app.js?v=400"></script>
 </body>
 </html>
