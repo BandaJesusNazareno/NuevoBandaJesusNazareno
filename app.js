@@ -282,91 +282,131 @@ function cargarComponentesYAsistencia() {
 
     verificarActoEnFecha(fechaSeleccionada);
 
+    // Detectamos el tipo de acto del día seleccionado para heredar su color exacto
+    var tipoActoDia = 'ensayo';
+    for (var idEv in eventosMap) {
+        if (eventosMap[idEv].fecha === fechaSeleccionada) {
+            if (eventosMap[idEv].tipo) {
+                tipoActoDia = eventosMap[idEv].tipo.toLowerCase();
+            }
+            break;
+        }
+    }
+
     var numSel = parseInt(fechaSeleccionada.replace(/-/g, ''), 10);
 
-    db.collection("componentes").get().then(function(querySnapshot) {
-        var componentesArr = [];
-        querySnapshot.forEach(function(resDoc) {
-            var data = resDoc.data();
-            data.id = resDoc.id;
-            componentesArr.push(data);
+    // Leemos todo el histórico de asistencias para calcular el total acumulado
+    db.collection("asistencias").get().then(function(snapshotAsistencias) {
+        var conteoAsistencias = {}; 
+
+        snapshotAsistencias.forEach(function(docAsis) {
+            var datosAsis = docAsis.data();
+            var regs = datosAsis.registros || {};
+            for (var idC in regs) {
+                if (!conteoAsistencias[idC]) {
+                    conteoAsistencias[idC] = { asiste: 0, no: 0 };
+                }
+                if (regs[idC] === 'asiste') {
+                    conteoAsistencias[idC].asiste++;
+                } else if (regs[idC] === 'no') {
+                    conteoAsistencias[idC].no++;
+                }
+            }
         });
 
-        componentesArr.sort(function(a, b) {
-            var tA = a.creadoEn || 0;
-            var tB = b.creadoEn || 0;
-            return tA - tB;
-        });
-
-        var cornetasHTML = '';
-        var bateriaHTML = '';
-        
-        var totalMusicos = 0;
-        var totalPresentes = 0;
-        var totalAusentes = 0;
-
-        db.collection("asistencias").doc(fechaSeleccionada).get().then(function(asistenciaDoc) {
-            var registrosAsistencia = asistenciaDoc.exists ? asistenciaDoc.data().registros || {} : {};
-
-            componentesArr.forEach(function(comp) {
-                var idComp = comp.id;
-                
-                var fechaAltaStr = comp.fechaAlta || "2024-01-01";
-                if (fechaAltaStr.includes('/')) {
-                    var p = fechaAltaStr.split('/');
-                    fechaAltaStr = p[2] + '-' + p[1] + '-' + p[0];
-                }
-                var numAlta = parseInt(fechaAltaStr.replace(/-/g, ''), 10);
-
-                if (numSel < numAlta) {
-                    return; 
-                }
-
-                var estado = registrosAsistencia[idComp] || ''; 
-
-                totalMusicos++;
-                if (estado === 'asiste') {
-                    totalPresentes++;
-                } else if (estado === 'no') {
-                    totalAusentes++;
-                }
-
-                var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">' +
-                    '<span style="color: #fff; font-size: 0.9rem;">' + comp.nombre + '</span>' +
-                    '<div class="acciones-asistencia" style="display: flex; gap: 6px; align-items: center;">';
-
-                if (esAdmin) {
-                    htmlItem += '<button type="button" class="btn-asiste ' + (estado === 'asiste' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'asiste\')">Sí</button>' +
-                                '<button type="button" class="btn-no-asiste ' + (estado === 'no' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'no\')">No</button>' +
-                                '<button type="button" class="btn-borrar-componente" onclick="eliminarComponente(\'' + idComp + '\')" title="Dar de baja" style="background:none; border:none; cursor:pointer; font-size: 1rem;">🗑️</button>';
-                } else {
-                    if (estado === 'asiste') {
-                        htmlItem += '<span class="asistencia-badge-si">SÍ</span>';
-                    } else if (estado === 'no') {
-                        htmlItem += '<span class="asistencia-badge-no">NO</span>';
-                    } else {
-                        htmlItem += '<span style="color: #94a3b8; font-size: 0.85rem; font-style: italic;">Sin registrar</span>';
-                    }
-                }
-
-                htmlItem += '</div></div>';
-
-                if (comp.seccion === 'corneta') {
-                    cornetasHTML += htmlItem;
-                } else {
-                    bateriaHTML += htmlItem;
-                }
+        db.collection("componentes").get().then(function(querySnapshot) {
+            var componentesArr = [];
+            querySnapshot.forEach(function(resDoc) {
+                var data = resDoc.data();
+                data.id = resDoc.id;
+                componentesArr.push(data);
             });
 
-            document.getElementById('totalMusicosCount').innerText = totalMusicos;
-            document.getElementById('totalPresentesCount').innerText = totalPresentes;
-            document.getElementById('totalAusentesCount').innerText = totalAusentes;
+            componentesArr.sort(function(a, b) {
+                var tA = a.creadoEn || 0;
+                var tB = b.creadoEn || 0;
+                return tA - tB;
+            });
 
-            document.getElementById('listaCornetasAsistencia').innerHTML = cornetasHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay cornetas registradas para esta fecha.</p>';
-            document.getElementById('listaBateriaAsistencia').innerHTML = bateriaHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay batería/tambores registrados para esta fecha.</p>';
+            var cornetasHTML = '';
+            var bateriaHTML = '';
+            
+            var totalMusicos = 0;
+            var totalPresentes = 0;
+            var totalAusentes = 0;
+
+            db.collection("asistencias").doc(fechaSeleccionada).get().then(function(asistenciaDoc) {
+                var registrosAsistencia = asistenciaDoc.exists ? asistenciaDoc.data().registros || {} : {};
+
+                componentesArr.forEach(function(comp) {
+                    var idComp = comp.id;
+                    
+                    var fechaAltaStr = comp.fechaAlta || "2024-01-01";
+                    if (fechaAltaStr.includes('/')) {
+                        var p = fechaAltaStr.split('/');
+                        fechaAltaStr = p[2] + '-' + p[1] + '-' + p[0];
+                    }
+                    var numAlta = parseInt(fechaAltaStr.replace(/-/g, ''), 10);
+
+                    if (numSel < numAlta) {
+                        return; 
+                    }
+
+                    var estado = registrosAsistencia[idComp] || ''; 
+
+                    totalMusicos++;
+                    if (estado === 'asiste') {
+                        totalPresentes++;
+                    } else if (estado === 'no') {
+                        totalAusentes++;
+                    }
+
+                    var stats = conteoAsistencias[idComp] || { asiste: 0, no: 0 };
+
+                    // Usamos la clase insignia con el color del tipo de acto del día
+                    var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">' +
+                        '<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">' +
+                            '<span style="color: #fff; font-size: 0.9rem;">' + comp.nombre + '</span>' +
+                            '<span class="badge ' + tipoActoDia + '" style="font-size: 0.7rem; padding: 2px 6px; margin: 0;">Asistencias: ' + stats.asiste + '</span>' +
+                            '<span class="badge" style="font-size: 0.7rem; padding: 2px 6px; margin: 0; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4);">Faltas: ' + stats.no + '</span>' +
+                        '</div>' +
+                        '<div class="acciones-asistencia" style="display: flex; gap: 6px; align-items: center;">';
+
+                    if (esAdmin) {
+                        htmlItem += '<button type="button" class="btn-asiste ' + (estado === 'asiste' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'asiste\')">Sí</button>' +
+                                    '<button type="button" class="btn-no-asiste ' + (estado === 'no' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'no\')">No</button>' +
+                                    '<button type="button" class="btn-borrar-componente" onclick="eliminarComponente(\'' + idComp + '\')" title="Dar de baja" style="background:none; border:none; cursor:pointer; font-size: 1rem;">🗑️</button>';
+                    } else {
+                        if (estado === 'asiste') {
+                            htmlItem += '<span class="asistencia-badge-si">SÍ</span>';
+                        } else if (estado === 'no') {
+                            htmlItem += '<span class="asistencia-badge-no">NO</span>';
+                        } else {
+                            htmlItem += '<span style="color: #94a3b8; font-size: 0.85rem; font-style: italic;">Sin registrar</span>';
+                        }
+                    }
+
+                    htmlItem += '</div></div>';
+
+                    if (comp.seccion === 'corneta') {
+                        cornetasHTML += htmlItem;
+                    } else {
+                        bateriaHTML += htmlItem;
+                    }
+                });
+
+                document.getElementById('totalMusicosCount').innerText = totalMusicos;
+                document.getElementById('totalPresentesCount').innerText = totalPresentes;
+                document.getElementById('totalAusentesCount').innerText = totalAusentes;
+
+                document.getElementById('listaCornetasAsistencia').innerHTML = cornetasHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay cornetas registradas para esta fecha.</p>';
+                document.getElementById('listaBateriaAsistencia').innerHTML = bateriaHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay batería/tambores registrados para esta fecha.</p>';
+            });
+        }).catch(function(error) {
+            console.error("Error al cargar componentes:", error);
         });
     }).catch(function(error) {
-        console.error("Error al cargar componentes:", error);
+        console.error("Error al cargar histórico de asistencias:", error);
     });
 }
 
