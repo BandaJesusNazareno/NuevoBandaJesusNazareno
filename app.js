@@ -373,20 +373,20 @@ function cargarComponentesYAsistencia() {
                         var statsTipo = tiposDelMusico[t] || { asiste: 0, no: 0 };
                         
                         if (statsTipo.asiste > 0 || statsTipo.no > 0) {
-                            badgesHTML += '<span class="badge ' + t + '" style="font-size: 0.65rem; padding: 2px 5px; margin-right: 4px;">' + t.toUpperCase().substring(0,3) + ' A:' + statsTipo.asiste + ' F:'  + statsTipo.no + '</span>';
+                            badgesHTML += '<span class="badge ' + t + '" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">' + t.toUpperCase().substring(0,3) + ' A:' + statsTipo.asiste + ' F:'  + statsTipo.no + '</span>';
                         }
                     }
 
                     if (!badgesHTML) {
-                        badgesHTML = '<span class="badge ensayo" style="font-size: 0.65rem; padding: 2px 5px; margin-right: 4px;">ENS A:0 F:0</span>';
+                        badgesHTML = '<span class="badge ensayo" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">ENS A:0 F:0</span>';
                     }
 
-                    var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">' +
-                        '<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">' +
-                            '<span style="color: #fff; font-size: 0.9rem;">' + comp.nombre + '</span>' +
-                            '<div style="display: flex; gap: 4px; flex-wrap: wrap;">' + badgesHTML + '</div>' +
+                    var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 6px; border-bottom: 1px solid rgba(255,255,255,0.08);">' +
+                        '<div style="display: flex; flex-direction: column; gap: 6px; flex: 1; padding-right: 8px;">' +
+                            '<span style="color: #fff; font-size: 0.95rem; font-weight: 500;">' + comp.nombre + '</span>' +
+                            '<div style="display: flex; flex-wrap: wrap; gap: 2px;">' + badgesHTML + '</div>' +
                         '</div>' +
-                        '<div class="acciones-asistencia" style="display: flex; gap: 6px; align-items: center;">';
+                        '<div class="acciones-asistencia" style="display: flex; gap: 6px; align-items: center; flex-shrink: 0;">';
 
                     if (esAdmin) {
                         htmlItem += '<button type="button" class="btn-asiste ' + (estado === 'asiste' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'asiste\')">Sí</button>' +
