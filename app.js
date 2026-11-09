@@ -294,20 +294,35 @@ function cargarComponentesYAsistencia() {
 
     var numSel = parseInt(fechaSeleccionada.replace(/-/g, ''), 10);
 
+    // Mapeamos las fechas de los eventos con sus tipos correspondientes
+    var tiposPorFecha = {};
+    for (var idEv in eventosMap) {
+        var ev = eventosMap[idEv];
+        if (ev.fecha && ev.tipo) {
+            tiposPorFecha[ev.fecha] = ev.tipo.toLowerCase();
+        }
+    }
+
     db.collection("asistencias").get().then(function(snapshotAsistencias) {
-        var conteoAsistencias = {}; 
+        var conteoPorTipo = {}; 
 
         snapshotAsistencias.forEach(function(docAsis) {
+            var fechaAsis = docAsis.id;
+            var tipoDeEseDia = tiposPorFecha[fechaAsis] || 'ensayo';
+            
             var datosAsis = docAsis.data();
             var regs = datosAsis.registros || {};
             for (var idC in regs) {
-                if (!conteoAsistencias[idC]) {
-                    conteoAsistencias[idC] = { asiste: 0, no: 0 };
+                if (!conteoPorTipo[idC]) {
+                    conteoPorTipo[idC] = {};
+                }
+                if (!conteoPorTipo[idC][tipoDeEseDia]) {
+                    conteoPorTipo[idC][tipoDeEseDia] = { asiste: 0, no: 0 };
                 }
                 if (regs[idC] === 'asiste') {
-                    conteoAsistencias[idC].asiste++;
+                    conteoPorTipo[idC][tipoDeEseDia].asiste++;
                 } else if (regs[idC] === 'no') {
-                    conteoAsistencias[idC].no++;
+                    conteoPorTipo[idC][tipoDeEseDia].no++;
                 }
             }
         });
@@ -359,7 +374,8 @@ function cargarComponentesYAsistencia() {
                         totalAusentes++;
                     }
 
-                    var stats = conteoAsistencias[idComp] || { asiste: 0, no: 0 };
+                    // Obtenemos los contadores específicos para el tipo de acto de este día
+                    var stats = (conteoPorTipo[idComp] && conteoPorTipo[idComp][tipoActoDia]) ? conteoPorTipo[idComp][tipoActoDia] : { asiste: 0, no: 0 };
 
                     var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">' +
                         '<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">' +
