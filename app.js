@@ -1,4 +1,5 @@
 const firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyA87GdLbgUDMlE-N_wQtJpLnGFgODA6Mpc",
     authDomain: "bandajesusnazareno2012.firebaseapp.com",
     projectId: "bandajesusnazareno2012",
@@ -284,7 +285,6 @@ function cargarComponentesYAsistencia() {
 
     var numSel = parseInt(fechaSeleccionada.replace(/-/g, ''), 10);
 
-    // Mapeamos las fechas de los eventos con sus tipos correspondientes
     var tiposPorFecha = {};
     for (var idEv in eventosMap) {
         var ev = eventosMap[idEv];
@@ -373,22 +373,21 @@ function cargarComponentesYAsistencia() {
                         var statsTipo = tiposDelMusico[t] || { asiste: 0, no: 0 };
                         
                         if (statsTipo.asiste > 0 || statsTipo.no > 0) {
-                            // Asistencia con el color correspondiente del tipo de acto
-                            badgesHTML += '<span class="badge ' + t + '" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">' + t.toUpperCase().substring(0,3) + ' A:' + statsTipo.asiste + '</span>';
-                            // Falta completamente en rojo llamativo
-                            badgesHTML += '<span style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block; background: rgba(239, 68, 68, 0.25); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.5); border-radius: 4px; font-weight: 600;">' + t.toUpperCase().substring(0,3) + ' F:' + statsTipo.no + '</span>';
+                            // Metemos la asistencia y la falta DENTRO de la misma pastilla de color (clase badge), pero forzamos el texto de la F y su número en rojo con span y style="color: #ef4444 !important;"
+                            badgesHTML += '<span class="badge ' + t + '" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">' + 
+                                          t.toUpperCase().substring(0,3) + ' A:' + statsTipo.asiste + ' <span style="color: #ef4444 !important; font-weight: 700;">F:' + statsTipo.no + '</span>' + 
+                                          '</span>';
                         }
                     }
 
                     if (!badgesHTML) {
-                        badgesHTML = '<span class="badge ensayo" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">ENS A:0</span>' +
-                                     '<span style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block; background: rgba(239, 68, 68, 0.25); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.5); border-radius: 4px; font-weight: 600;">ENS F:0</span>';
+                        badgesHTML = '<span class="badge ensayo" style="font-size: 0.7rem; padding: 3px 7px; margin: 2px 3px 2px 0; display: inline-block;">ENS A:0 <span style="color: #ef4444 !important; font-weight: 700;">F:0</span></span>';
                     }
 
                     var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 6px; border-bottom: 1px solid rgba(255,255,255,0.08);">' +
                         '<div style="display: flex; flex-direction: column; gap: 6px; flex: 1; padding-right: 8px;">' +
                             '<span style="color: #fff; font-size: 0.95rem; font-weight: 500;">' + comp.nombre + '</span>' +
-                            '<div style="display: flex; flex-wrap: wrap; gap: 2px;">' + badgesHTML + '</div>' +
+                            '<div style="display: flex; flex-wrap: wrap; gap: 2px; align-items: center;">' + badgesHTML + '</div>' +
                         '</div>' +
                         '<div class="acciones-asistencia" style="display: flex; gap: 6px; align-items: center; flex-shrink: 0;">';
 
