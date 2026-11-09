@@ -13,8 +13,9 @@ body {
     padding: 0;
 }
 
+/* Cabecera superior con el tono rojo granate corporativo */
 .header {
-    background-color: var(--color-primario);
+    background-color: #581c1c;
     padding: 15px 20px;
     border-bottom: 2px solid var(--color-secundario);
     text-align: center;
@@ -42,7 +43,7 @@ body {
 .header-titles p {
     margin: 4px 0 0 0;
     font-size: 0.9rem;
-    color: #94a3b8;
+    color: #cbd5e1;
 }
 
 .barra-botones-superior {
