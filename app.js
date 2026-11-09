@@ -282,7 +282,6 @@ function cargarComponentesYAsistencia() {
 
     verificarActoEnFecha(fechaSeleccionada);
 
-    // Detectamos el tipo de acto del día seleccionado para heredar su color exacto
     var tipoActoDia = 'ensayo';
     for (var idEv in eventosMap) {
         if (eventosMap[idEv].fecha === fechaSeleccionada) {
@@ -295,7 +294,6 @@ function cargarComponentesYAsistencia() {
 
     var numSel = parseInt(fechaSeleccionada.replace(/-/g, ''), 10);
 
-    // Leemos todo el histórico de asistencias para calcular el total acumulado
     db.collection("asistencias").get().then(function(snapshotAsistencias) {
         var conteoAsistencias = {}; 
 
@@ -363,12 +361,11 @@ function cargarComponentesYAsistencia() {
 
                     var stats = conteoAsistencias[idComp] || { asiste: 0, no: 0 };
 
-                    // Usamos la clase insignia con el color del tipo de acto del día
                     var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">' +
-                        '<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">' +
+                        '<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">' +
                             '<span style="color: #fff; font-size: 0.9rem;">' + comp.nombre + '</span>' +
-                            '<span class="badge ' + tipoActoDia + '" style="font-size: 0.7rem; padding: 2px 6px; margin: 0;">Asistencias: ' + stats.asiste + '</span>' +
-                            '<span class="badge" style="font-size: 0.7rem; padding: 2px 6px; margin: 0; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4);">Faltas: ' + stats.no + '</span>' +
+                            '<span class="badge ' + tipoActoDia + '" style="font-size: 0.65rem; padding: 2px 5px; margin: 0;">A: ' + stats.asiste + '</span>' +
+                            '<span class="badge" style="font-size: 0.65rem; padding: 2px 5px; margin: 0; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4);">F: ' + stats.no + '</span>' +
                         '</div>' +
                         '<div class="acciones-asistencia" style="display: flex; gap: 6px; align-items: center;">';
 
@@ -484,13 +481,3 @@ function iniciarVigilanteDeDia() {
         if (modalAsistencia && modalAsistencia.style.display === 'block') {
             var hoy = new Date().toISOString().split('T')[0];
             var inputFecha = document.getElementById('fechaAsistencia');
-            
-            if (inputFecha && inputFecha.value !== hoy) {
-                inputFecha.value = hoy;
-                cargarComponentesYAsistencia();
-            }
-        }
-    }, 60000); 
-}
-
-iniciarVigilanteDeDia();
