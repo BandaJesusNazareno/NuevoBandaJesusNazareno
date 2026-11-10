@@ -229,7 +229,6 @@ function abrirPanelAsistencia() {
         inputFecha.value = hoy;
     }
     
-    // Limpiar buscador al abrir el panel
     var inputBuscador = document.getElementById('buscadorMusico');
     if (inputBuscador) {
         inputBuscador.value = '';
@@ -279,6 +278,19 @@ function verificarActoEnFecha(fechaSeleccionada) {
     } else {
         contenedorIndicador.innerHTML = '<span style="color: #94a3b8; font-size: 0.8rem; font-style: italic;">No hay ningún acto oficial registrado para este día.</span>';
     }
+}
+
+// Función para mostrar el mensaje emergente flotante (Toast)
+function mostrarToastHonor(nombreMusico) {
+    var toast = document.getElementById('toastHonor');
+    if (!toast) return;
+    toast.innerHTML = '⭐ <strong>' + nombreMusico + '</strong> es Músico de Honor';
+    toast.classList.add('mostrar');
+    
+    if (window.timerToast) clearTimeout(window.timerToast);
+    window.timerToast = setTimeout(function() {
+        toast.classList.remove('mostrar');
+    }, 2000); // Desaparece a los 2 segundos
 }
 
 // NUEVA FUNCIÓN: Filtrar músicos en tiempo real
@@ -422,14 +434,14 @@ function cargarComponentesYAsistencia() {
                     // Verificamos si es músico de honor
                     var esHonor = comp.esHonor === true;
                     var estiloNombre = esHonor ? 'color: #D4AF37; font-weight: 600;' : 'color: #fff; font-weight: 500;';
-                    var iconoHonor = esHonor ? ' ⭐' : '';
-                    var textoHonorBadge = esHonor ? '<span class="etiqueta-honor" title="Reconocimiento oficial">Músico de Honor</span>' : '';
+                    
+                    // Estrella interactiva junto al nombre que muestra el mensaje flotante al pulsarla si es honor
+                    var iconoHonor = esHonor ? ' <span class="estrella-nombre" onclick="mostrarToastHonor(\'' + comp.nombre.replace(/'/g, "\\'") + '\')" title="Pulsa para ver reconocimiento">⭐</span>' : '';
 
                     var htmlItem = '<div class="item-componente" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 6px; border-bottom: 1px solid rgba(255,255,255,0.08);">' +
                         '<div style="display: flex; flex-direction: column; gap: 6px; flex: 1; padding-right: 8px;">' +
                             '<div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">' +
                                 '<span style="' + estiloNombre + ' font-size: 0.95rem;">' + comp.nombre + iconoHonor + '</span>' +
-                                textoHonorBadge +
                             '</div>' +
                             '<div style="display: flex; flex-wrap: wrap; gap: 2px;">' + badgesHTML + '</div>' +
                         '</div>' +
@@ -442,7 +454,6 @@ function cargarComponentesYAsistencia() {
                                     '<button type="button" class="btn-no-asiste ' + (estado === 'no' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'no\')">No</button>' +
                                     '<button type="button" class="btn-borrar-componente" onclick="eliminarComponente(\'' + idComp + '\')" title="Dar de baja" style="background:none; border:none; cursor:pointer; font-size: 1rem;">🗑️</button>';
                     } else {
-                        // Eliminado el cuadro repetido de honor a la derecha, solo muestra la asistencia normal
                         if (estado === 'asiste') {
                             htmlItem += '<span class="asistencia-badge-si">SÍ</span>';
                         } else if (estado === 'no') {
@@ -468,7 +479,6 @@ function cargarComponentesYAsistencia() {
                 document.getElementById('listaCornetasAsistencia').innerHTML = cornetasHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay cornetas registradas para esta fecha.</p>';
                 document.getElementById('listaBateriaAsistencia').innerHTML = bateriaHTML || '<p style="color:#64748b; font-size:0.85rem;">No hay batería/tambores registrados para esta fecha.</p>';
                 
-                // Aplicar el filtro actual en caso de que hubiera texto escrito al recargar
                 var inputBuscador = document.getElementById('buscadorMusico');
                 if (inputBuscador && inputBuscador.value.trim() !== '') {
                     filtrarMusicos();
