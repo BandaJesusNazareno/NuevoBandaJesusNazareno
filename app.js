@@ -141,8 +141,8 @@ function escucharEventos() {
                 '<span style="color: #D4AF37; font-weight: 700; font-size: 0.95rem;">' + (evento.hora || '') + '</span>';
 
             if (esAdmin) {
-                htmlTarjeta += '<button class="btn-editar" onclick="cargarEdicionEvento(\'' + evento.id + '\')" title="Editar acto">✏️</button>' +
-                               '<button class="btn-eliminar" onclick="borrarEvento(\'' + evento.id + '\')" title="Eliminar acto">✕</button>';
+                htmlTarjeta += '<button type="button" class="btn-accion-acto" onclick="cargarEdicionEvento(\'' + evento.id + '\')" title="Editar acto">✏️</button>' +
+                               '<button type="button" class="btn-accion-acto btn-eliminar-acto" onclick="borrarEvento(\'' + evento.id + '\')" title="Eliminar acto">✕</button>';
             }
 
             htmlTarjeta += '</div></div>' +
