@@ -54,7 +54,7 @@ body {
 }
 
 .btn-accion-principal {
-    background-color: var(--color-primario);
+    background-color: #4a0e17;
     color: var(--color-secundario);
     border: 1px solid var(--color-secundario);
     padding: 8px 16px;
@@ -62,12 +62,12 @@ body {
     font-weight: 600;
     cursor: pointer;
     font-size: 0.9rem;
-    transition: background 0.2s;
+    transition: all 0.2s;
 }
 
 .btn-accion-principal:hover {
     background-color: var(--color-secundario);
-    color: var(--color-fondo);
+    color: #4a0e17;
 }
 
 .contenedor {
@@ -238,12 +238,19 @@ body {
 }
 
 .btn-secundario {
-    background-color: transparent;
-    color: #cbd5e1;
-    border: 1px solid #334155;
+    background-color: #4a0e17;
+    color: var(--color-secundario);
+    border: 1px solid var(--color-secundario);
     padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-secundario:hover {
+    background-color: var(--color-secundario);
+    color: #4a0e17;
 }
 
 #btnFlotanteAgregar {
