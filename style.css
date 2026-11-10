@@ -396,3 +396,28 @@ body {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
 }
+
+/* Estilos para los botones de editar y eliminar en las tarjetas de actos */
+.btn-accion-acto {
+    background: #1e293b;
+    color: #94a3b8;
+    border: 1px solid #334155;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-accion-acto:hover {
+    border-color: var(--color-secundario);
+    color: var(--color-secundario);
+}
+
+.btn-accion-acto.btn-eliminar-acto:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
