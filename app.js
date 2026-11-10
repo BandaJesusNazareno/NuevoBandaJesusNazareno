@@ -442,9 +442,7 @@ function cargarComponentesYAsistencia() {
                                     '<button type="button" class="btn-no-asiste ' + (estado === 'no' ? 'activo' : '') + '" onclick="marcarAsistenciaDirecto(event, \'' + idComp + '\', \'no\')">No</button>' +
                                     '<button type="button" class="btn-borrar-componente" onclick="eliminarComponente(\'' + idComp + '\')" title="Dar de baja" style="background:none; border:none; cursor:pointer; font-size: 1rem;">🗑️</button>';
                     } else {
-                        if (esHonor) {
-                            htmlItem += '<span class="etiqueta-honor">⭐ Honor</span>';
-                        }
+                        // Eliminado el cuadro repetido de honor a la derecha, solo muestra la asistencia normal
                         if (estado === 'asiste') {
                             htmlItem += '<span class="asistencia-badge-si">SÍ</span>';
                         } else if (estado === 'no') {
