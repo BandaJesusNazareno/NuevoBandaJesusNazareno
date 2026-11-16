@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banda Jesús Nazareno - Agenda Oficial</title>
     <!-- Versión actualizada para forzar la caché del móvil -->
-    <link rel="stylesheet" href="style.css?v=428">
+    <link rel="stylesheet" href="style.css?v=429">
 
     <!-- SDKs de Firebase Compatibles -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -26,18 +26,20 @@
         </div>
     </header>
 
-    <!-- Barra de Botones de Gestión -->
+    <!-- Barra de Botones de Gestión (Sin el botón de notificaciones) -->
     <div class="barra-botones-superior">
         <button class="btn-accion-principal" onclick="abrirPanelAsistencia()">📋 Asistencia</button>
         <button class="btn-accion-principal" onclick="pedirClave()">⚙️ Admin</button>
-        <button class="btn-accion-principal" id="btnNotificaciones" onclick="solicitarPermisoNotificaciones()" style="background-color: #1e293b; border-color: #334155;">🔔 Activar Avisos</button>
     </div>
 
     <!-- Contenido Principal -->
     <main class="contenedor">
-        <div class="seccion-titulo">
-            <h2>Próximos Actos y Ensayos</h2>
-            <p>Calendario actualizado de la formación</p>
+        <div class="seccion-titulo" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2>Próximos Actos y Ensayos</h2>
+                <p>Calendario actualizado de la formación</p>
+            </div>
+            <button id="btnNotificaciones" onclick="solicitarPermisoNotificaciones()" title="Activar avisos" style="background: none; border: none; font-size: 1.6rem; cursor: pointer; padding: 4px; color: #94a3b8; transition: color 0.3s;">🔔</button>
         </div>
 
         <div id="listaEventos">
@@ -216,6 +218,6 @@
     <div id="toastHonor">⭐ ¡Músico de Honor de la Banda!</div>
 
     <!-- Script principal actualizado con versión para la caché -->
-    <script src="app.js?v=428"></script>
+    <script src="app.js?v=429"></script>
 </body>
 </html>
