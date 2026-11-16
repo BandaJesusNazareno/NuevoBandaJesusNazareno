@@ -639,7 +639,7 @@ function iniciarVigilanteDeDia() {
 iniciarVigilanteDeDia();
 
 
-// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) ADAPTADO PARA APPS INDEPENDIENTES ---
+// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) LIBRE DE ERRORES DE ENTORNO ---
 
 const messaging = firebase.messaging();
 
@@ -657,55 +657,32 @@ if ('serviceWorker' in navigator) {
 function solicitarPermisoNotificaciones() {
     alert("1. Botón pulsado correctamente"); // Chivato 1
 
-    var permisoPromise;
-    try {
-        if (typeof Notification !== 'undefined' && typeof Notification.requestPermission === 'function') {
-            permisoPromise = Notification.requestPermission();
-        } else if (window.Notification && typeof window.Notification.requestPermission === 'function') {
-            permisoPromise = window.Notification.requestPermission();
-        } else {
-            permisoPromise = Promise.resolve('granted'); // Salto seguro para apps independientes empaquetadas
-        }
-    } catch (e) {
-        permisoPromise = Promise.resolve('granted');
+    if (typeof firebase === 'undefined' || !firebase.messaging) {
+        alert("Error: Firebase Messaging no está disponible.");
+        return;
     }
 
-    permisoPromise.then(function(permission) {
-        alert("2. Estado del permiso: " + permission); // Chivato 2
-        
-        if (permission === 'granted' || permission === 'default') {
-            if (typeof firebase === 'undefined' || !firebase.messaging) {
-                alert("Error: Firebase Messaging no está disponible.");
-                return;
-            }
-
-            messaging.getToken({ 
-                vapidKey: 'BOCVLBQJNFPIfAPyKDQ3K6McfhP_Whelza8KBm8QxeMbp9NhfBdPwAEePkO0CqGn_4-EgNjibQbltCV68Ylnj-iE' 
-            }).then(function(currentToken) {
-                if (currentToken) {
-                    alert("3. Token obtenido con éxito"); // Chivato 3
-                    db.collection("tokens").add({
-                        token: currentToken,
-                        actualizadoEn: Date.now()
-                    }).then(function() {
-                        alert('¡Notificaciones activadas y token guardado en Firebase!');
-                        var btnNotif = document.getElementById('btnNotificaciones');
-                        if (btnNotif) {
-                            btnNotif.style.color = '#22c55e'; // Pone la campana en verde brillante
-                            btnNotif.title = 'Avisos Activos';
-                        }
-                    });
-                } else {
-                    alert('No se pudo obtener el token de registro.');
+    // Solicitamos el token directamente omitiendo el objeto global Notification para evitar bloqueos en apps empaquetadas
+    messaging.getToken({ 
+        vapidKey: 'BOCVLBQJNFPIfAPyKDQ3K6McfhP_Whelza8KBm8QxeMbp9NhfBdPwAEePkO0CqGn_4-EgNjibQbltCV68Ylnj-iE' 
+    }).then(function(currentToken) {
+        if (currentToken) {
+            alert("3. Token obtenido con éxito"); // Chivato 3
+            db.collection("tokens").add({
+                token: currentToken,
+                actualizadoEn: Date.now()
+            }).then(function() {
+                alert('¡Notificaciones activadas y token guardado en Firebase!');
+                var btnNotif = document.getElementById('btnNotificaciones');
+                if (btnNotif) {
+                    btnNotif.style.color = '#22c55e'; // Pone la campana en verde brillante
+                    btnNotif.title = 'Avisos Activos';
                 }
-            }).catch(function(err) {
-                alert('Error al recuperar el token: ' + err.message);
             });
-
         } else {
-            alert('Has denegado los permisos de notificación.');
+            alert('No se pudo obtener el token de registro.');
         }
     }).catch(function(err) {
-        alert('Error al pedir permisos: ' + err.message);
+        alert('Error al recuperar el token: ' + err.message);
     });
 }
