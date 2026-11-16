@@ -639,7 +639,7 @@ function iniciarVigilanteDeDia() {
 iniciarVigilanteDeDia();
 
 
-// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) CON CHIVATOS DE DIAGNÓSTICO ---
+// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) CORREGIDO PARA APPS INDEPENDIENTES ---
 
 const messaging = firebase.messaging();
 
@@ -657,12 +657,21 @@ if ('serviceWorker' in navigator) {
 function solicitarPermisoNotificaciones() {
     alert("1. Botón pulsado correctamente"); // Chivato 1
 
-    if (!('Notification' in window)) {
-        alert("Este dispositivo no soporta notificaciones.");
-        return;
+    // Usamos un manejador seguro para plataformas móviles independientes (WebAPK)
+    var permisoPromise;
+    try {
+        if (typeof Notification !== 'undefined' && Notification.requestPermission) {
+            permisoPromise = Notification.requestPermission();
+        } else if (window.Notification && window.Notification.requestPermission) {
+            permisoPromise = window.Notification.requestPermission();
+        } else {
+            permisoPromise = Promise.reject(new Error("Notification API no encontrada en este contexto."));
+        }
+    } catch (e) {
+        permisoPromise = Promise.reject(e);
     }
 
-    Notification.requestPermission().then(function(permission) {
+    permisoPromise.then(function(permission) {
         alert("2. Estado del permiso: " + permission); // Chivato 2
         
         if (permission === 'granted') {
