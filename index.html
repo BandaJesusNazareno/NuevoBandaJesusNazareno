@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banda Jesús Nazareno - Agenda Oficial</title>
     <!-- Versión actualizada para forzar la caché del móvil -->
-    <link rel="stylesheet" href="style.css?v=423">
+    <link rel="stylesheet" href="style.css?v=425">
 
     <!-- SDKs de Firebase Compatibles -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -60,7 +60,11 @@
             <div class="form-group">
                 <input type="password" id="inputClave" placeholder="Escribe la clave de acceso">
             </div>
-            <div class="modal-botones">
+            <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                <input type="checkbox" id="recordarClave" style="width: auto; cursor: pointer;">
+                <label for="recordarClave" style="margin: 0; cursor: pointer; color: #cbd5e1; font-size: 0.85rem;">Recordar contraseña</label>
+            </div>
+            <div class="modal-botones" style="margin-top: 15px;">
                 <button type="button" class="btn-secundario" onclick="cerrarModal('modalClave')">Cancelar</button>
                 <button type="button" class="btn-principal" onclick="validarClave()">Entrar</button>
             </div>
@@ -120,6 +124,11 @@
                     <button type="submit" class="btn-principal">Guardar</button>
                 </div>
             </form>
+
+            <!-- Botón para cerrar sesión de administrador dentro del panel -->
+            <div style="margin-top: 20px; border-top: 1px solid #334155; padding-top: 15px; text-align: center;">
+                <button type="button" class="btn-secundario" onclick="cerrarSesionAdmin()" style="width: 100%;">🔒 Cerrar Sesión de Administrador</button>
+            </div>
         </div>
     </div>
 
@@ -194,6 +203,6 @@
     <div id="toastHonor">⭐ ¡Músico de Honor de la Banda!</div>
 
     <!-- Script principal actualizado con versión para la caché -->
-    <script src="app.js?v=423"></script>
+    <script src="app.js?v=425"></script>
 </body>
 </html>
