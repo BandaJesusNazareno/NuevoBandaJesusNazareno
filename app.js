@@ -639,7 +639,7 @@ function iniciarVigilanteDeDia() {
 iniciarVigilanteDeDia();
 
 
-// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) LIBRE DE ERRORES DE ENTORNO ---
+// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) CON ESPERA DE SERVICE WORKER READY ---
 
 const messaging = firebase.messaging();
 
@@ -662,27 +662,32 @@ function solicitarPermisoNotificaciones() {
         return;
     }
 
-    // Solicitamos el token directamente omitiendo el objeto global Notification para evitar bloqueos en apps empaquetadas
-    messaging.getToken({ 
-        vapidKey: 'BOCVLBQJNFPIfAPyKDQ3K6McfhP_Whelza8KBm8QxeMbp9NhfBdPwAEePkO0CqGn_4-EgNjibQbltCV68Ylnj-iE' 
-    }).then(function(currentToken) {
-        if (currentToken) {
-            alert("3. Token obtenido con éxito"); // Chivato 3
-            db.collection("tokens").add({
-                token: currentToken,
-                actualizadoEn: Date.now()
-            }).then(function() {
-                alert('¡Notificaciones activadas y token guardado en Firebase!');
-                var btnNotif = document.getElementById('btnNotificaciones');
-                if (btnNotif) {
-                    btnNotif.style.color = '#22c55e'; // Pone la campana en verde brillante
-                    btnNotif.title = 'Avisos Activos';
-                }
-            });
-        } else {
-            alert('No se pudo obtener el token de registro.');
-        }
+    // Esperamos a que el Service Worker esté completamente listo y activo en el contenedor
+    navigator.serviceWorker.ready.then(function(registration) {
+        messaging.getToken({ 
+            vapidKey: 'BOCVLBQJNFPIfAPyKDQ3K6McfhP_Whelza8KBm8QxeMbp9NhfBdPwAEePkO0CqGn_4-EgNjibQbltCV68Ylnj-iE',
+            serviceWorkerRegistration: registration
+        }).then(function(currentToken) {
+            if (currentToken) {
+                alert("3. Token obtenido con éxito"); // Chivato 3
+                db.collection("tokens").add({
+                    token: currentToken,
+                    actualizadoEn: Date.now()
+                }).then(function() {
+                    alert('¡Notificaciones activadas y token guardado en Firebase!');
+                    var btnNotif = document.getElementById('btnNotificaciones');
+                    if (btnNotif) {
+                        btnNotif.style.color = '#22c55e'; // Pone la campana en verde brillante
+                        btnNotif.title = 'Avisos Activos';
+                    }
+                });
+            } else {
+                alert('No se pudo obtener el token de registro.');
+            }
+        }).catch(function(err) {
+            alert('Error al recuperar el token: ' + err.message);
+        });
     }).catch(function(err) {
-        alert('Error al recuperar el token: ' + err.message);
+        alert('Error: El Service Worker no está listo: ' + err.message);
     });
 }
