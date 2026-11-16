@@ -660,7 +660,7 @@ function solicitarPermisoNotificaciones() {
             console.log('Permiso de notificaciones concedido.');
             
             messaging.getToken({ 
-                vapidKey: 'AQUÍ_IRÍA_TU_CLAVE_VAPID_DE_FIREBASE' 
+                vapidKey: 'BOCVLBQJNFPIfAPyKDQ3K6McfhP_Whelza8KBm8QxeMbp9NhfBdPwAEePkO0CqGn_4-EgNjibQbltCV68Ylnj-iE' 
             }).then(function(currentToken) {
                 if (currentToken) {
                     console.log('Token FCM obtenido:', currentToken);
