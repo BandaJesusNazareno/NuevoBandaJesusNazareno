@@ -1,3 +1,13 @@
+// SIMULADOR GLOBAL (POLYFILL): Evita que cualquier llamada interna de Firebase busque la API Notification nativa
+if (typeof window !== 'undefined' && typeof window.Notification === 'undefined') {
+    window.Notification = {
+        permission: 'granted',
+        requestPermission: function() {
+            return Promise.resolve('granted');
+        }
+    };
+}
+
 const firebaseConfig = {
     apiKey: "AIzaSyA87GdLbgUDMlE-N_wQtJpLnGFgODA6Mpc",
     authDomain: "bandajesusnazareno2012.firebaseapp.com",
@@ -639,7 +649,7 @@ function iniciarVigilanteDeDia() {
 iniciarVigilanteDeDia();
 
 
-// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) CON DIAGNÓSTICO DETALLADO ---
+// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) CON ESPERA DE SERVICE WORKER READY ---
 
 const messaging = firebase.messaging();
 
@@ -662,6 +672,7 @@ function solicitarPermisoNotificaciones() {
         return;
     }
 
+    // Esperamos a que el Service Worker esté completamente listo y activo en el contenedor
     navigator.serviceWorker.ready.then(function(registration) {
         messaging.getToken({ 
             vapidKey: 'BOCVLBQJNFPIfAPyKDQ3K6McfhP_Whelza8KBm8QxeMbp9NhfBdPwAEePkO0CqGn_4-EgNjibQbltCV68Ylnj-iE',
@@ -684,10 +695,9 @@ function solicitarPermisoNotificaciones() {
                 alert('No se pudo obtener el token de registro.');
             }
         }).catch(function(err) {
-            // Mostramos el detalle exacto del error devuelto por Firebase
-            alert('DETALLE TÉCNICO: [' + (err.code || 'SIN_CODIGO') + '] ' + err.message);
+            alert('Error al recuperar el token: ' + err.message);
         });
     }).catch(function(err) {
-        alert('Error Service Worker Ready: ' + err.message);
+        alert('Error: El Service Worker no está listo: ' + err.message);
     });
 }
