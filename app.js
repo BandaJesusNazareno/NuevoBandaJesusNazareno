@@ -38,7 +38,9 @@ function obtenerNombreDia(fechaOriginal) {
 
 function pedirClave() {
     if (esAdmin) {
-        abrirFormularioDirecto();
+        // Si ya es administrador, abrimos el menú independiente para cerrar sesión
+        document.getElementById("modalMenuAdmin").style.display = "flex";
+        document.body.style.overflow = 'hidden';
     } else {
         var savedPass = localStorage.getItem("bandaPassword");
         var inputClave = document.getElementById("inputClave");
@@ -104,7 +106,7 @@ function validarClave() {
 function cerrarSesionAdmin() {
     esAdmin = false;
     localStorage.removeItem("bandaAdmin");
-    cerrarModal('panelAdmin');
+    cerrarModal('modalMenuAdmin');
     
     var btnFlotante = document.getElementById("btnFlotanteAgregar");
     if (btnFlotante) btnFlotante.remove();
