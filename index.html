@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banda Jesús Nazareno - Agenda Oficial</title>
     <!-- Versión actualizada para forzar la caché del móvil -->
-    <link rel="stylesheet" href="style.css?v=425">
+    <link rel="stylesheet" href="style.css?v=427">
 
     <!-- SDKs de Firebase Compatibles -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -71,7 +71,22 @@
         </div>
     </div>
 
-    <!-- Modal Formulario de Administración -->
+    <!-- Modal Menú de Administrador (Independiente para cerrar sesión) -->
+    <div id="modalMenuAdmin" class="modal">
+        <div class="modal-contenido modal-sm" style="text-align: center;">
+            <div class="modal-header">
+                <h3>Panel de Administrador</h3>
+                <span class="btn-cerrar" onclick="cerrarModal('modalMenuAdmin')">&times;</span>
+            </div>
+            <p style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 20px;">Sesión de administrador activa.</p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button type="button" class="btn-secundario" onclick="cerrarSesionAdmin()" style="width: 100%;">🔒 Cerrar Sesión de Administrador</button>
+                <button type="button" class="btn-principal" onclick="cerrarModal('modalMenuAdmin')" style="width: 100%;">Volver</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Formulario de Administración (Solo para crear/editar actos, limpio sin botón de cerrar sesión) -->
     <div id="panelAdmin" class="modal">
         <div class="modal-contenido">
             <div class="modal-header">
@@ -124,11 +139,6 @@
                     <button type="submit" class="btn-principal">Guardar</button>
                 </div>
             </form>
-
-            <!-- Botón para cerrar sesión de administrador dentro del panel -->
-            <div style="margin-top: 20px; border-top: 1px solid #334155; padding-top: 15px; text-align: center;">
-                <button type="button" class="btn-secundario" onclick="cerrarSesionAdmin()" style="width: 100%;">🔒 Cerrar Sesión de Administrador</button>
-            </div>
         </div>
     </div>
 
@@ -203,6 +213,6 @@
     <div id="toastHonor">⭐ ¡Músico de Honor de la Banda!</div>
 
     <!-- Script principal actualizado con versión para la caché -->
-    <script src="app.js?v=425"></script>
+    <script src="app.js?v=427"></script>
 </body>
 </html>
