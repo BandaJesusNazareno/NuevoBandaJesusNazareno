@@ -637,3 +637,55 @@ function iniciarVigilanteDeDia() {
 }
 
 iniciarVigilanteDeDia();
+
+
+// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) ---
+
+const messaging = firebase.messaging();
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('firebase-messaging-sw.js')
+        .then(function(registration) {
+            console.log('Service Worker registrado con éxito:', registration.scope);
+            messaging.useServiceWorker(registration);
+        })
+        .catch(function(err) {
+            console.log('Falló el registro del Service Worker:', err);
+        });
+}
+
+function solicitarPermisoNotificaciones() {
+    Notification.requestPermission().then(function(permission) {
+        if (permission === 'granted') {
+            console.log('Permiso de notificaciones concedido.');
+            
+            messaging.getToken({ 
+                vapidKey: 'AQUÍ_IRÍA_TU_CLAVE_VAPID_DE_FIREBASE' 
+            }).then(function(currentToken) {
+                if (currentToken) {
+                    console.log('Token FCM obtenido:', currentToken);
+                    db.collection("tokens").add({
+                        token: currentToken,
+                        actualizadoEn: Date.now()
+                    }).then(function() {
+                        alert('¡Notificaciones activadas correctamente en este dispositivo!');
+                        var btnNotif = document.getElementById('btnNotificaciones');
+                        if (btnNotif) {
+                            btnNotif.innerText = '🔔 Avisos Activos';
+                            btnNotif.style.borderColor = '#22c55e';
+                            btnNotif.style.color = '#22c55e';
+                        }
+                    });
+                } else {
+                    console.log('No se pudo obtener el token de registro.');
+                }
+            }).catch(function(err) {
+                console.log('Error al recuperar el token.', err);
+                alert('Error al activar las notificaciones. Comprueba la configuración.');
+            });
+
+        } else {
+            alert('Has denegado los permisos de notificación. Puedes activarlos desde la configuración de tu navegador.');
+        }
+    });
+}
