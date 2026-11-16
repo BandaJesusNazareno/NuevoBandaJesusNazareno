@@ -14,13 +14,33 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// Manejo opcional de notificaciones en segundo plano
+// Manejo de notificaciones en segundo plano con protección contra errores
 messaging.onBackgroundMessage(function(payload) {
     console.log('[firebase-messaging-sw.js] Mensaje recibido en segundo plano: ', payload);
-    const notificationTitle = payload.notification.title;
+    
+    const notificationTitle = (payload.notification && payload.notification.title) ? payload.notification.title : "Banda Jesús Nazareno";
     const notificationOptions = {
-        body: payload.notification.body,
+        body: (payload.notification && payload.notification.body) ? payload.notification.body : "Nuevo aviso en la agenda oficial",
         icon: 'escudo.png'
     };
+    
     self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+// Evento crucial para aplicaciones instaladas: abre la app al hacer clic en la notificación
+self.addEventListener('notificationclick', function(event) {
+    event.notification.close();
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
+            for (var i = 0; i < clientList.length; i++) {
+                var client = clientList[i];
+                if ('focus' in client) {
+                    return client.focus();
+                }
+            }
+            if (clients.openWindow) {
+                return clients.openWindow('./');
+            }
+        })
+    );
 });
