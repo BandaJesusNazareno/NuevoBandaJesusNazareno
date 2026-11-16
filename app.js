@@ -12,7 +12,6 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const eventosRef = db.collection("eventos");
 
-// Recuperamos el estado de administrador de la memoria del navegador
 var esAdmin = localStorage.getItem("bandaAdmin") === "true";
 var idEventoEditando = null;
 var eventosMap = {};
@@ -41,6 +40,18 @@ function pedirClave() {
     if (esAdmin) {
         abrirFormularioDirecto();
     } else {
+        var savedPass = localStorage.getItem("bandaPassword");
+        var inputClave = document.getElementById("inputClave");
+        var chkRecordar = document.getElementById("recordarClave");
+        
+        if (savedPass) {
+            inputClave.value = savedPass;
+            if (chkRecordar) chkRecordar.checked = true;
+        } else {
+            inputClave.value = "";
+            if (chkRecordar) chkRecordar.checked = false;
+        }
+
         document.getElementById("modalClave").style.display = "flex";
         document.body.style.overflow = 'hidden';
     }
@@ -61,9 +72,18 @@ function cerrarModalAsistencia() {
 
 function validarClave() {
     var claveIngresada = document.getElementById("inputClave").value;
+    var chkRecordar = document.getElementById("recordarClave");
+
     if (claveIngresada === "nazareno2012") {  
         esAdmin = true;
-        localStorage.setItem("bandaAdmin", "true"); // Guardamos la sesión en el navegador
+        localStorage.setItem("bandaAdmin", "true");
+        
+        if (chkRecordar && chkRecordar.checked) {
+            localStorage.setItem("bandaPassword", "nazareno2012");
+        } else {
+            localStorage.removeItem("bandaPassword");
+        }
+
         document.getElementById("inputClave").value = "";
         cerrarModal("modalClave");
         crearBotonFlotante();
@@ -79,6 +99,21 @@ function validarClave() {
     } else {
         alert("Contraseña incorrecta");
     }
+}
+
+function cerrarSesionAdmin() {
+    esAdmin = false;
+    localStorage.removeItem("bandaAdmin");
+    cerrarModal('panelAdmin');
+    
+    var btnFlotante = document.getElementById("btnFlotanteAgregar");
+    if (btnFlotante) btnFlotante.remove();
+
+    document.querySelectorAll(".admin-only").forEach(function(el) {
+        el.style.display = "none";
+    });
+
+    escucharEventos();
 }
 
 function crearBotonFlotante() {
@@ -177,7 +212,6 @@ function escucharEventos() {
 
 escucharEventos();
 
-// Si ya estaba guardado como admin, activamos las funciones de administración al cargar
 if (esAdmin) {
     crearBotonFlotante();
     document.addEventListener("DOMContentLoaded", function() {
