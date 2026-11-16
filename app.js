@@ -1,4 +1,4 @@
-// SIMULADOR GLOBAL (POLYFILL): Evita que cualquier llamada interna de Firebase busque la API Notification nativa
+// SIMULADOR GLOBAL (POLYFILL): Evita que Firebase busque la API Notification nativa y falle en la app
 if (typeof window !== 'undefined' && typeof window.Notification === 'undefined') {
     window.Notification = {
         permission: 'granted',
