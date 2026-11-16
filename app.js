@@ -671,9 +671,8 @@ function solicitarPermisoNotificaciones() {
                         alert('¡Notificaciones activadas correctamente en este dispositivo!');
                         var btnNotif = document.getElementById('btnNotificaciones');
                         if (btnNotif) {
-                            btnNotif.innerText = '🔔 Avisos Activos';
-                            btnNotif.style.borderColor = '#22c55e';
-                            btnNotif.style.color = '#22c55e';
+                            btnNotif.style.color = '#22c55e'; // Pone la campana en verde brillante
+                            btnNotif.title = 'Avisos Activos';
                         }
                     });
                 } else {
