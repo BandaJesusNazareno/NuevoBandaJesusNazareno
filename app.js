@@ -25,6 +25,17 @@ function formatearFecha(fechaOriginal) {
     return fechaOriginal;
 }
 
+function obtenerNombreDia(fechaOriginal) {
+    if (!fechaOriginal) return '';
+    var partes = fechaOriginal.split('-');
+    if (partes.length === 3) {
+        var d = new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1, parseInt(partes[2], 10));
+        var dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+        return dias[d.getDay()];
+    }
+    return '';
+}
+
 function pedirClave() {
     if (esAdmin) {
         abrirFormularioDirecto();
@@ -134,6 +145,8 @@ function escucharEventos() {
             var tarjeta = document.createElement("div");
             tarjeta.className = "tarjeta-evento";
             var fechaFormateada = formatearFecha(evento.fecha);
+            var nombreDia = obtenerNombreDia(evento.fecha);
+            var spanDia = nombreDia ? ' <span style="color: #D4AF37; font-weight: 600; text-transform: capitalize;">(' + nombreDia + ')</span>' : '';
 
             var htmlTarjeta = '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">' +
                 '<span class="badge ' + (evento.tipo ? evento.tipo.toLowerCase() : '') + '">' + (evento.tipo || 'Evento') + '</span>' +
@@ -147,7 +160,7 @@ function escucharEventos() {
 
             htmlTarjeta += '</div></div>' +
                 '<h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 10px; font-weight: 600;">' + (evento.titulo || '') + '</h3>' +
-                '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📅 <strong>Fecha:</strong> ' + fechaFormateada + '</p>' +
+                '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📅 <strong>Fecha:</strong> ' + fechaFormateada + spanDia + '</p>' +
                 '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📍 <strong>Lugar:</strong> ' + (evento.lugar || '') + '</p>';
 
             if (evento.detalles) {
