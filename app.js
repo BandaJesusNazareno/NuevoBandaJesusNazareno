@@ -639,7 +639,7 @@ function iniciarVigilanteDeDia() {
 iniciarVigilanteDeDia();
 
 
-// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) ---
+// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) CON CHIVATOS DE DIAGNÓSTICO ---
 
 const messaging = firebase.messaging();
 
@@ -655,20 +655,32 @@ if ('serviceWorker' in navigator) {
 }
 
 function solicitarPermisoNotificaciones() {
+    alert("1. Botón pulsado correctamente"); // Chivato 1
+
+    if (!('Notification' in window)) {
+        alert("Este dispositivo no soporta notificaciones.");
+        return;
+    }
+
     Notification.requestPermission().then(function(permission) {
+        alert("2. Estado del permiso: " + permission); // Chivato 2
+        
         if (permission === 'granted') {
-            console.log('Permiso de notificaciones concedido.');
-            
+            if (typeof firebase === 'undefined' || !firebase.messaging) {
+                alert("Error: Firebase Messaging no está disponible.");
+                return;
+            }
+
             messaging.getToken({ 
                 vapidKey: 'BOCVLBQJNFPIfAPyKDQ3K6McfhP_Whelza8KBm8QxeMbp9NhfBdPwAEePkO0CqGn_4-EgNjibQbltCV68Ylnj-iE' 
             }).then(function(currentToken) {
                 if (currentToken) {
-                    console.log('Token FCM obtenido:', currentToken);
+                    alert("3. Token obtenido con éxito"); // Chivato 3
                     db.collection("tokens").add({
                         token: currentToken,
                         actualizadoEn: Date.now()
                     }).then(function() {
-                        alert('¡Notificaciones activadas correctamente en este dispositivo!');
+                        alert('¡Notificaciones activadas y token guardado en Firebase!');
                         var btnNotif = document.getElementById('btnNotificaciones');
                         if (btnNotif) {
                             btnNotif.style.color = '#22c55e'; // Pone la campana en verde brillante
@@ -676,15 +688,16 @@ function solicitarPermisoNotificaciones() {
                         }
                     });
                 } else {
-                    console.log('No se pudo obtener el token de registro.');
+                    alert('No se pudo obtener el token de registro.');
                 }
             }).catch(function(err) {
-                console.log('Error al recuperar el token.', err);
-                alert('Error al activar las notificaciones. Comprueba la configuración.');
+                alert('Error al recuperar el token: ' + err.message);
             });
 
         } else {
-            alert('Has denegado los permisos de notificación. Puedes activarlos desde la configuración de tu navegador.');
+            alert('Has denegado los permisos de notificación.');
         }
+    }).catch(function(err) {
+        alert('Error al pedir permisos: ' + err.message);
     });
 }
