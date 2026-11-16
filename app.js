@@ -12,7 +12,8 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const eventosRef = db.collection("eventos");
 
-var esAdmin = false;
+// Recuperamos el estado de administrador de la memoria del navegador
+var esAdmin = localStorage.getItem("bandaAdmin") === "true";
 var idEventoEditando = null;
 var eventosMap = {};
 
@@ -62,6 +63,7 @@ function validarClave() {
     var claveIngresada = document.getElementById("inputClave").value;
     if (claveIngresada === "nazareno2012") {  
         esAdmin = true;
+        localStorage.setItem("bandaAdmin", "true"); // Guardamos la sesión en el navegador
         document.getElementById("inputClave").value = "";
         cerrarModal("modalClave");
         crearBotonFlotante();
@@ -174,6 +176,16 @@ function escucharEventos() {
 }
 
 escucharEventos();
+
+// Si ya estaba guardado como admin, activamos las funciones de administración al cargar
+if (esAdmin) {
+    crearBotonFlotante();
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".admin-only").forEach(function(el) {
+            el.style.display = "block";
+        });
+    });
+}
 
 function cargarEdicionEvento(id) {
     if (!esAdmin) return;
