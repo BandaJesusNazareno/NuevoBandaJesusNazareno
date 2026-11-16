@@ -160,8 +160,8 @@ function escucharEventos() {
 
             htmlTarjeta += '</div></div>' +
                 '<h3 style="color: #ffffff; font-size: 1.25rem; margin-bottom: 10px; font-weight: 600;">' + (evento.titulo || '') + '</h3>' +
-                '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📅 <strong>Fecha:</strong> ' + fechaFormateada + spanDia + '</p>' +
-                '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📍 <strong>Lugar:</strong> ' + (evento.lugar || '') + '</p>';
+                '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📅 <strong style="color: #D4AF37;">Fecha:</strong> ' + fechaFormateada + spanDia + '</p>' +
+                '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📍 <strong style="color: #D4AF37;">Lugar:</strong> ' + (evento.lugar || '') + '</p>';
 
             if (evento.detalles) {
                 htmlTarjeta += '<p style="margin: 4px 0; color: #cbd5e1; font-size: 0.9rem;">📝 ' + evento.detalles + '</p>';
