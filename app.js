@@ -639,7 +639,7 @@ function iniciarVigilanteDeDia() {
 iniciarVigilanteDeDia();
 
 
-// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) CON ESPERA DE SERVICE WORKER READY ---
+// --- CÓDIGO DE NOTIFICACIONES PUSH (FCM) CON DIAGNÓSTICO DETALLADO ---
 
 const messaging = firebase.messaging();
 
@@ -662,7 +662,6 @@ function solicitarPermisoNotificaciones() {
         return;
     }
 
-    // Esperamos a que el Service Worker esté completamente listo y activo en el contenedor
     navigator.serviceWorker.ready.then(function(registration) {
         messaging.getToken({ 
             vapidKey: 'BOCVLBQJNFPIfAPyKDQ3K6McfhP_Whelza8KBm8QxeMbp9NhfBdPwAEePkO0CqGn_4-EgNjibQbltCV68Ylnj-iE',
@@ -685,9 +684,10 @@ function solicitarPermisoNotificaciones() {
                 alert('No se pudo obtener el token de registro.');
             }
         }).catch(function(err) {
-            alert('Error al recuperar el token: ' + err.message);
+            // Mostramos el detalle exacto del error devuelto por Firebase
+            alert('DETALLE TÉCNICO: [' + (err.code || 'SIN_CODIGO') + '] ' + err.message);
         });
     }).catch(function(err) {
-        alert('Error: El Service Worker no está listo: ' + err.message);
+        alert('Error Service Worker Ready: ' + err.message);
     });
 }
